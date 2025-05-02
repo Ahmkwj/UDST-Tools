@@ -1,12 +1,69 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 type SidebarProps = {
   children: React.ReactNode;
+  currentPath: string;
+  onNavigate: (path: string) => void;
 };
 
-export default function Sidebar({ children }: SidebarProps) {
+interface NavItem {
+  name: string;
+  path: string;
+  icon: React.ReactNode;
+}
+
+export default function Sidebar({
+  children,
+  currentPath,
+  onNavigate,
+}: SidebarProps) {
   const [isOpen, setIsOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Navigation items
+  const navItems: NavItem[] = [
+    {
+      name: "Dashboard",
+      path: "/",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-5 h-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+          />
+        </svg>
+      ),
+    },
+    {
+      name: "GPA Calculator",
+      path: "/gpa-calculator",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-5 h-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z"
+          />
+        </svg>
+      ),
+    },
+  ];
 
   // Handle responsive behavior
   useEffect(() => {
@@ -23,6 +80,13 @@ export default function Sidebar({ children }: SidebarProps) {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const handleNavigation = (path: string) => {
+    onNavigate(path);
+    if (isMobile) {
+      setIsOpen(false);
+    }
+  };
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-black text-white">
@@ -107,37 +171,32 @@ export default function Sidebar({ children }: SidebarProps) {
           className={`flex-1 overflow-y-auto py-5 ${isOpen ? "px-3" : "px-2"}`}
         >
           <ul className="space-y-1">
-            <li>
-              <a
-                href="#"
-                className={`flex items-center ${
-                  isOpen ? "space-x-3" : "justify-center"
-                } p-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium shadow-md group relative`}
-                title="Dashboard"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-5 h-5 text-white"
+            {navItems.map((item) => (
+              <li key={item.path}>
+                <Link
+                  to={item.path}
+                  onClick={() => handleNavigation(item.path)}
+                  className={`flex items-center ${
+                    isOpen ? "space-x-3" : "justify-center"
+                  } p-2 rounded-lg ${
+                    currentPath === item.path
+                      ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium shadow-md"
+                      : "text-zinc-400 hover:text-white hover:bg-zinc-800"
+                  } transition-colors group relative`}
+                  title={item.name}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-                  />
-                </svg>
-                {isOpen && <span className="text-white">Dashboard</span>}
-                {/* Tooltip for collapsed state */}
-                {!isOpen && !isMobile && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-zinc-800 text-white text-sm rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                    Dashboard
-                  </div>
-                )}
-              </a>
-            </li>
+                  <span className="text-white">{item.icon}</span>
+                  {isOpen && <span className="text-white">{item.name}</span>}
+
+                  {/* Tooltip for collapsed state */}
+                  {!isOpen && !isMobile && (
+                    <div className="absolute left-full ml-2 px-2 py-1 bg-zinc-800 text-white text-sm rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                      {item.name}
+                    </div>
+                  )}
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
 
