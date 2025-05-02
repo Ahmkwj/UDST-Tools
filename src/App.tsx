@@ -9,6 +9,7 @@ import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
 import GPACalculator from "./pages/GPACalculator";
 import AttendanceCalculator from "./pages/AttendanceCalculator";
+import ScheduleMaker from "./pages/ScheduleMaker";
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -26,6 +27,7 @@ function App() {
             path="/attendance-calculator"
             element={<AttendanceCalculator />}
           />
+          <Route path="/schedule-maker" element={<ScheduleMaker />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Sidebar>
