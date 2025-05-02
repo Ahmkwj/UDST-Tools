@@ -5,18 +5,35 @@ export default function Home() {
 
   return (
     <div
-      className={`h-full w-full flex flex-col items-center justify-center p-6 ${
-        isDark ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-900"
+      className={`relative h-full w-full flex flex-col items-center justify-center ${
+        isDark
+          ? "bg-gradient-to-br from-black via-zinc-900 to-black text-white"
+          : "bg-gradient-to-br from-white via-slate-50 to-white text-slate-900"
       } transition-colors duration-300`}
     >
-      <div className="absolute top-4 right-4">
+      {/* Background decoration */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div
+          className={`absolute -top-40 -right-40 w-80 h-80 rounded-full ${
+            isDark ? "bg-blue-900/10" : "bg-blue-50"
+          } blur-3xl`}
+        ></div>
+        <div
+          className={`absolute -bottom-40 -left-40 w-80 h-80 rounded-full ${
+            isDark ? "bg-blue-900/10" : "bg-blue-50"
+          } blur-3xl`}
+        ></div>
+      </div>
+
+      {/* Dark mode toggle */}
+      <div className="fixed md:absolute top-4 right-4 z-10">
         <button
           onClick={() => setIsDark(!isDark)}
-          className={`p-2 rounded-lg ${
+          className={`p-2.5 rounded-full ${
             isDark
-              ? "bg-slate-800 hover:bg-slate-700"
-              : "bg-white hover:bg-slate-200"
-          } transition-colors`}
+              ? "bg-zinc-800 hover:bg-zinc-700 ring-1 ring-zinc-700"
+              : "bg-white hover:bg-slate-100 shadow-md ring-1 ring-slate-200"
+          } transition-all`}
           aria-label="Toggle dark mode"
         >
           {isDark ? (
@@ -26,7 +43,7 @@ export default function Home() {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-5 h-5 text-blue-400"
             >
               <path
                 strokeLinecap="round"
@@ -41,7 +58,7 @@ export default function Home() {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-5 h-5 text-blue-600"
             >
               <path
                 strokeLinecap="round"
@@ -53,33 +70,54 @@ export default function Home() {
         </button>
       </div>
 
-      <div className="max-w-3xl w-full text-center space-y-8">
-        <h1 className="text-5xl font-bold tracking-tight">
-          Welcome to UDST Tools
-        </h1>
-        <div
-          className={`h-1 w-24 mx-auto ${
-            isDark ? "bg-indigo-500" : "bg-indigo-600"
-          }`}
-        ></div>
-        <p className="text-xl">
-          Your one-stop dashboard for managing and analyzing data.
-        </p>
-
-        <div
-          className={`p-8 rounded-xl ${
-            isDark ? "bg-slate-800" : "bg-white shadow-lg"
-          } transition-colors max-w-xl mx-auto`}
-        >
-          <p className="leading-relaxed">
-            This modern interface provides a seamless experience for all your
-            data processing needs. Navigate through the sidebar to access
-            different tools and features.
+      {/* Main content */}
+      <div className="relative z-10 max-w-3xl w-full text-center px-4 md:px-6 py-8 md:py-12 space-y-6 md:space-y-8 mt-12 md:mt-0">
+        <div className="space-y-4">
+          <h1
+            className={`text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight ${
+              isDark
+                ? "bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-transparent"
+                : "bg-gradient-to-r from-blue-600 via-blue-700 to-blue-600 bg-clip-text text-transparent"
+            }`}
+          >
+            UDST Tools
+          </h1>
+          <div className="h-1 w-16 md:w-24 mx-auto bg-gradient-to-r from-blue-500 to-blue-600"></div>
+          <p
+            className={`text-lg md:text-xl ${
+              isDark ? "text-zinc-300" : "text-slate-700"
+            }`}
+          >
+            A Student Project
           </p>
         </div>
 
-        <button className="mt-8 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-md transition-colors">
-          Get Started
+        <div
+          className={`p-6 md:p-8 rounded-xl md:rounded-2xl backdrop-blur-sm ${
+            isDark
+              ? "bg-zinc-900/70 ring-1 ring-zinc-800/50"
+              : "bg-white/70 shadow-xl ring-1 ring-slate-200/50"
+          } transition-all max-w-xl mx-auto`}
+        >
+          <div
+            className={`space-y-4 ${
+              isDark ? "text-zinc-300" : "text-slate-600"
+            }`}
+          >
+            <p className="leading-relaxed text-sm md:text-base">
+              This website is a personal project created by a student to help
+              organize and manage academic resources.
+            </p>
+            <p className="leading-relaxed font-medium text-sm md:text-base">
+              Important Notice: This is an independent project and is not
+              affiliated with, endorsed by, or connected to the University of
+              Doha for Science and Technology (UDST) in any way.
+            </p>
+          </div>
+        </div>
+
+        <button className="mt-6 md:mt-8 px-5 md:px-6 py-3 md:py-3.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg md:rounded-xl shadow-md transition-all hover:shadow-lg hover:scale-105 font-medium text-sm md:text-base">
+          Explore Tools
         </button>
       </div>
     </div>
