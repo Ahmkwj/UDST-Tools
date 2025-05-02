@@ -17,7 +17,6 @@ export default function AttendanceCalculator() {
   const [classInfos, setClassInfos] = useState<ClassInfo[]>([]);
   const [newAbsenteeismPercentage, setNewAbsenteeismPercentage] =
     useState<number>(0);
-  const [maxAllowedPercentage] = useState<number>(15);
 
   // Initialize class infos when number of classes changes
   useEffect(() => {
@@ -107,15 +106,6 @@ export default function AttendanceCalculator() {
     setClassesPerWeek(0);
     setClassInfos([]);
     setNewAbsenteeismPercentage(0);
-  };
-
-  const getProgressColor = () => {
-    if (newAbsenteeismPercentage >= maxAllowedPercentage) {
-      return "bg-red-500";
-    } else if (newAbsenteeismPercentage >= maxAllowedPercentage * 0.8) {
-      return "bg-yellow-500";
-    }
-    return "bg-emerald-500";
   };
 
   const handleCustomInput = (index: number) => {
@@ -334,7 +324,7 @@ export default function AttendanceCalculator() {
 
           {/* Right Column - Results Section */}
           <div className="space-y-8">
-            <Card title="Attendance Calculation Result" className="h-full">
+            <Card title="Calculation Results" className="h-full">
               <div className="text-center mb-6 md:mb-8">
                 <div className="inline-flex items-baseline">
                   <span className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
@@ -350,12 +340,12 @@ export default function AttendanceCalculator() {
                 <div className="relative pt-1">
                   <div className="flex mb-2 items-center justify-between">
                     <div>
-                      <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-400 bg-blue-900/20">
+                      <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-white bg-zinc-800">
                         Absence Level
                       </span>
                     </div>
                     <div className="text-right">
-                      <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-400 bg-blue-900/20">
+                      <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-white bg-zinc-800">
                         15%
                       </span>
                     </div>
@@ -377,133 +367,153 @@ export default function AttendanceCalculator() {
                       }`}
                     ></div>
                   </div>
-                  <div className="text-xs text-zinc-400">
-                    Maximum allowed: 15%
-                  </div>
-                </div>
-
-                {/* Status Section */}
-                <div className="rounded-lg border border-zinc-800 p-4">
-                  <h3 className="text-base font-semibold text-zinc-200 mb-2">
-                    Attendance Status
-                  </h3>
-                  <div
-                    className={`text-base font-medium transition-colors duration-300 ease-in-out ${
-                      newAbsenteeismPercentage <= 5
-                        ? "text-blue-500"
+                  <div className="flex items-center justify-between">
+                    <div
+                      className={`text-sm font-medium transition-colors duration-300 ease-in-out ${
+                        newAbsenteeismPercentage <= 5
+                          ? "text-blue-500"
+                          : newAbsenteeismPercentage <= 10
+                          ? "text-yellow-500"
+                          : "text-red-500"
+                      }`}
+                    >
+                      {newAbsenteeismPercentage <= 5
+                        ? "Excellent attendance!"
                         : newAbsenteeismPercentage <= 10
-                        ? "text-yellow-500"
-                        : "text-red-500"
-                    }`}
-                  >
-                    {newAbsenteeismPercentage <= 5
-                      ? "Excellent attendance! You have a good margin for emergencies."
-                      : newAbsenteeismPercentage <= 10
-                      ? "Be cautious - you've used a significant portion of your allowed absences."
-                      : newAbsenteeismPercentage >= 15
-                      ? "Critical: You've reached or exceeded the 15% absence limit."
-                      : "Warning: You're very close to the maximum absence limit."}
+                        ? "Be cautious with absences"
+                        : newAbsenteeismPercentage >= 15
+                        ? "Critical: Limit exceeded"
+                        : "Warning: Near limit"}
+                    </div>
                   </div>
                 </div>
 
                 {/* Classes Left Section */}
-                {classesPerWeek > 0 && (
-                  <div className="rounded-lg border border-zinc-800 p-4 bg-zinc-900/50 backdrop-blur-sm">
-                    <div className="mb-4">
-                      <h3 className="text-base font-semibold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
-                        How Many Classes Left?
-                      </h3>
-                    </div>
+                <>
+                  <div className="h-px bg-zinc-800/50 my-6"></div>
 
-                    <div className="space-y-3 divide-y divide-zinc-800/50">
-                      {classInfos.map((classInfo, index) => {
-                        // Calculate how many more classes can be missed
-                        const totalMinutesInSemester =
-                          (classInfo.duration || 0) *
-                          parseInt(weeksInSemester || "0");
-                        const maxMissedMinutes = totalMinutesInSemester * 0.15;
+                  <div>
+                    <h3 className="text-base font-semibold text-white mb-2">
+                      How Many Classes Left?
+                    </h3>
+                    <p className="text-sm text-zinc-400 mb-4">
+                      This shows the remaining classes you can miss before
+                      reaching the 15% absence limit. Consider saving some for
+                      emergencies.
+                    </p>
 
-                        // Current missed minutes
-                        let currentMissedMinutes = 0;
-                        if (typeof classInfo.missedTimes === "number") {
-                          currentMissedMinutes =
-                            classInfo.missedTimes * (classInfo.duration || 0);
-                        } else {
-                          currentMissedMinutes = parseInt(
-                            classInfo.missedTimes || "0"
+                    {classesPerWeek === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-8 text-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-zinc-600 mb-3"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                          />
+                        </svg>
+                        <p className="text-zinc-400 text-sm sm:text-base md:text-lg mb-1 sm:mb-2">
+                          No Classes Added
+                        </p>
+                        <p className="text-zinc-500 text-xs sm:text-sm max-w-[180px] sm:max-w-[250px]">
+                          Add classes above to see how many you can still miss
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3 divide-y divide-zinc-800/50">
+                        {classInfos.map((classInfo, index) => {
+                          // Calculate how many more classes can be missed
+                          const totalMinutesInSemester =
+                            (classInfo.duration || 0) *
+                            parseInt(weeksInSemester || "0");
+                          const maxMissedMinutes =
+                            totalMinutesInSemester * 0.15;
+
+                          // Current missed minutes
+                          let currentMissedMinutes = 0;
+                          if (typeof classInfo.missedTimes === "number") {
+                            currentMissedMinutes =
+                              classInfo.missedTimes * (classInfo.duration || 0);
+                          } else {
+                            currentMissedMinutes = parseInt(
+                              classInfo.missedTimes || "0"
+                            );
+                          }
+
+                          // Current absenteeism percentage for this class
+                          const classAbsenteeismPercentage =
+                            totalMinutesInSemester > 0
+                              ? (currentMissedMinutes /
+                                  totalMinutesInSemester) *
+                                100
+                              : 0;
+
+                          // Calculate remaining minutes and classes
+                          const remainingMinutes = Math.max(
+                            0,
+                            maxMissedMinutes - currentMissedMinutes
                           );
-                        }
+                          const remainingClasses =
+                            classInfo.duration > 0
+                              ? Math.floor(
+                                  remainingMinutes / classInfo.duration
+                                )
+                              : 0;
 
-                        // Current absenteeism percentage for this class
-                        const classAbsenteeismPercentage =
-                          totalMinutesInSemester > 0
-                            ? (currentMissedMinutes / totalMinutesInSemester) *
-                              100
-                            : 0;
-
-                        // Calculate remaining minutes and classes
-                        const remainingMinutes = Math.max(
-                          0,
-                          maxMissedMinutes - currentMissedMinutes
-                        );
-                        const remainingClasses =
-                          classInfo.duration > 0
-                            ? Math.floor(remainingMinutes / classInfo.duration)
-                            : 0;
-
-                        return (
-                          <div
-                            key={index}
-                            className="p-3 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
-                                <span className="text-sm font-medium">
-                                  {index + 1}
-                                </span>
+                          return (
+                            <div
+                              key={index}
+                              className="p-3 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-800 text-white">
+                                  <span className="text-sm font-medium">
+                                    {index + 1}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="text-sm font-medium text-zinc-200">
+                                    Class {index + 1}
+                                  </span>
+                                  <div className="text-xs text-zinc-500">
+                                    {classInfo.duration} minutes per session
+                                  </div>
+                                </div>
                               </div>
-                              <div>
-                                <span className="text-sm font-medium text-zinc-200">
-                                  Class {index + 1}
-                                </span>
-                                <div className="text-xs text-zinc-500">
-                                  {classInfo.duration} minutes per session
+                              <div className="flex items-center gap-2">
+                                <div
+                                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                    newAbsenteeismPercentage >= 15 ||
+                                    classAbsenteeismPercentage >= 15
+                                      ? "bg-red-500/10 text-red-400"
+                                      : classAbsenteeismPercentage >= 10
+                                      ? "bg-yellow-500/10 text-yellow-400"
+                                      : "bg-blue-500/10 text-blue-400"
+                                  }`}
+                                >
+                                  {newAbsenteeismPercentage >= 15 ||
+                                  classAbsenteeismPercentage >= 15
+                                    ? "Limit exceeded"
+                                    : `${remainingClasses} ${
+                                        remainingClasses === 1
+                                          ? "class"
+                                          : "classes"
+                                      } left`}
                                 </div>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <div
-                                className={`px-3 py-1 rounded-full text-sm font-medium ${
-                                  classAbsenteeismPercentage >= 15
-                                    ? "bg-red-500/10 text-red-400"
-                                    : classAbsenteeismPercentage >= 10
-                                    ? "bg-yellow-500/10 text-yellow-400"
-                                    : "bg-blue-500/10 text-blue-400"
-                                }`}
-                              >
-                                {classAbsenteeismPercentage >= 15
-                                  ? "Limit exceeded"
-                                  : `${remainingClasses} ${
-                                      remainingClasses === 1
-                                        ? "class"
-                                        : "classes"
-                                    } left`}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <div className="mt-4">
-                      <p className="text-xs text-zinc-500">
-                        This shows the remaining classes you can miss before
-                        reaching the 15% absence limit. Consider saving some for
-                        emergencies.
-                      </p>
-                    </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
-                )}
+                </>
               </div>
             </Card>
           </div>
