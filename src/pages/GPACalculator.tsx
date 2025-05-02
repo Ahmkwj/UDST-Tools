@@ -246,18 +246,6 @@ export default function GPACalculator() {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto space-y-8">
-        {/* Page header */}
-        <header className="text-center space-y-4 mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-transparent">
-            GPA Calculator
-          </h1>
-          <div className="h-1 w-24 md:w-32 mx-auto bg-gradient-to-r from-blue-500 to-blue-600"></div>
-          <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
-            Calculate your current and projected GPA with our advanced
-            calculator
-          </p>
-        </header>
-
         {/* Main content */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Input Sections */}
