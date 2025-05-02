@@ -93,7 +93,30 @@ export default function GPACalculator() {
     value: string | number | boolean
   ) => {
     const updatedCourses = [...courses];
+
+    // For credits, ensure a positive value
+    if (field === "credits") {
+      const numValue =
+        typeof value === "number" ? value : parseFloat(value as string);
+      value = Math.max(1, numValue || 1);
+    }
+
     updatedCourses[index] = { ...updatedCourses[index], [field]: value };
+
+    // If repeat is turned off, clear previous grade
+    if (field === "isRepeat" && value === false) {
+      updatedCourses[index].previousGrade = "F";
+    }
+
+    // Only allow repeating for failing grades
+    if (
+      field === "grade" &&
+      updatedCourses[index].isRepeat &&
+      ["A", "B+", "B", "C+", "C"].includes(value as string)
+    ) {
+      updatedCourses[index].isRepeat = false;
+    }
+
     setCourses(updatedCourses);
   };
 
@@ -112,14 +135,16 @@ export default function GPACalculator() {
   };
 
   const calculateGPA = () => {
-    const tgp = parseFloat(totalGradePoints as string) || 0;
-    const tc = parseFloat(totalCredits as string) || 0;
+    // Validate and sanitize input values
+    const tgp = Math.max(0, parseFloat(totalGradePoints as string) || 0);
+    const tc = Math.max(0, parseFloat(totalCredits as string) || 0);
 
     let newTGP = tgp;
     let newTC = tc;
 
     courses.forEach((course) => {
-      const courseCredits = course.credits || 0;
+      // Ensure course credits are at least 1
+      const courseCredits = Math.max(1, course.credits || 1);
       const gradePoints = calculateGradePoints(course.grade) * courseCredits;
 
       if (course.isRepeat) {
@@ -134,11 +159,16 @@ export default function GPACalculator() {
       }
     });
 
+    // Ensure we don't divide by zero
     const prevGPA = tc > 0 ? tgp / tc : 0;
     const newGPA = newTC > 0 ? newTGP / newTC : 0;
 
-    setPreviousCumulativeGPA(prevGPA);
-    setNewCumulativeGPA(newGPA);
+    // Ensure GPA is within valid range
+    const validPrevGPA = Math.min(4.0, Math.max(0, prevGPA));
+    const validNewGPA = Math.min(4.0, Math.max(0, newGPA));
+
+    setPreviousCumulativeGPA(validPrevGPA);
+    setNewCumulativeGPA(validNewGPA);
     setNewTotalGradePoints(newTGP);
     setNewTotalCredits(newTC);
   };
@@ -289,18 +319,36 @@ export default function GPACalculator() {
                   <Input
                     label="Total Grade Points"
                     type="number"
+                    min="0"
+                    step="1"
                     placeholder="e.g. 95.500"
                     value={totalGradePoints}
-                    onChange={(e) => setTotalGradePoints(e.target.value)}
+                    onChange={(e) => {
+                      const value = parseFloat(e.target.value);
+                      if (e.target.value === "" || isNaN(value)) {
+                        setTotalGradePoints("");
+                      } else {
+                        setTotalGradePoints(Math.max(0, value));
+                      }
+                    }}
                     helperText="Total points earned so far"
                   />
 
                   <Input
                     label="Total Earned Credits"
                     type="number"
+                    min="0"
+                    step="1"
                     placeholder="e.g. 50"
                     value={totalCredits}
-                    onChange={(e) => setTotalCredits(e.target.value)}
+                    onChange={(e) => {
+                      const value = parseFloat(e.target.value);
+                      if (e.target.value === "" || isNaN(value)) {
+                        setTotalCredits("");
+                      } else {
+                        setTotalCredits(Math.max(0, value));
+                      }
+                    }}
                     helperText="Total credits earned so far"
                   />
                 </div>
@@ -361,14 +409,17 @@ export default function GPACalculator() {
                         <Input
                           label="Credits"
                           type="number"
+                          min="1"
+                          step="1"
                           value={course.credits}
-                          onChange={(e) =>
+                          onChange={(e) => {
+                            const value = parseFloat(e.target.value);
                             updateCourse(
                               index,
                               "credits",
-                              parseFloat(e.target.value) || 0
-                            )
-                          }
+                              isNaN(value) ? 1 : Math.max(1, value)
+                            );
+                          }}
                         />
                       </div>
 
@@ -489,7 +540,7 @@ export default function GPACalculator() {
                             },
                             ticks: {
                               color: "rgba(255, 255, 255, 0.7)",
-                              stepSize: 0.5,
+                              stepSize: 1,
                               callback: function (tickValue: number | string) {
                                 return typeof tickValue === "number"
                                   ? tickValue.toFixed(1)
