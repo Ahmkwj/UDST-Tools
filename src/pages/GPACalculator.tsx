@@ -4,6 +4,27 @@ import Select from "../components/ui/Select";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Checkbox from "../components/ui/Checkbox";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 type Course = {
   grade: string;
@@ -22,7 +43,7 @@ type Scenario = {
 export default function GPACalculator() {
   const [totalGradePoints, setTotalGradePoints] = useState<number | string>("");
   const [totalCredits, setTotalCredits] = useState<number | string>("");
-  const [numberOfCourses, setNumberOfCourses] = useState<number>(0);
+  const [numberOfCourses, setNumberOfCourses] = useState<number>(1);
   const [courses, setCourses] = useState<Course[]>([]);
   const [scenarios, setScenarios] = useState<Scenario[]>([
     { numCourses: 4, grades: [], termGPA: 0, cumulativeGPA: 0 },
@@ -37,15 +58,26 @@ export default function GPACalculator() {
 
   // Initialize courses when number of courses changes
   useEffect(() => {
-    const newCourses: Course[] = [];
-    for (let i = 0; i < numberOfCourses; i++) {
-      newCourses.push({
-        grade: "A",
-        credits: 3,
-        isRepeat: false,
-        previousGrade: "",
-      });
+    let newCourses: Course[] = [];
+
+    if (numberOfCourses > courses.length) {
+      // Adding new courses
+      newCourses = [
+        ...courses, // Keep existing courses
+        ...Array(numberOfCourses - courses.length)
+          .fill(null)
+          .map(() => ({
+            grade: "A",
+            credits: 3,
+            isRepeat: false,
+            previousGrade: "F",
+          })),
+      ];
+    } else {
+      // Removing courses or keeping the same number
+      newCourses = courses.slice(0, numberOfCourses);
     }
+
     setCourses(newCourses);
   }, [numberOfCourses]);
 
@@ -114,7 +146,7 @@ export default function GPACalculator() {
   const resetForm = () => {
     setTotalGradePoints("");
     setTotalCredits("");
-    setNumberOfCourses(0);
+    setNumberOfCourses(1);
     setCourses([]);
     setNewCumulativeGPA(0);
     setPreviousCumulativeGPA(0);
@@ -215,12 +247,12 @@ export default function GPACalculator() {
 
       <div className="relative z-10 max-w-6xl mx-auto space-y-8">
         {/* Page header */}
-        <header className="text-center space-y-4">
+        <header className="text-center space-y-4 mb-12">
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-transparent">
             GPA Calculator
           </h1>
           <div className="h-1 w-24 md:w-32 mx-auto bg-gradient-to-r from-blue-500 to-blue-600"></div>
-          <p className="text-zinc-300 text-lg max-w-2xl mx-auto">
+          <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
             Calculate your current and projected GPA with our advanced
             calculator
           </p>
@@ -284,7 +316,7 @@ export default function GPACalculator() {
                   onChange={(e) => setNumberOfCourses(parseInt(e.target.value))}
                   helperText="Choose the number of courses you are currently taking"
                 >
-                  {[0, 1, 2, 3, 4, 5, 6].map((num) => (
+                  {[1, 2, 3, 4, 5, 6].map((num) => (
                     <option key={num} value={num}>
                       {num}
                     </option>
@@ -306,10 +338,10 @@ export default function GPACalculator() {
                       className="p-4 bg-zinc-800/40 border border-zinc-700/50 rounded-lg space-y-4"
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-sm font-medium text-blue-400">
+                        <h3 className="text-sm font-semibold text-blue-400">
                           Course {index + 1}
                         </h3>
-                        <div className="text-xs text-zinc-400 bg-zinc-800 px-2 py-1 rounded">
+                        <div className="text-xs font-medium text-zinc-400 bg-zinc-800/80 px-2.5 py-1 rounded-full">
                           {course.credits} Credits
                         </div>
                       </div>
@@ -361,9 +393,6 @@ export default function GPACalculator() {
                             updateCourse(index, "previousGrade", e.target.value)
                           }
                         >
-                          <option value="" disabled>
-                            Choose the previous grade
-                          </option>
                           {["F", "D+", "D"].map((grade) => (
                             <option key={grade} value={grade}>
                               {grade}
@@ -383,123 +412,276 @@ export default function GPACalculator() {
             <Card title="GPA Calculation Result">
               <div className="text-center mb-8">
                 <div className="inline-flex items-baseline">
-                  <span className="text-5xl font-bold text-white">
+                  <span className="text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
                     {newCumulativeGPA.toFixed(3)}
                   </span>
-                  <span className="text-xl text-zinc-400 ml-2">/4.00</span>
+                  <span className="text-2xl text-zinc-400 ml-2">/4.00</span>
                 </div>
-                <p className="text-zinc-300 text-sm mt-2">New Cumulative GPA</p>
-              </div>
-
-              <div className="relative w-full h-4 bg-zinc-800 rounded-full mb-8 overflow-hidden">
-                <div
-                  className="absolute h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full 
-                    transition-all duration-500 ease-out"
-                  style={{
-                    width: `${Math.min(100, (newCumulativeGPA / 4) * 100)}%`,
-                  }}
-                ></div>
+                <p className="text-zinc-400 text-base mt-3">Cumulative GPA</p>
               </div>
 
               <div className="space-y-4">
-                <div className="flex justify-between items-center p-3 rounded-lg bg-zinc-800/50">
-                  <span className="text-zinc-400">Previous GPA</span>
-                  <span className="text-white font-medium">
-                    {previousCumulativeGPA.toFixed(3)}
-                  </span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex justify-between items-center p-4 rounded-lg bg-zinc-800/50">
+                    <span className="text-sm font-medium text-zinc-300">
+                      Grade Points
+                    </span>
+                    <span className="text-base font-semibold text-white">
+                      {newTotalGradePoints.toFixed(3)}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center p-4 rounded-lg bg-zinc-800/50">
+                    <span className="text-sm font-medium text-zinc-300">
+                      Total Credits
+                    </span>
+                    <span className="text-base font-semibold text-white">
+                      {newTotalCredits.toFixed(0)}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="flex justify-between items-center p-3 rounded-lg bg-zinc-800/50">
-                  <span className="text-zinc-400">New Grade Points</span>
-                  <span className="text-white font-medium">
-                    {newTotalGradePoints.toFixed(3)}
-                  </span>
-                </div>
+                {/* GPA Graph */}
+                <div className="mt-8 pt-6 border-t border-zinc-800">
+                  <h3 className="text-base font-semibold text-zinc-200 mb-2">
+                    GPA Trend
+                  </h3>
+                  <p className="text-sm text-zinc-400 mb-6">
+                    Visualizes the progression from your previous cumulative GPA
+                    to your projected GPA after this semester.
+                  </p>
+                  <div className="h-[200px] w-full">
+                    <Line
+                      data={{
+                        labels: ["Previous", "Current"],
+                        datasets: [
+                          {
+                            label: "GPA",
+                            data: [previousCumulativeGPA, newCumulativeGPA],
+                            borderColor: "rgb(59, 130, 246)",
+                            backgroundColor: "rgba(59, 130, 246, 0.5)",
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: "rgb(59, 130, 246)",
+                            pointBorderColor: "#fff",
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                          },
+                        ],
+                      }}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                          y: {
+                            min:
+                              Math.floor(
+                                Math.min(
+                                  previousCumulativeGPA,
+                                  newCumulativeGPA
+                                ) * 2
+                              ) / 2,
+                            max:
+                              Math.ceil(
+                                Math.max(
+                                  previousCumulativeGPA,
+                                  newCumulativeGPA
+                                ) * 2
+                              ) / 2,
+                            grid: {
+                              color: "rgba(255, 255, 255, 0.1)",
+                            },
+                            ticks: {
+                              color: "rgba(255, 255, 255, 0.7)",
+                              stepSize: 0.5,
+                              callback: function (tickValue: number | string) {
+                                return typeof tickValue === "number"
+                                  ? tickValue.toFixed(1)
+                                  : tickValue;
+                              },
+                            },
+                            title: {
+                              display: true,
+                              text: "GPA",
+                              color: "rgba(255, 255, 255, 0.7)",
+                              font: {
+                                size: 12,
+                              },
+                            },
+                          },
+                          x: {
+                            grid: {
+                              color: "rgba(255, 255, 255, 0.1)",
+                            },
+                            ticks: {
+                              color: "rgba(255, 255, 255, 0.7)",
+                            },
+                          },
+                        },
+                        plugins: {
+                          legend: {
+                            display: false,
+                          },
+                          tooltip: {
+                            backgroundColor: "rgba(17, 24, 39, 0.8)",
+                            titleColor: "rgb(255, 255, 255)",
+                            bodyColor: "rgb(255, 255, 255)",
+                            padding: 12,
+                            borderColor: "rgba(255, 255, 255, 0.1)",
+                            borderWidth: 1,
+                            displayColors: false,
+                            callbacks: {
+                              label: (context) =>
+                                `GPA: ${context.parsed.y.toFixed(3)}`,
+                            },
+                          },
+                        },
+                      }}
+                    />
+                  </div>
 
-                <div className="flex justify-between items-center p-3 rounded-lg bg-zinc-800/50">
-                  <span className="text-zinc-400">New Total Credits</span>
-                  <span className="text-white font-medium">
-                    {newTotalCredits.toFixed(0)}
-                  </span>
-                </div>
-              </div>
-            </Card>
-
-            {/* Scenarios Section */}
-            <Card title="Future Scenarios">
-              <p className="text-zinc-300 text-sm mb-6">
-                Explore possible outcomes for next semester
-              </p>
-
-              <div className="grid gap-4">
-                {scenarios.map((scenario, index) => (
-                  <div
-                    key={index}
-                    className="bg-zinc-800/50 rounded-lg overflow-hidden"
-                  >
-                    <div className="flex items-center justify-between bg-zinc-800/80 px-4 py-3">
-                      <h3 className="font-medium text-white">
-                        {scenario.numCourses} Course
-                        {scenario.numCourses > 1 ? "s" : ""} Scenario
-                      </h3>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="!p-1.5"
-                        onClick={() => refreshSingleScenario(index)}
-                        aria-label="Refresh scenario"
-                      >
+                  {/* GPA Change Indicator */}
+                  <div className="flex items-center justify-center mt-6">
+                    <div
+                      className={`text-sm font-medium flex items-center gap-1 ${
+                        newCumulativeGPA > previousCumulativeGPA
+                          ? "text-emerald-400"
+                          : newCumulativeGPA < previousCumulativeGPA
+                          ? "text-red-400"
+                          : "text-zinc-400"
+                      }`}
+                    >
+                      {newCumulativeGPA > previousCumulativeGPA ? (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          className="w-4 h-4"
                         >
                           <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                            fillRule="evenodd"
+                            d="M12.577 4.878a.75.75 0 01.919-.53l4.78 1.281a.75.75 0 01.531.919l-1.281 4.78a.75.75 0 01-1.449-.387l.81-3.022a19.407 19.407 0 00-5.594 5.203.75.75 0 01-1.139.093L7 10.06l-4.72 4.72a.75.75 0 01-1.06-1.061l5.25-5.25a.75.75 0 011.06 0l3.074 3.073a20.923 20.923 0 015.545-4.931l-3.042-.815a.75.75 0 01-.53-.919z"
+                            clipRule="evenodd"
                           />
                         </svg>
-                      </Button>
-                    </div>
-
-                    <div className="p-4 grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <div className="text-zinc-400 text-sm">Term GPA</div>
-                        <div className="text-2xl font-medium text-white">
-                          {scenario.termGPA.toFixed(3)}
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="text-zinc-400 text-sm">Cumulative</div>
-                        <div className="text-2xl font-medium text-white">
-                          {scenario.cumulativeGPA.toFixed(3)}
-                        </div>
-                      </div>
-                      <div className="col-span-2 pt-2 border-t border-zinc-700">
-                        <div className="text-zinc-400 text-sm mb-1">
-                          Projected Grades
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {scenario.grades.map((grade, i) => (
-                            <span
-                              key={i}
-                              className="px-2 py-1 bg-zinc-700 rounded text-sm text-white"
-                            >
-                              {grade}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
+                      ) : newCumulativeGPA < previousCumulativeGPA ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          className="w-4 h-4"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M1.22 5.222a.75.75 0 011.06 0L7 9.942l3.768-3.769a.75.75 0 011.113.058 20.908 20.908 0 013.813 7.254l1.574-2.727a.75.75 0 011.3.75l-2.475 4.286a.75.75 0 01-1.025.275l-4.287-2.475a.75.75 0 01.75-1.3l2.71 1.565a19.422 19.422 0 00-3.013-6.024L7.53 11.533a.75.75 0 01-1.06 0l-5.25-5.25a.75.75 0 010-1.06z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          className="w-4 h-4"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      )}
+                      <span>
+                        {Math.abs(
+                          newCumulativeGPA - previousCumulativeGPA
+                        ).toFixed(3)}{" "}
+                        points
+                      </span>
                     </div>
                   </div>
-                ))}
+                </div>
               </div>
             </Card>
           </div>
+        </div>
+
+        {/* Future Scenarios Section - Full Width */}
+        <div className="mt-8">
+          <Card title="Future Scenarios">
+            <p className="text-base text-zinc-300 mb-8">
+              Explore possible outcomes based on different course loads for your
+              next semester
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {scenarios.map((scenario, index) => (
+                <div
+                  key={index}
+                  className="bg-zinc-800/50 rounded-lg overflow-hidden"
+                >
+                  <div className="flex items-center justify-between bg-zinc-800/80 px-4 py-3">
+                    <h3 className="font-medium text-zinc-100">
+                      {scenario.numCourses} Course
+                      {scenario.numCourses > 1 ? "s" : ""}
+                    </h3>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="!p-1.5"
+                      onClick={() => refreshSingleScenario(index)}
+                      aria-label="Refresh scenario"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                        />
+                      </svg>
+                    </Button>
+                  </div>
+
+                  <div className="p-4 grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <div className="text-sm text-zinc-400">Term GPA</div>
+                      <div className="text-2xl font-semibold text-white">
+                        {scenario.termGPA.toFixed(3)}
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <div className="text-sm text-zinc-400">Cumulative</div>
+                      <div className="text-2xl font-semibold text-white">
+                        {scenario.cumulativeGPA.toFixed(3)}
+                      </div>
+                    </div>
+                    <div className="col-span-2 pt-3 border-t border-zinc-700">
+                      <div className="text-sm text-zinc-400 mb-2">
+                        Projected Grades
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {scenario.grades.map((grade, i) => (
+                          <span
+                            key={i}
+                            className="px-2.5 py-1 bg-zinc-700/80 rounded-full text-sm font-medium text-white"
+                          >
+                            {grade}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
         </div>
       </div>
     </div>
