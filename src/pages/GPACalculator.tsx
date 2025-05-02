@@ -147,7 +147,14 @@ export default function GPACalculator() {
     setTotalGradePoints("");
     setTotalCredits("");
     setNumberOfCourses(1);
-    setCourses([]);
+    setCourses([
+      {
+        grade: "A",
+        credits: 3,
+        isRepeat: false,
+        previousGrade: "F",
+      },
+    ]);
     setNewCumulativeGPA(0);
     setPreviousCumulativeGPA(0);
     setNewTotalGradePoints(0);
