@@ -268,18 +268,18 @@ export default function GPACalculator() {
   };
 
   return (
-    <div className="relative min-h-screen w-full py-8 px-4 md:px-8 overflow-y-auto bg-gradient-to-br from-black via-zinc-900 to-black text-white">
+    <div className="relative min-h-screen w-full py-6 md:py-8 px-2 md:px-8 overflow-x-hidden overflow-y-auto bg-gradient-to-br from-black via-zinc-900 to-black text-white">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto space-y-8">
+      <div className="relative z-10 w-full max-w-6xl mx-auto space-y-4 sm:space-y-6 md:space-y-8">
         {/* Main content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
           {/* Left Column - Input Sections */}
-          <div className="space-y-8 h-full flex flex-col">
+          <div className="space-y-6 md:space-y-8 h-full flex flex-col">
             {/* Basic Information Card */}
             <Card title="Current GPA Information" className="relative">
               <div className="absolute top-6 right-6">
@@ -308,7 +308,7 @@ export default function GPACalculator() {
               </div>
 
               <form className="space-y-6">
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
                   <Input
                     label="Total Grade Points"
                     type="number"
@@ -364,13 +364,13 @@ export default function GPACalculator() {
             {/* Course Information Card */}
             <Card
               title="Course Information"
-              className="bg-zinc-900/70 backdrop-blur-sm ring-1 ring-zinc-800/50 flex-1"
+              className="bg-zinc-900/70 backdrop-blur-sm ring-1 ring-zinc-800/50 flex-1 relative min-h-[250px] sm:min-h-[300px] md:min-h-[350px]"
             >
               {numberOfCourses === 0 ? (
-                <div className="absolute inset-0 flex flex-col items-center justify-center py-8 px-4 text-center">
+                <div className="flex flex-col items-center justify-center py-8 px-3 text-center w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-12 w-12 text-zinc-600 mb-4"
+                    className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-zinc-600 mb-3"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -382,31 +382,30 @@ export default function GPACalculator() {
                       d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                     />
                   </svg>
-                  <p className="text-zinc-400 text-lg mb-2">
+                  <p className="text-zinc-400 text-sm sm:text-base md:text-lg mb-1 sm:mb-2">
                     No Courses Selected
                   </p>
-                  <p className="text-zinc-500 text-sm">
-                    Choose the number of courses you're taking this semester to
-                    start calculating
+                  <p className="text-zinc-500 text-xs sm:text-sm max-w-[180px] sm:max-w-[250px]">
+                    Choose the number of courses you're taking this semester
                   </p>
                 </div>
               ) : (
-                <div className="space-y-6 h-full overflow-y-auto">
+                <div className="space-y-4 sm:space-y-6 h-full overflow-y-auto px-1 sm:px-0">
                   {courses.map((course, index) => (
                     <div
                       key={index}
-                      className="p-6 bg-zinc-800/50 border border-zinc-700/50 rounded-lg space-y-6"
+                      className="p-4 sm:p-6 bg-zinc-800/50 border border-zinc-700/50 rounded-lg space-y-4 sm:space-y-6"
                     >
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center justify-between mb-1 sm:mb-2">
                         <h3 className="text-sm font-semibold text-blue-400">
                           Course {index + 1}
                         </h3>
-                        <div className="text-xs font-medium text-zinc-400 bg-zinc-800/80 px-2.5 py-1 rounded-full">
+                        <div className="text-xs font-medium text-zinc-400 bg-zinc-800/80 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full">
                           {course.credits} Credits
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
                         <Select
                           label="Grade"
                           value={course.grade}
@@ -446,6 +445,7 @@ export default function GPACalculator() {
                           updateCourse(index, "isRepeat", e.target.checked)
                         }
                         label="Repeating this course"
+                        className="max-w-full overflow-hidden text-ellipsis"
                       />
 
                       {course.isRepeat && (
@@ -473,19 +473,23 @@ export default function GPACalculator() {
           {/* Right Column - Results Section */}
           <div className="space-y-8">
             <Card title="GPA Calculation Result">
-              <div className="text-center mb-8">
+              <div className="text-center mb-6 md:mb-8">
                 <div className="inline-flex items-baseline">
-                  <span className="text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
+                  <span className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
                     {newCumulativeGPA.toFixed(3)}
                   </span>
-                  <span className="text-2xl text-zinc-400 ml-2">/4.00</span>
+                  <span className="text-xl md:text-2xl text-zinc-400 ml-2">
+                    /4.00
+                  </span>
                 </div>
-                <p className="text-zinc-400 text-base mt-3">Cumulative GPA</p>
+                <p className="text-zinc-400 text-sm md:text-base mt-3">
+                  Cumulative GPA
+                </p>
               </div>
 
               <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="flex justify-between items-center p-6 rounded-2xl bg-zinc-800/50 border border-zinc-700/50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
+                  <div className="flex justify-between items-center p-4 sm:p-6 rounded-2xl bg-zinc-800/50 border border-zinc-700/50">
                     <span className="text-sm font-medium text-zinc-300">
                       Grade Points
                     </span>
@@ -494,7 +498,7 @@ export default function GPACalculator() {
                     </span>
                   </div>
 
-                  <div className="flex justify-between items-center p-6 rounded-2xl bg-zinc-800/50 border border-zinc-700/50">
+                  <div className="flex justify-between items-center p-4 sm:p-6 rounded-2xl bg-zinc-800/50 border border-zinc-700/50">
                     <span className="text-sm font-medium text-zinc-300">
                       Total Credits
                     </span>
@@ -505,15 +509,15 @@ export default function GPACalculator() {
                 </div>
 
                 {/* GPA Graph */}
-                <div className="mt-8 pt-6 border-t border-zinc-800">
+                <div className="mt-6 md:mt-8 pt-6 border-t border-zinc-800 overflow-x-hidden">
                   <h3 className="text-base font-semibold text-zinc-200 mb-2">
                     GPA Trend
                   </h3>
-                  <p className="text-sm text-zinc-400 mb-6">
+                  <p className="text-xs sm:text-sm text-zinc-400 mb-4 md:mb-6">
                     Visualizes the progression from your previous cumulative GPA
                     to your projected GPA after this semester.
                   </p>
-                  <div className="h-[200px] w-full">
+                  <div className="h-[180px] sm:h-[200px] w-full">
                     <Line
                       data={{
                         labels: ["Previous", "Current"],
@@ -670,14 +674,14 @@ export default function GPACalculator() {
         </div>
 
         {/* Future Scenarios Section - Full Width */}
-        <div className="mt-8">
+        <div className="mt-6 md:mt-8">
           <Card title="Future Scenarios">
-            <p className="text-base text-zinc-300 mb-8">
+            <p className="text-base text-zinc-300 mb-6 md:mb-8">
               Explore possible outcomes based on different course loads for your
               next semester
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
               {scenarios.map((scenario, index) => (
                 <div
                   key={index}
@@ -712,7 +716,7 @@ export default function GPACalculator() {
                     </Button>
                   </div>
 
-                  <div className="p-6 grid grid-cols-2 gap-6">
+                  <div className="p-3 sm:p-4 md:p-6 grid grid-cols-2 gap-2 sm:gap-4 md:gap-6">
                     <div className="space-y-1.5">
                       <div className="text-sm text-zinc-400">Term GPA</div>
                       <div className="text-2xl font-semibold text-white">
@@ -733,7 +737,7 @@ export default function GPACalculator() {
                         {scenario.grades.map((grade, i) => (
                           <span
                             key={i}
-                            className="px-2.5 py-1 bg-zinc-700/80 rounded-full text-sm font-medium text-white"
+                            className="px-2 sm:px-2.5 py-0.5 sm:py-1 bg-zinc-700/80 rounded-full text-xs sm:text-sm font-medium text-white"
                           >
                             {grade}
                           </span>
