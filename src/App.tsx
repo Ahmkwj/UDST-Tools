@@ -8,6 +8,7 @@ import {
 import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
 import GPACalculator from "./pages/GPACalculator";
+import GradeCalculator from "./pages/GradeCalculator";
 import AttendanceCalculator from "./pages/AttendanceCalculator";
 import ScheduleMaker from "./pages/ScheduleMaker";
 
@@ -23,6 +24,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/gpa-calculator" element={<GPACalculator />} />
+          <Route path="/grade-calculator" element={<GradeCalculator />} />
           <Route
             path="/attendance-calculator"
             element={<AttendanceCalculator />}
