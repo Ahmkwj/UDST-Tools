@@ -21,7 +21,6 @@ type GradeScale = {
 };
 
 export default function GradeCalculator() {
-  const [courseName, setCourseName] = useState<string>("");
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [totalWeight, setTotalWeight] = useState<number>(0);
 
@@ -195,12 +194,6 @@ export default function GradeCalculator() {
       points: 0,
       description: "",
     };
-  };
-
-  // Reset calculator
-  const resetCalculator = () => {
-    setCourseName("");
-    setAssignments([]);
   };
 
   const currentGrade = calculateCurrentGrade();
