@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import * as pdfjsLib from "pdfjs-dist";
@@ -19,23 +19,6 @@ type ClassSession = {
 
 type WeeklySchedule = {
   [key: string]: ClassSession[];
-};
-
-type Course = {
-  courseCode: string;
-  courseName: string;
-  units: string;
-  sections: {
-    type: string;
-    section: string;
-    class: string;
-    schedule: {
-      day: string;
-      startTime: string;
-      endTime: string;
-      room: string;
-    }[];
-  }[];
 };
 
 export default function ScheduleMaker() {
