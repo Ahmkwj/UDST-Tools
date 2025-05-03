@@ -676,7 +676,7 @@ export default function GPACalculator() {
                             borderWidth: 1,
                             displayColors: false,
                             callbacks: {
-                              label: (context) =>
+                              label: (context: any) =>
                                 `GPA: ${context.parsed.y.toFixed(3)}`,
                             },
                           },
