@@ -22,10 +22,9 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    /* Types */
-    "types": [],
-    "typeRoots": ["./node_modules/@types", "./src"]
+    /* Types - Minimal configuration to prevent type errors */
+    "types": []
   },
-  "include": ["src", "src/types.d.ts"],
+  "include": ["src"],
   "exclude": ["**/*.spec.ts", "**/*.test.ts", "**/*.spec.tsx", "**/*.test.tsx"]
 }
