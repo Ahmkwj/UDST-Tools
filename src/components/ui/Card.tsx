@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocale } from "../../context/LanguageContext";
 
 interface CardProps {
   children: React.ReactNode;
@@ -7,11 +8,14 @@ interface CardProps {
 }
 
 export default function Card({ children, className = "", title }: CardProps) {
+  const locale = useLocale();
+
   return (
     <section
       className={`
         bg-zinc-900/70 backdrop-blur-sm rounded-xl p-6 
         shadow-lg ring-1 ring-zinc-800/50
+        ${locale === "ar" ? "text-right" : "text-left"}
         ${className}
       `}
     >

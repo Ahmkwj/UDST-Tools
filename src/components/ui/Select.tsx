@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocale } from "../../context/LanguageContext";
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
@@ -16,10 +17,17 @@ export default function Select({
   children,
   ...props
 }: SelectProps) {
+  const locale = useLocale();
+  const isRTL = locale === "ar";
+
   return (
     <div className={`space-y-1 ${fullWidth ? "w-full" : ""}`}>
       {label && (
-        <label className="block text-sm font-medium text-zinc-300">
+        <label
+          className={`block text-sm font-medium text-zinc-300 ${
+            isRTL ? "text-right" : "text-left"
+          }`}
+        >
           {label}
         </label>
       )}
@@ -34,13 +42,19 @@ export default function Select({
             hover:border-zinc-600
             transition-colors duration-200
             appearance-none
+            ${isRTL ? "text-right pr-4" : "text-left"}
             ${className}
           `}
+          dir={isRTL ? "rtl" : "ltr"}
           {...props}
         >
           {children}
         </select>
-        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-zinc-400">
+        <div
+          className={`pointer-events-none absolute inset-y-0 ${
+            isRTL ? "left-0" : "right-0"
+          } flex items-center px-2 text-zinc-400`}
+        >
           <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
             <path
               fillRule="evenodd"
@@ -51,7 +65,11 @@ export default function Select({
         </div>
       </div>
       {helperText && (
-        <p className={`text-xs ${error ? "text-red-400" : "text-zinc-400"}`}>
+        <p
+          className={`text-xs ${error ? "text-red-400" : "text-zinc-400"} ${
+            isRTL ? "text-right" : "text-left"
+          }`}
+        >
           {helperText}
         </p>
       )}

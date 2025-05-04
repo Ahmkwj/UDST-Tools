@@ -5,6 +5,7 @@ import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Checkbox from "../components/ui/Checkbox";
 import Footer from "../components/ui/Footer";
+import { useLocale } from "../context/LanguageContext";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -45,6 +46,7 @@ type Scenario = {
 };
 
 export default function GPACalculator() {
+  const locale = useLocale();
   const [totalGradePoints, setTotalGradePoints] = useState<number | string>("");
   const [totalCredits, setTotalCredits] = useState<number | string>("");
   const [numberOfCourses, setNumberOfCourses] = useState<number>(0);
@@ -360,14 +362,25 @@ export default function GPACalculator() {
             {/* Left Column - Input Sections */}
             <div className="space-y-6 md:space-y-8 h-full flex flex-col">
               {/* Basic Information Card */}
-              <Card title="Current GPA Information" className="relative">
+              <Card
+                title={
+                  locale === "ar"
+                    ? "معلومات المعدل التراكمي الحالي"
+                    : "Current GPA Information"
+                }
+                className="relative"
+              >
                 <div className="absolute top-6 right-6">
                   <Button
                     variant="outline"
                     size="sm"
                     className="!p-2"
                     onClick={resetForm}
-                    aria-label="Reset calculator"
+                    aria-label={
+                      locale === "ar"
+                        ? "إعادة تعيين الآلة الحاسبة"
+                        : "Reset calculator"
+                    }
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -389,11 +402,17 @@ export default function GPACalculator() {
                 <form className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
                     <Input
-                      label="Total Grade Points"
+                      label={
+                        locale === "ar"
+                          ? "مجموع نقاط الدرجات"
+                          : "Total Grade Points"
+                      }
                       type="number"
                       min="0"
                       step="1"
-                      placeholder="e.g. 95.500"
+                      placeholder={
+                        locale === "ar" ? "مثال: 95.500" : "e.g. 95.500"
+                      }
                       value={totalGradePoints}
                       onChange={(e) => {
                         const value = parseFloat(e.target.value);
@@ -403,15 +422,23 @@ export default function GPACalculator() {
                           setTotalGradePoints(Math.max(0, value));
                         }
                       }}
-                      helperText="Total points earned so far"
+                      helperText={
+                        locale === "ar"
+                          ? "مجموع النقاط المكتسبة حتى الآن"
+                          : "Total points earned so far"
+                      }
                     />
 
                     <Input
-                      label="Total Earned Credits"
+                      label={
+                        locale === "ar"
+                          ? "إجمالي الساعات المكتسبة"
+                          : "Total Earned Credits"
+                      }
                       type="number"
                       min="0"
                       step="1"
-                      placeholder="e.g. 50"
+                      placeholder={locale === "ar" ? "مثال: 50" : "e.g. 50"}
                       value={totalCredits}
                       onChange={(e) => {
                         const value = parseFloat(e.target.value);
@@ -421,17 +448,27 @@ export default function GPACalculator() {
                           setTotalCredits(Math.max(0, value));
                         }
                       }}
-                      helperText="Total credits earned so far"
+                      helperText={
+                        locale === "ar"
+                          ? "إجمالي الساعات المكتسبة حتى الآن"
+                          : "Total credits earned so far"
+                      }
                     />
                   </div>
 
                   <Select
-                    label="Number of Courses"
+                    label={
+                      locale === "ar" ? "عدد المقررات" : "Number of Courses"
+                    }
                     value={numberOfCourses}
                     onChange={(e) =>
                       setNumberOfCourses(parseInt(e.target.value))
                     }
-                    helperText="Choose the number of courses you are currently taking"
+                    helperText={
+                      locale === "ar"
+                        ? "اختر عدد المقررات التي تدرسها حاليًا"
+                        : "Choose the number of courses you are currently taking"
+                    }
                   >
                     {[0, 1, 2, 3, 4, 5, 6].map((num) => (
                       <option key={num} value={num}>
@@ -444,7 +481,9 @@ export default function GPACalculator() {
 
               {/* Course Information Card */}
               <Card
-                title="Course Information"
+                title={
+                  locale === "ar" ? "معلومات المقررات" : "Course Information"
+                }
                 className="bg-zinc-900/70 backdrop-blur-sm ring-1 ring-zinc-800/50 flex-1 relative min-h-[250px] sm:min-h-[300px] md:min-h-[350px]"
               >
                 {numberOfCourses === 0 ? (
@@ -464,10 +503,14 @@ export default function GPACalculator() {
                       />
                     </svg>
                     <p className="text-zinc-400 text-sm sm:text-base md:text-lg mb-1 sm:mb-2">
-                      No Courses Selected
+                      {locale === "ar"
+                        ? "لم يتم اختيار أي مقررات"
+                        : "No Courses Selected"}
                     </p>
                     <p className="text-zinc-500 text-xs sm:text-sm max-w-[180px] sm:max-w-[250px]">
-                      Choose the number of courses you're taking this semester
+                      {locale === "ar"
+                        ? "اختر عدد المقررات التي تدرسها هذا الفصل"
+                        : "Choose the number of courses you're taking this semester"}
                     </p>
                   </div>
                 ) : (
@@ -479,16 +522,19 @@ export default function GPACalculator() {
                       >
                         <div className="flex items-center justify-between mb-1 sm:mb-2">
                           <h3 className="text-sm font-semibold text-blue-400">
-                            Course {index + 1}
+                            {locale === "ar"
+                              ? `المقرر ${index + 1}`
+                              : `Course ${index + 1}`}
                           </h3>
                           <div className="text-xs font-medium text-zinc-400 bg-zinc-800/80 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full">
-                            {course.credits} Credits
+                            {course.credits}{" "}
+                            {locale === "ar" ? "ساعات" : "Credits"}
                           </div>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
                           <Select
-                            label="Grade"
+                            label={locale === "ar" ? "الدرجة" : "Grade"}
                             value={course.grade}
                             onChange={(e) =>
                               updateCourse(index, "grade", e.target.value)
@@ -504,7 +550,7 @@ export default function GPACalculator() {
                           </Select>
 
                           <Input
-                            label="Credits"
+                            label={locale === "ar" ? "الساعات" : "Credits"}
                             type="number"
                             min="1"
                             step="1"
@@ -525,7 +571,11 @@ export default function GPACalculator() {
                           onChange={(e) =>
                             updateCourse(index, "isRepeat", e.target.checked)
                           }
-                          label="Repeating this course"
+                          label={
+                            locale === "ar"
+                              ? "إعادة هذا المقرر"
+                              : "Repeating this course"
+                          }
                           className="max-w-full overflow-hidden text-ellipsis"
                         />
 
@@ -557,7 +607,13 @@ export default function GPACalculator() {
 
             {/* Right Column - Results Section */}
             <div className="space-y-8">
-              <Card title="GPA Calculation Result">
+              <Card
+                title={
+                  locale === "ar"
+                    ? "نتيجة حساب المعدل"
+                    : "GPA Calculation Result"
+                }
+              >
                 <div className="text-center mb-6 md:mb-8">
                   <div className="inline-flex items-baseline">
                     <span className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
@@ -568,7 +624,7 @@ export default function GPACalculator() {
                     </span>
                   </div>
                   <p className="text-zinc-400 text-sm md:text-base mt-3">
-                    Cumulative GPA
+                    {locale === "ar" ? "المعدل التراكمي" : "Cumulative GPA"}
                   </p>
                 </div>
 
@@ -576,7 +632,7 @@ export default function GPACalculator() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
                     <div className="flex justify-between items-center p-4 sm:p-6 rounded-2xl bg-zinc-800/50 border border-zinc-700/50">
                       <span className="text-sm font-medium text-zinc-300">
-                        Grade Points
+                        {locale === "ar" ? "نقاط الدرجات" : "Grade Points"}
                       </span>
                       <span className="text-base font-semibold text-white">
                         {newTotalGradePoints.toFixed(3)}
@@ -585,7 +641,7 @@ export default function GPACalculator() {
 
                     <div className="flex justify-between items-center p-4 sm:p-6 rounded-2xl bg-zinc-800/50 border border-zinc-700/50">
                       <span className="text-sm font-medium text-zinc-300">
-                        Total Credits
+                        {locale === "ar" ? "إجمالي الساعات" : "Total Credits"}
                       </span>
                       <span className="text-base font-semibold text-white">
                         {newTotalCredits.toFixed(0)}
@@ -596,11 +652,12 @@ export default function GPACalculator() {
                   {/* GPA Graph */}
                   <div className="mt-6 md:mt-8 pt-6 border-t border-zinc-800 overflow-x-hidden">
                     <h3 className="text-base font-semibold text-zinc-200 mb-2">
-                      GPA Trend
+                      {locale === "ar" ? "اتجاه المعدل التراكمي" : "GPA Trend"}
                     </h3>
                     <p className="text-xs sm:text-sm text-zinc-400 mb-4 md:mb-6">
-                      Visualizes the progression from your previous cumulative
-                      GPA to your projected GPA after this semester.
+                      {locale === "ar"
+                        ? "يوضح التقدم من المعدل التراكمي السابق إلى المعدل التراكمي المتوقع بعد هذا الفصل."
+                        : "Visualizes the progression from your previous cumulative GPA to your projected GPA after this semester."}
                     </p>
                     <div className="h-[180px] sm:h-[200px] w-full">
                       <Line

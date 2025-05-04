@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocale } from "../../context/LanguageContext";
 
 interface CheckboxProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
@@ -12,8 +13,15 @@ export default function Checkbox({
   className = "",
   ...props
 }: CheckboxProps) {
+  const locale = useLocale();
+  const isRTL = locale === "ar";
+
   return (
-    <label className="relative flex items-start cursor-pointer group">
+    <label
+      className={`relative flex items-start cursor-pointer group ${
+        isRTL ? "flex-row-reverse" : ""
+      }`}
+    >
       <div className="flex items-center h-5">
         <input
           type="checkbox"
@@ -46,7 +54,7 @@ export default function Checkbox({
         </div>
       </div>
       {(label || description) && (
-        <div className="ml-3">
+        <div className={`${isRTL ? "mr-3 text-right" : "ml-3 text-left"}`}>
           {label && (
             <div className="text-sm font-medium text-zinc-300">{label}</div>
           )}

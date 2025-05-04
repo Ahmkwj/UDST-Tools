@@ -1,54 +1,100 @@
-# React + TypeScript + Vite
+# UDST Tools - Arabic Language Support Implementation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+This project implements Arabic language support using the following approach:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. **Locale-based Routing** - URLs structured as `/en/...` and `/ar/...`
+2. **RTL Support** - Dynamically setting `dir="rtl"` for Arabic UI
+3. **Inline Translation Strategy** - Using `locale === 'ar' ? 'Arabic text' : 'English text'` throughout
+4. **Language Switcher** - A toggle in the sidebar to switch between English and Arabic
 
-## Expanding the ESLint configuration
+## Implementation Details
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 1. Language Context
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+A React context (`LanguageContext`) manages the current locale and provides hooks:
+
+- `useLocale()` - Get the current locale ('en' or 'ar')
+- `useSetLocale()` - Set a new locale
+- `useIsRTL()` - Check if current locale is RTL (returns true for Arabic)
+
+### 2. Routing Structure
+
+We use React Router with localized routes:
+
+- `/en` and `/ar` for home pages
+- `/en/gpa-calculator` and `/ar/gpa-calculator` for sub-pages
+- Automatic redirection from `/` to `/en` or `/ar` based on user preference
+
+### 3. RTL Support
+
+RTL direction is implemented via:
+
+- Setting `dir="rtl"` on the HTML document when Arabic is active
+- Adding the `rtl` class to the body for CSS targeting
+- CSS utilities in `index.css` to handle RTL-specific styling
+- Component-level RTL accommodations (text alignment, flex direction, etc.)
+
+### 4. Translation Strategy
+
+All UI text is translated using conditional rendering based on the current locale:
+
+```tsx
+{
+  locale === "ar" ? "نص عربي" : "English text";
+}
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+This approach is used consistently throughout all components.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 5. Components with Language Support
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+All core UI components have been modified to support RTL layout and Arabic text:
+
+- **Card** - Supports RTL text alignment
+- **Button** - Reverses flex direction in RTL mode
+- **Input** - Sets `dir="rtl"` and text alignment
+- **Select** - Adjusts dropdown indicator position
+- **Checkbox** - Reverses alignment in RTL mode
+- **Sidebar** - Full RTL support with Arabic navigation labels
+- **Footer** - Localized text
+
+### 6. Page Content
+
+Pages like GPACalculator have been updated with Arabic translations for:
+
+- Section titles
+- Labels
+- Helper text
+- Buttons
+- Error messages
+
+## Usage Example
+
+```tsx
+import { useLocale } from "../context/LanguageContext";
+
+function MyComponent() {
+  const locale = useLocale();
+
+  return (
+    <div>
+      <h1>{locale === "ar" ? "العنوان بالعربية" : "English Title"}</h1>
+      <p>{locale === "ar" ? "محتوى النص بالعربية" : "English content text"}</p>
+    </div>
+  );
+}
 ```
+
+## Language Switcher
+
+A language switcher component in the sidebar allows users to toggle between English and Arabic:
+
+```tsx
+<button onClick={handleLanguageChange}>
+  {locale === "ar" ? "English" : "العربية"}
+</button>
+```
+
+When clicked, it changes the locale in the context and navigates to the equivalent page in the new locale.

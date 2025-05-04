@@ -1,20 +1,24 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useLocale } from "../context/LanguageContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 type SidebarProps = {
   children: React.ReactNode;
   currentPath: string;
-  onNavigate: (path: string) => void;
+  onNavigate?: (path: string) => void; // Make onNavigate optional
 };
 
 interface NavItem {
   name: string;
   path: string;
   icon: React.ReactNode;
+  nameAr?: string; // Arabic name for menu items
 }
 
 interface NavCategory {
   name: string;
+  nameAr?: string; // Arabic name for category
   items: NavItem[];
 }
 
@@ -23,6 +27,8 @@ export default function Sidebar({
   currentPath,
   onNavigate,
 }: SidebarProps) {
+  const locale = useLocale();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -30,9 +36,11 @@ export default function Sidebar({
   const navCategories: NavCategory[] = [
     {
       name: "Main",
+      nameAr: "الرئيسية",
       items: [
         {
           name: "Dashboard",
+          nameAr: "لوحة التحكم",
           path: "/",
           icon: (
             <svg
@@ -55,9 +63,11 @@ export default function Sidebar({
     },
     {
       name: "Academic Tools",
+      nameAr: "أدوات أكاديمية",
       items: [
         {
           name: "GPA Calculator",
+          nameAr: "حاسبة المعدل التراكمي",
           path: "/gpa-calculator",
           icon: (
             <svg
@@ -78,6 +88,7 @@ export default function Sidebar({
         },
         {
           name: "Grade Calculator",
+          nameAr: "حاسبة الدرجات",
           path: "/grade-calculator",
           icon: (
             <svg
@@ -100,9 +111,11 @@ export default function Sidebar({
     },
     {
       name: "Attendance & Schedule",
+      nameAr: "الحضور والجدول",
       items: [
         {
           name: "Attendance",
+          nameAr: "الحضور",
           path: "/attendance-calculator",
           icon: (
             <svg
@@ -123,6 +136,7 @@ export default function Sidebar({
         },
         {
           name: "Schedule",
+          nameAr: "الجدول",
           path: "/schedule-maker",
           icon: (
             <svg
@@ -145,9 +159,11 @@ export default function Sidebar({
     },
     {
       name: "Info",
+      nameAr: "معلومات",
       items: [
         {
           name: "About",
+          nameAr: "حول",
           path: "/about",
           icon: (
             <svg
@@ -187,14 +203,27 @@ export default function Sidebar({
   }, []);
 
   const handleNavigation = (path: string) => {
-    onNavigate(path);
+    // Ensure path has locale prefix
+    const localizedPath = path === "/" ? `/${locale}` : `/${locale}${path}`;
+
+    if (onNavigate) {
+      onNavigate(localizedPath);
+    }
+
     if (isMobile) {
       setIsOpen(false);
     }
+
+    // Use navigate directly for better routing control
+    navigate(localizedPath);
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-black text-white">
+    <div
+      className={`flex h-screen w-screen overflow-hidden bg-black text-white ${
+        locale === "ar" ? "rtl" : "ltr"
+      }`}
+    >
       {/* Mobile overlay */}
       {isMobile && (
         <div
@@ -209,8 +238,14 @@ export default function Sidebar({
       <div
         className={`${
           isMobile
-            ? `fixed inset-y-0 left-0 z-30 w-[280px] ${
-                isOpen ? "translate-x-0" : "-translate-x-full"
+            ? `fixed inset-y-0 ${
+                locale === "ar" ? "right-0" : "left-0"
+              } z-30 w-[280px] ${
+                isOpen
+                  ? "translate-x-0"
+                  : locale === "ar"
+                  ? "translate-x-full"
+                  : "-translate-x-full"
               }`
             : `relative ${isOpen ? "w-64" : "w-20"}`
         } bg-zinc-900 border-r border-zinc-800/50 transition-all duration-300 ease-in-out flex flex-col shrink-0 shadow-lg`}
@@ -222,7 +257,7 @@ export default function Sidebar({
         >
           {(!isMobile && isOpen) || (isMobile && isOpen) ? (
             <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-              UDST Tools
+              {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
             </h3>
           ) : !isMobile ? (
             <div className="w-full flex justify-center">
@@ -279,41 +314,68 @@ export default function Sidebar({
             <div key={category.name} className={index !== 0 ? "mt-6" : ""}>
               {isOpen && (
                 <h4 className="px-2 mb-2 text-xs font-medium text-zinc-500 uppercase tracking-wider">
-                  {category.name}
+                  {locale === "ar" ? category.nameAr : category.name}
                 </h4>
               )}
               <ul className="space-y-1">
                 {category.items.map((item) => (
                   <li key={item.path}>
-                    <Link
-                      to={item.path}
-                      onClick={() => handleNavigation(item.path)}
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleNavigation(item.path);
+                      }}
                       className={`flex items-center ${
                         isOpen ? "space-x-3" : "justify-center"
                       } p-2 rounded-lg ${
-                        currentPath === item.path
+                        currentPath === `/${locale}${item.path}` ||
+                        (item.path === "/" && currentPath === `/${locale}`)
                           ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium shadow-md"
                           : "text-zinc-400 hover:text-white hover:bg-zinc-800"
                       } transition-colors group relative`}
-                      title={item.name}
+                      title={locale === "ar" ? item.nameAr : item.name}
                     >
                       <span className="text-white">{item.icon}</span>
                       {isOpen && (
-                        <span className="text-white">{item.name}</span>
+                        <span
+                          className={`text-white ${
+                            locale === "ar" ? "mr-3" : "ml-3"
+                          }`}
+                        >
+                          {locale === "ar" ? item.nameAr : item.name}
+                        </span>
                       )}
 
                       {/* Tooltip for collapsed state */}
                       {!isOpen && !isMobile && (
-                        <div className="absolute left-full ml-2 px-2 py-1 bg-zinc-800 text-white text-sm rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                          {item.name}
+                        <div
+                          className={`absolute ${
+                            locale === "ar"
+                              ? "right-full mr-2"
+                              : "left-full ml-2"
+                          } px-2 py-1 bg-zinc-800 text-white text-sm rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all`}
+                        >
+                          {locale === "ar" ? item.nameAr : item.name}
                         </div>
                       )}
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
+
+          {/* Language Switcher */}
+          {isOpen && (
+            <div className="mt-6 px-2">
+              <div className="h-px bg-zinc-800/50 mb-4"></div>
+              <h4 className="px-2 mb-2 text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                {locale === "ar" ? "اللغة" : "Language"}
+              </h4>
+              <LanguageSwitcher />
+            </div>
+          )}
         </nav>
 
         <div
@@ -322,7 +384,9 @@ export default function Sidebar({
           } text-center text-xs text-zinc-500 border-t border-zinc-800/50`}
         >
           {isOpen ? (
-            <p>UDST Tools v1.0</p>
+            <p>
+              {locale === "ar" ? "أدوات UDST الإصدار 1.0" : "UDST Tools v1.0"}
+            </p>
           ) : (
             <p className="text-[10px]">v1.0</p>
           )}
@@ -333,8 +397,14 @@ export default function Sidebar({
       {isMobile && (
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className={`fixed top-4 left-4 z-40 p-2 rounded-lg bg-zinc-900/90 backdrop-blur-sm text-white shadow-lg border border-zinc-800/50 transition-transform duration-300 ${
-            isOpen ? "translate-x-[280px]" : "translate-x-0"
+          className={`fixed top-4 ${
+            locale === "ar" ? "right-4" : "left-4"
+          } z-40 p-2 rounded-lg bg-zinc-900/90 backdrop-blur-sm text-white shadow-lg border border-zinc-800/50 transition-transform duration-300 ${
+            isOpen
+              ? locale === "ar"
+                ? "-translate-x-[280px]"
+                : "translate-x-[280px]"
+              : "translate-x-0"
           }`}
           aria-label={isOpen ? "Close menu" : "Open menu"}
         >
@@ -373,7 +443,13 @@ export default function Sidebar({
       )}
 
       {/* Main content */}
-      <div className="flex-1 h-full overflow-auto">{children}</div>
+      <div
+        className={`flex-1 h-full overflow-auto ${
+          locale === "ar" ? "text-right" : "text-left"
+        }`}
+      >
+        {children}
+      </div>
     </div>
   );
 }
