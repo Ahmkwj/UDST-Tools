@@ -6,7 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
-import Home from "./pages/Home";
+import Home from "../public/index.tsx";
 import GPACalculator from "./pages/GPACalculator";
 import GradeCalculator from "./pages/GradeCalculator";
 import AttendanceCalculator from "./pages/AttendanceCalculator";

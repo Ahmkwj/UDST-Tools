@@ -25,6 +25,6 @@
     /* Types - Minimal configuration to prevent type errors */
     "types": []
   },
-  "include": ["src"],
+  "include": ["src", "public/index.tsx"],
   "exclude": ["**/*.spec.ts", "**/*.test.ts", "**/*.spec.tsx", "**/*.test.tsx"]
 }
