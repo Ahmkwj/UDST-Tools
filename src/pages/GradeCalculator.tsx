@@ -3,6 +3,7 @@ import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import Footer from "../components/ui/Footer";
+import { useLocale } from "../context/LanguageContext";
 
 type Assignment = {
   id: string;
@@ -18,10 +19,12 @@ type GradeScale = {
     color: string;
     points: number;
     description: string;
+    descriptionAr: string;
   };
 };
 
 export default function GradeCalculator() {
+  const locale = useLocale();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [totalWeight, setTotalWeight] = useState<number>(0);
 
@@ -33,6 +36,7 @@ export default function GradeCalculator() {
       color: "text-emerald-400",
       points: 4.0,
       description: "Excellent",
+      descriptionAr: "ممتاز",
     },
     "B+": {
       min: 85,
@@ -40,6 +44,7 @@ export default function GradeCalculator() {
       color: "text-blue-400",
       points: 3.5,
       description: "Very Good",
+      descriptionAr: "جيد جداً مرتفع",
     },
     B: {
       min: 80,
@@ -47,6 +52,7 @@ export default function GradeCalculator() {
       color: "text-blue-400",
       points: 3.0,
       description: "Very Good",
+      descriptionAr: "جيد جداً",
     },
     "C+": {
       min: 75,
@@ -54,6 +60,7 @@ export default function GradeCalculator() {
       color: "text-yellow-400",
       points: 2.5,
       description: "Good",
+      descriptionAr: "جيد مرتفع",
     },
     C: {
       min: 70,
@@ -61,6 +68,7 @@ export default function GradeCalculator() {
       color: "text-yellow-400",
       points: 2.0,
       description: "Good",
+      descriptionAr: "جيد",
     },
     "D+": {
       min: 65,
@@ -68,6 +76,7 @@ export default function GradeCalculator() {
       color: "text-orange-400",
       points: 1.5,
       description: "Pass",
+      descriptionAr: "مقبول مرتفع",
     },
     D: {
       min: 60,
@@ -75,6 +84,7 @@ export default function GradeCalculator() {
       color: "text-orange-400",
       points: 1.0,
       description: "Pass",
+      descriptionAr: "مقبول",
     },
     F: {
       min: 0,
@@ -82,17 +92,18 @@ export default function GradeCalculator() {
       color: "text-red-400",
       points: 0.0,
       description: "Fail",
+      descriptionAr: "راسب",
     },
   };
 
   // Add a new assignment
   const addAssignment = () => {
     const defaultAssignments = [
-      { name: "Final", weight: 30 },
-      { name: "Laboratory", weight: 10 },
-      { name: "Midterm", weight: 25 },
-      { name: "Quiz", weight: 20 },
-      { name: "Project", weight: 15 },
+      { name: locale === "ar" ? "الاختبار النهائي" : "Final", weight: 30 },
+      { name: locale === "ar" ? "اللابات" : "Laboratory", weight: 10 },
+      { name: locale === "ar" ? "الاختبار النصفي" : "Midterm", weight: 25 },
+      { name: locale === "ar" ? "الكويزات" : "Quiz", weight: 20 },
+      { name: locale === "ar" ? "المشروع" : "Project", weight: 15 },
     ];
 
     const newAssignment: Assignment = {
@@ -100,6 +111,8 @@ export default function GradeCalculator() {
       name:
         assignments.length < defaultAssignments.length
           ? defaultAssignments[assignments.length].name
+          : locale === "ar"
+          ? `التكليف ${assignments.length + 1}`
           : `Assignment ${assignments.length + 1}`,
       weight:
         assignments.length < defaultAssignments.length
@@ -219,7 +232,10 @@ export default function GradeCalculator() {
             {/* Left Column - Course and Assignment Management */}
             <div className="space-y-4 md:space-y-6">
               {/* Assignments Card */}
-              <Card title="Assignments" className="relative">
+              <Card
+                title={locale === "ar" ? "التكليفات" : "Assignments"}
+                className="relative"
+              >
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-4 md:mb-6">
                   <div className="flex flex-wrap gap-2">
                     <div
@@ -229,11 +245,12 @@ export default function GradeCalculator() {
                           : "bg-blue-500/20 text-blue-400 border border-blue-500/20"
                       }`}
                     >
-                      Total Weight: {totalWeight.toFixed(0)}%
+                      {locale === "ar" ? "النسبة الكلية" : "Total Weight"}:{" "}
+                      {totalWeight.toFixed(0)}%
                     </div>
                     {isWeightExceeded && (
                       <div className="bg-red-500/20 text-red-400 border border-red-500/20 text-xs sm:text-sm px-2 py-1 rounded-lg">
-                        Exceeds 100%
+                        {locale === "ar" ? "يتجاوز 100%" : "Exceeds 100%"}
                       </div>
                     )}
                   </div>
@@ -242,7 +259,9 @@ export default function GradeCalculator() {
                     size="sm"
                     onClick={addAssignment}
                     className="!p-2"
-                    aria-label="Add assignment"
+                    aria-label={
+                      locale === "ar" ? "إضافة تكليف" : "Add assignment"
+                    }
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -272,10 +291,14 @@ export default function GradeCalculator() {
                       />
                     </svg>
                     <p className="text-zinc-400 text-sm sm:text-base mb-1">
-                      No Assignments Yet
+                      {locale === "ar"
+                        ? "لا توجد تكليفات بعد"
+                        : "No Assignments Yet"}
                     </p>
                     <p className="text-zinc-500 text-xs sm:text-sm max-w-[180px] sm:max-w-[250px]">
-                      Add your first assignment to start calculating your grade
+                      {locale === "ar"
+                        ? "أضف تكليفك الأول لبدء حساب درجتك"
+                        : "Add your first assignment to start calculating your grade"}
                     </p>
                   </div>
                 ) : (
@@ -290,7 +313,11 @@ export default function GradeCalculator() {
                         {/* Mobile view - Stacked layout */}
                         <div className="block lg:hidden space-y-3">
                           <Input
-                            label="Assignment Name"
+                            label={
+                              locale === "ar"
+                                ? "اسم التكليف"
+                                : "Assignment Name"
+                            }
                             value={assignment.name}
                             onChange={(e) =>
                               updateAssignment(
@@ -302,7 +329,9 @@ export default function GradeCalculator() {
                           />
                           <div className="grid grid-cols-2 gap-3">
                             <Input
-                              label="Weight (%)"
+                              label={
+                                locale === "ar" ? "الوزن (%)" : "Weight (%)"
+                              }
                               type="number"
                               min="0"
                               max="100"
@@ -316,7 +345,9 @@ export default function GradeCalculator() {
                               }
                             />
                             <Input
-                              label="Score (%)"
+                              label={
+                                locale === "ar" ? "الدرجة (%)" : "Score (%)"
+                              }
                               type="number"
                               min="0"
                               max="100"
@@ -333,7 +364,11 @@ export default function GradeCalculator() {
                                       )
                                 )
                               }
-                              placeholder="Not graded"
+                              placeholder={
+                                locale === "ar"
+                                  ? "لم يتم التصحيح"
+                                  : "Not graded"
+                              }
                             />
                           </div>
                         </div>
@@ -342,7 +377,11 @@ export default function GradeCalculator() {
                         <div className="hidden lg:grid grid-cols-5 gap-4">
                           <div className="col-span-2">
                             <Input
-                              label="Assignment Name"
+                              label={
+                                locale === "ar"
+                                  ? "اسم التكليف"
+                                  : "Assignment Name"
+                              }
                               value={assignment.name}
                               onChange={(e) =>
                                 updateAssignment(
@@ -355,7 +394,9 @@ export default function GradeCalculator() {
                           </div>
                           <div className="col-span-3 grid grid-cols-2 gap-4">
                             <Input
-                              label="Weight (%)"
+                              label={
+                                locale === "ar" ? "الوزن (%)" : "Weight (%)"
+                              }
                               type="number"
                               min="0"
                               max="100"
@@ -369,7 +410,9 @@ export default function GradeCalculator() {
                               }
                             />
                             <Input
-                              label="Score (%)"
+                              label={
+                                locale === "ar" ? "الدرجة (%)" : "Score (%)"
+                              }
                               type="number"
                               min="0"
                               max="100"
@@ -386,7 +429,11 @@ export default function GradeCalculator() {
                                       )
                                 )
                               }
-                              placeholder="Not graded"
+                              placeholder={
+                                locale === "ar"
+                                  ? "لم يتم التصحيح"
+                                  : "Not graded"
+                              }
                             />
                           </div>
                         </div>
@@ -422,7 +469,11 @@ export default function GradeCalculator() {
                             size="sm"
                             onClick={() => removeAssignment(assignment.id)}
                             className="!p-2"
-                            aria-label="Remove assignment"
+                            aria-label={
+                              locale === "ar"
+                                ? "حذف التكليف"
+                                : "Remove assignment"
+                            }
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -449,7 +500,13 @@ export default function GradeCalculator() {
 
             {/* Right Column - Grade Results */}
             <div className="space-y-4 md:space-y-6">
-              <Card title="Grade Calculation Results">
+              <Card
+                title={
+                  locale === "ar"
+                    ? "نتائج حساب الدرجات"
+                    : "Grade Calculation Results"
+                }
+              >
                 {!hasCompletedAssignments ? (
                   <div className="flex flex-col items-center justify-center py-6 sm:py-8 text-center">
                     <svg
@@ -467,11 +524,12 @@ export default function GradeCalculator() {
                       />
                     </svg>
                     <p className="text-zinc-400 text-sm sm:text-base mb-1">
-                      No Grades Yet
+                      {locale === "ar" ? "لا توجد درجات بعد" : "No Grades Yet"}
                     </p>
                     <p className="text-zinc-500 text-xs sm:text-sm max-w-[180px] sm:max-w-[250px]">
-                      Add assignments and their scores to see your grade
-                      calculation
+                      {locale === "ar"
+                        ? "أضف التكليفات ودرجاتها لرؤية حساب درجتك"
+                        : "Add assignments and their scores to see your grade calculation"}
                     </p>
                   </div>
                 ) : (
@@ -481,7 +539,9 @@ export default function GradeCalculator() {
                       {/* Current Standing */}
                       <div className="bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 rounded-xl border border-zinc-700/50 p-4 md:p-6 flex flex-col items-center justify-center">
                         <h3 className="text-xs md:text-sm font-medium text-zinc-400 uppercase tracking-wider mb-2 md:mb-4">
-                          Current Standing
+                          {locale === "ar"
+                            ? "الوضع الحالي"
+                            : "Current Standing"}
                         </h3>
                         <div className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent mb-1 md:mb-2">
                           {currentGrade.toFixed(1)}%
@@ -492,13 +552,20 @@ export default function GradeCalculator() {
                           {currentLetterGrade.letter}
                         </div>
                         <div className="text-xs md:text-sm text-zinc-400">
-                          {currentLetterGrade.points.toFixed(2)} GPA Points
+                          {currentLetterGrade.points.toFixed(2)}{" "}
+                          {locale === "ar" ? "نقاط المعدل" : "GPA Points"}
                         </div>
                         <div className="mt-3 pt-3 md:mt-4 md:pt-4 border-t border-zinc-700/50 text-center w-full">
                           <div className="text-xs md:text-sm text-zinc-500">
-                            Based on{" "}
-                            {assignments.filter((a) => a.score !== null).length}{" "}
-                            completed assignments
+                            {locale === "ar"
+                              ? `بناءً على ${
+                                  assignments.filter((a) => a.score !== null)
+                                    .length
+                                } تكليفات مكتملة`
+                              : `Based on ${
+                                  assignments.filter((a) => a.score !== null)
+                                    .length
+                                } completed assignments`}
                           </div>
                         </div>
                       </div>
@@ -506,7 +573,9 @@ export default function GradeCalculator() {
                       {/* Projected Final */}
                       <div className="bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 rounded-xl border border-zinc-700/50 p-4 md:p-6 flex flex-col items-center justify-center">
                         <h3 className="text-xs md:text-sm font-medium text-zinc-400 uppercase tracking-wider mb-2 md:mb-4">
-                          Projected Final
+                          {locale === "ar"
+                            ? "التوقع النهائي"
+                            : "Projected Final"}
                         </h3>
                         <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-1 md:mb-2">
                           {finalGrade.toFixed(1)}%
@@ -517,11 +586,14 @@ export default function GradeCalculator() {
                           {finalLetterGrade.letter}
                         </div>
                         <div className="text-xs md:text-sm text-zinc-400">
-                          {finalLetterGrade.points.toFixed(2)} GPA Points
+                          {finalLetterGrade.points.toFixed(2)}{" "}
+                          {locale === "ar" ? "نقاط المعدل" : "GPA Points"}
                         </div>
                         <div className="mt-3 pt-3 md:mt-4 md:pt-4 border-t border-zinc-700/50 text-center w-full">
                           <div className="text-xs md:text-sm text-zinc-500">
-                            If remaining work receives 0%
+                            {locale === "ar"
+                              ? "إذا حصلت على 0% في العمل المتبقي"
+                              : "If remaining work receives 0%"}
                           </div>
                         </div>
                       </div>
@@ -530,34 +602,40 @@ export default function GradeCalculator() {
                     {/* Additional Details */}
                     <div className="bg-zinc-800/30 rounded-xl border border-zinc-700/50 p-4 md:p-6">
                       <h3 className="text-xs md:text-sm font-medium text-zinc-400 uppercase tracking-wider mb-3 md:mb-4">
-                        Grade Breakdown
+                        {locale === "ar" ? "تفصيل الدرجات" : "Grade Breakdown"}
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
                         <div>
                           <div className="text-xs text-zinc-500 mb-1">
-                            Completed Work
+                            {locale === "ar"
+                              ? "العمل المكتمل"
+                              : "Completed Work"}
                           </div>
                           <div className="text-base md:text-lg font-medium text-zinc-200">
                             {assignments
                               .filter((a) => a.score !== null)
                               .reduce((sum, a) => sum + a.weight, 0)}
-                            % of total
+                            % {locale === "ar" ? "من المجموع" : "of total"}
                           </div>
                         </div>
                         <div>
                           <div className="text-xs text-zinc-500 mb-1">
-                            Remaining Work
+                            {locale === "ar"
+                              ? "العمل المتبقي"
+                              : "Remaining Work"}
                           </div>
                           <div className="text-base md:text-lg font-medium text-zinc-200">
                             {assignments
                               .filter((a) => a.score === null)
                               .reduce((sum, a) => sum + a.weight, 0)}
-                            % of total
+                            % {locale === "ar" ? "من المجموع" : "of total"}
                           </div>
                         </div>
                         <div>
                           <div className="text-xs text-zinc-500 mb-1">
-                            Course Progress
+                            {locale === "ar"
+                              ? "تقدم المقرر"
+                              : "Course Progress"}
                           </div>
                           <div className="text-base md:text-lg font-medium text-zinc-200">
                             {(
@@ -566,7 +644,7 @@ export default function GradeCalculator() {
                                 assignments.length) *
                               100
                             ).toFixed(0)}
-                            % complete
+                            % {locale === "ar" ? "مكتمل" : "complete"}
                           </div>
                         </div>
                       </div>
@@ -576,23 +654,27 @@ export default function GradeCalculator() {
               </Card>
 
               {/* Grade Scale Reference */}
-              <Card title="Grade Scale Reference">
+              <Card
+                title={
+                  locale === "ar" ? "مرجع سلم الدرجات" : "Grade Scale Reference"
+                }
+              >
                 <div className="bg-zinc-800/30 rounded-xl border border-zinc-700/50 overflow-hidden">
                   <div className="overflow-x-auto -mx-4 px-4">
                     <table className="w-full min-w-[500px]">
                       <thead className="bg-zinc-800/50">
                         <tr>
                           <th className="px-3 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">
-                            Grade
+                            {locale === "ar" ? "الدرجة" : "Grade"}
                           </th>
                           <th className="px-3 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">
-                            Range
+                            {locale === "ar" ? "النطاق" : "Range"}
                           </th>
                           <th className="px-3 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">
-                            Points
+                            {locale === "ar" ? "النقاط" : "Points"}
                           </th>
                           <th className="px-3 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">
-                            Description
+                            {locale === "ar" ? "الوصف" : "Description"}
                           </th>
                         </tr>
                       </thead>
@@ -606,13 +688,17 @@ export default function GradeCalculator() {
                               {grade}
                             </td>
                             <td className="px-3 md:px-4 py-2 whitespace-nowrap text-xs md:text-sm">
-                              {`${info.min} to ${info.max}`}
+                              {locale === "ar"
+                                ? `${info.min} إلى ${info.max}`
+                                : `${info.min} to ${info.max}`}
                             </td>
                             <td className="px-3 md:px-4 py-2 whitespace-nowrap text-xs md:text-sm font-medium">
                               {info.points.toFixed(2)}
                             </td>
                             <td className="px-3 md:px-4 py-2 whitespace-nowrap text-xs md:text-sm">
-                              {info.description}
+                              {locale === "ar"
+                                ? info.descriptionAr
+                                : info.description}
                             </td>
                           </tr>
                         ))}

@@ -378,7 +378,7 @@ export default function GPACalculator() {
                     onClick={resetForm}
                     aria-label={
                       locale === "ar"
-                        ? "إعادة تعيين الآلة الحاسبة"
+                        ? "إعادة تعيين الحاسبة"
                         : "Reset calculator"
                     }
                   >
@@ -422,11 +422,6 @@ export default function GPACalculator() {
                           setTotalGradePoints(Math.max(0, value));
                         }
                       }}
-                      helperText={
-                        locale === "ar"
-                          ? "مجموع النقاط المكتسبة حتى الآن"
-                          : "Total points earned so far"
-                      }
                     />
 
                     <Input
@@ -448,17 +443,12 @@ export default function GPACalculator() {
                           setTotalCredits(Math.max(0, value));
                         }
                       }}
-                      helperText={
-                        locale === "ar"
-                          ? "إجمالي الساعات المكتسبة حتى الآن"
-                          : "Total credits earned so far"
-                      }
                     />
                   </div>
 
                   <Select
                     label={
-                      locale === "ar" ? "عدد المقررات" : "Number of Courses"
+                      locale === "ar" ? "عدد المواد" : "Number of Courses"
                     }
                     value={numberOfCourses}
                     onChange={(e) =>
@@ -466,7 +456,7 @@ export default function GPACalculator() {
                     }
                     helperText={
                       locale === "ar"
-                        ? "اختر عدد المقررات التي تدرسها حاليًا"
+                        ? "اختر عدد المواد التي تدرسها حاليًا"
                         : "Choose the number of courses you are currently taking"
                     }
                   >
@@ -482,7 +472,7 @@ export default function GPACalculator() {
               {/* Course Information Card */}
               <Card
                 title={
-                  locale === "ar" ? "معلومات المقررات" : "Course Information"
+                  locale === "ar" ? "معلومات المواد" : "Course Information"
                 }
                 className="bg-zinc-900/70 backdrop-blur-sm ring-1 ring-zinc-800/50 flex-1 relative min-h-[250px] sm:min-h-[300px] md:min-h-[350px]"
               >
@@ -504,12 +494,12 @@ export default function GPACalculator() {
                     </svg>
                     <p className="text-zinc-400 text-sm sm:text-base md:text-lg mb-1 sm:mb-2">
                       {locale === "ar"
-                        ? "لم يتم اختيار أي مقررات"
+                        ? "لم يتم اختيار أي مادةات"
                         : "No Courses Selected"}
                     </p>
                     <p className="text-zinc-500 text-xs sm:text-sm max-w-[180px] sm:max-w-[250px]">
                       {locale === "ar"
-                        ? "اختر عدد المقررات التي تدرسها هذا الفصل"
+                        ? "اختر عدد المواد التي تدرسها هذا الفصل"
                         : "Choose the number of courses you're taking this semester"}
                     </p>
                   </div>
@@ -523,7 +513,7 @@ export default function GPACalculator() {
                         <div className="flex items-center justify-between mb-1 sm:mb-2">
                           <h3 className="text-sm font-semibold text-blue-400">
                             {locale === "ar"
-                              ? `المقرر ${index + 1}`
+                              ? `المادة ${index + 1}`
                               : `Course ${index + 1}`}
                           </h3>
                           <div className="text-xs font-medium text-zinc-400 bg-zinc-800/80 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full">
@@ -573,7 +563,7 @@ export default function GPACalculator() {
                           }
                           label={
                             locale === "ar"
-                              ? "إعادة هذا المقرر"
+                              ? "أقوم بإعادة هذه المادة"
                               : "Repeating this course"
                           }
                           className="max-w-full overflow-hidden text-ellipsis"
@@ -581,7 +571,11 @@ export default function GPACalculator() {
 
                         {course.isRepeat && (
                           <Select
-                            label="Previous Grade"
+                            label={
+                              locale === "ar"
+                                ? "الدرجة السابقة"
+                                : "Previous Grade"
+                            }
                             value={course.previousGrade}
                             onChange={(e) =>
                               updateCourse(
@@ -619,7 +613,7 @@ export default function GPACalculator() {
                     <span className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
                       {newCumulativeGPA.toFixed(3)}
                     </span>
-                    <span className="text-xl md:text-2xl text-zinc-400 ml-2">
+                    <span className="text-xl md:text-2xl text-zinc-400 mr-2">
                       /4.00
                     </span>
                   </div>
@@ -656,16 +650,20 @@ export default function GPACalculator() {
                     </h3>
                     <p className="text-xs sm:text-sm text-zinc-400 mb-4 md:mb-6">
                       {locale === "ar"
-                        ? "يوضح التقدم من المعدل التراكمي السابق إلى المعدل التراكمي المتوقع بعد هذا الفصل."
-                        : "Visualizes the progression from your previous cumulative GPA to your projected GPA after this semester."}
+                        ? "يوضح التقدم من المعدل التراكمي السابق إلى المعدل التراكمي المتوقع بعد هذا الفصل"
+                        : "Visualizes the progression from your previous cumulative GPA to your projected GPA after this semester"}
                     </p>
                     <div className="h-[180px] sm:h-[200px] w-full">
                       <Line
                         data={{
-                          labels: ["Previous", "Current"],
+                          labels: [
+                            locale === "ar" ? "السابق" : "Previous",
+                            locale === "ar" ? "الحالي" : "Current",
+                          ],
                           datasets: [
                             {
-                              label: "GPA",
+                              label:
+                                locale === "ar" ? "المعدل التراكمي" : "GPA",
                               data: [previousCumulativeGPA, newCumulativeGPA],
                               borderColor: "rgb(59, 130, 246)",
                               backgroundColor: "rgba(59, 130, 246, 0.5)",
@@ -714,7 +712,8 @@ export default function GPACalculator() {
                               },
                               title: {
                                 display: true,
-                                text: "GPA",
+                                text:
+                                  locale === "ar" ? "المعدل التراكمي" : "GPA",
                                 color: "rgba(255, 255, 255, 0.7)",
                                 font: {
                                   size: 12,
@@ -744,7 +743,9 @@ export default function GPACalculator() {
                               displayColors: false,
                               callbacks: {
                                 label: (context: any) =>
-                                  `GPA: ${context.parsed.y.toFixed(3)}`,
+                                  locale === "ar"
+                                    ? `المعدل: ${context.parsed.y.toFixed(3)}`
+                                    : `GPA: ${context.parsed.y.toFixed(3)}`,
                               },
                             },
                           },
@@ -772,7 +773,7 @@ export default function GPACalculator() {
                           >
                             <path
                               fillRule="evenodd"
-                              d="M12.577 4.878a.75.75 0 01.919-.53l4.78 1.281a.75.75 0 01.531.919l-1.281 4.78a.75.75 0 01-1.449-.387l.81-3.022a19.407 19.407 0 00-5.594 5.203.75.75 0 01-1.139.093L7 10.06l-4.72 4.72a.75.75 0 01-1.06-1.061l5.25-5.25a.75.75 0 011.06 0l3.074 3.073a20.923 20.923 0 015.545-4.931l-3.042-.815a.75.75 0 01-.53-.919z"
+                              d="M12.577 4.878a.75.75 0 01.919-.53l4.78 1.281a.75.75 0 01.531.919l-1.281 4.78a.75.75 0 01-1.449-.387l.81-3.022a19.407 19.407 0 00-5.594 5.203a.75.75 0 01-1.139.093L7 10.06l-4.72 4.72a.75.75 0 01-1.06-1.061l5.25-5.25a.75.75 0 011.06 0l3.074 3.073a20.923 20.923 0 015.545-4.931l-3.042-.815a.75.75 0 01-.53-.919z"
                               clipRule="evenodd"
                             />
                           </svg>
@@ -807,7 +808,7 @@ export default function GPACalculator() {
                           {Math.abs(
                             newCumulativeGPA - previousCumulativeGPA
                           ).toFixed(3)}{" "}
-                          points
+                          {locale === "ar" ? "نقطة" : "points"}
                         </span>
                       </div>
                     </div>

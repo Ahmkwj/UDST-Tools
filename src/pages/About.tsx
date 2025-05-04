@@ -1,7 +1,10 @@
 import Card from "../components/ui/Card";
 import Footer from "../components/ui/Footer";
+import { useLocale } from "../context/LanguageContext";
 
 export default function About() {
+  const locale = useLocale();
+
   return (
     <div className="relative min-h-screen w-full flex flex-col bg-gradient-to-br from-black via-zinc-900 to-black text-white">
       <div className="flex-1 py-4 md:py-8 px-3 md:px-8 overflow-x-hidden overflow-y-auto">
@@ -15,15 +18,17 @@ export default function About() {
           {/* Header section */}
           <div className="text-center mb-2 md:mb-6">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mt-4 mb-6">
-              About UDST Tools
+              {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
             </h1>
             <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto">
-              A collection of tools to help you manage your academic journey
+              {locale === "ar"
+                ? "مجموعة من الأدوات لمساعدتك في رحلتك الأكاديمية"
+                : "A collection of tools to help you manage your academic journey"}
             </p>
           </div>
 
           {/* Tools section */}
-          <Card title="Available Tools">
+          <Card title={locale === "ar" ? "الأدوات المتاحة" : "Available Tools"}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-zinc-800/30 rounded-lg p-4 border border-zinc-700/50">
                 <div className="flex items-center mb-3">
@@ -44,12 +49,15 @@ export default function About() {
                     </svg>
                   </div>
                   <h3 className="text-lg font-medium text-white">
-                    GPA Calculator
+                    {locale === "ar"
+                      ? "حاسبة المعدل التراكمي"
+                      : "GPA Calculator"}
                   </h3>
                 </div>
                 <p className="text-sm text-zinc-400">
-                  Calculate your GPA and track academic performance across
-                  semesters
+                  {locale === "ar"
+                    ? "احسب معدلك التراكمي وتتبع أداءك الأكاديمي عبر الفصول الدراسية"
+                    : "Calculate your GPA and track academic performance across semesters"}
                 </p>
               </div>
 
@@ -72,11 +80,13 @@ export default function About() {
                     </svg>
                   </div>
                   <h3 className="text-lg font-medium text-white">
-                    Grade Calculator
+                    {locale === "ar" ? "حاسبة الدرجات" : "Grade Calculator"}
                   </h3>
                 </div>
                 <p className="text-sm text-zinc-400">
-                  Estimate your final course grades based on assignment weights
+                  {locale === "ar"
+                    ? "قدّر درجاتك النهائية في المقررات بناءً على أوزان التقييمات"
+                    : "Estimate your final course grades based on assignment weights"}
                 </p>
               </div>
 
@@ -99,11 +109,13 @@ export default function About() {
                     </svg>
                   </div>
                   <h3 className="text-lg font-medium text-white">
-                    Attendance Calculator
+                    {locale === "ar" ? "حاسبة الحضور" : "Attendance Calculator"}
                   </h3>
                 </div>
                 <p className="text-sm text-zinc-400">
-                  Track attendance and plan absences within course limits
+                  {locale === "ar"
+                    ? "تتبع حضورك وخطط للغياب ضمن الحدود المسموح بها"
+                    : "Track attendance and plan absences within course limits"}
                 </p>
               </div>
 
@@ -126,24 +138,28 @@ export default function About() {
                     </svg>
                   </div>
                   <h3 className="text-lg font-medium text-white">
-                    Schedule Maker
+                    {locale === "ar" ? "منشئ الجدول" : "Schedule Maker"}
                   </h3>
                 </div>
                 <p className="text-sm text-zinc-400">
-                  Convert your PDF schedule into a calendar format
+                  {locale === "ar"
+                    ? "حوّل جدولك من PDF إلى تنسيق التقويم"
+                    : "Convert your PDF schedule into a calendar format"}
                 </p>
               </div>
             </div>
           </Card>
 
           {/* Disclaimer section */}
-          <Card title="Important Note">
+          <Card title={locale === "ar" ? "ملاحظة مهمة" : "Important Note"}>
             <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-4">
-              <p className="text-yellow-400 font-medium mb-2">Disclaimer:</p>
+              <p className="text-yellow-400 font-medium mb-2">
+                {locale === "ar" ? "تنويه:" : "Disclaimer:"}
+              </p>
               <p className="text-zinc-300">
-                This platform is not affiliated with, endorsed by, or connected
-                to University of Doha for Science and Technology (UDST). It is
-                an independent student project.
+                {locale === "ar"
+                  ? "هذه المنصة غير مرتبطة أو معتمدة أو متصلة بجامعة الدوحة للعلوم والتكنولوجيا (UDST). إنها مشروع طلابي مستقل."
+                  : "This platform is not affiliated with, endorsed by, or connected to University of Doha for Science and Technology (UDST). It is an independent student project."}
               </p>
             </div>
           </Card>
