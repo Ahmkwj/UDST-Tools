@@ -19,7 +19,7 @@ export default function Checkbox({
   return (
     <label
       className={`relative flex items-start cursor-pointer group ${
-        isRTL ? "flex-row-reverse" : ""
+        isRTL ? "flex-row-reverse justify-end" : ""
       }`}
     >
       <div className="flex items-center h-5">
@@ -36,7 +36,7 @@ export default function Checkbox({
           `}
           {...props}
         />
-        <div className="absolute text-white left-0 top-0 h-5 w-5 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 peer-checked:opacity-100">
+        <div className={`absolute text-white ${isRTL ? "right-0" : "left-0"} top-0 h-5 w-5 flex items-center justify-center pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity duration-200`}>
           <svg
             className="h-3.5 w-3.5"
             viewBox="0 0 12 12"
@@ -54,7 +54,7 @@ export default function Checkbox({
         </div>
       </div>
       {(label || description) && (
-        <div className={`${isRTL ? "mr-3 text-right" : "ml-3 text-left"}`}>
+        <div className={`${isRTL ? "mr-3 text-right" : "ml-3 text-left"} flex-1`}>
           {label && (
             <div className="text-sm font-medium text-zinc-300">{label}</div>
           )}

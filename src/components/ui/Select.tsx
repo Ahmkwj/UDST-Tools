@@ -21,10 +21,10 @@ export default function Select({
   const isRTL = locale === "ar";
 
   return (
-    <div className={`space-y-1 ${fullWidth ? "w-full" : ""}`}>
+    <div className={`space-y-2 ${fullWidth ? "w-full" : ""}`}>
       {label && (
         <label
-          className={`block text-sm font-medium text-zinc-300 ${
+          className={`block text-sm font-medium text-zinc-300 mb-1.5 ${
             isRTL ? "text-right" : "text-left"
           }`}
         >
@@ -66,7 +66,7 @@ export default function Select({
       </div>
       {helperText && (
         <p
-          className={`text-xs ${error ? "text-red-400" : "text-zinc-400"} ${
+          className={`text-xs ${error ? "text-red-400" : "text-zinc-400"} mt-2 ${
             isRTL ? "text-right" : "text-left"
           }`}
         >
