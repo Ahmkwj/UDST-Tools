@@ -1,4 +1,6 @@
-export default function Home() {
+import * as React from "react";
+
+const Home: React.FC = () => {
   return (
     <div className="relative h-full w-full flex flex-col items-center justify-center bg-gradient-to-br from-black via-zinc-900 to-black text-white">
       {/* Background decoration */}
@@ -37,4 +39,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default Home;

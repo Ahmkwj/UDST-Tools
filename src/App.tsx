@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useState } from "react";
 import {
   BrowserRouter as Router,
@@ -13,7 +14,7 @@ import AttendanceCalculator from "./pages/AttendanceCalculator";
 import ScheduleMaker from "./pages/ScheduleMaker";
 import About from "./pages/About";
 
-function App() {
+const App: React.FC = () => {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
   return (
@@ -37,6 +38,6 @@ function App() {
       </Sidebar>
     </Router>
   );
-}
+};
 
 export default App;
