@@ -4,6 +4,7 @@ import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import Select from "../components/ui/Select";
 import * as pdfjsLib from "pdfjs-dist";
+import Footer from "../components/ui/Footer";
 
 // Initialize PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
@@ -1620,108 +1621,111 @@ export default function ScheduleMaker() {
   };
 
   return (
-    <div className="relative min-h-screen w-full py-6 md:py-8 px-2 md:px-8 overflow-x-hidden overflow-y-auto bg-gradient-to-br from-black via-zinc-900 to-black text-white">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-      </div>
+    <div className="relative min-h-screen w-full flex flex-col bg-gradient-to-br from-black via-zinc-900 to-black text-white">
+      <div className="flex-1 py-4 md:py-8 px-3 md:px-8 overflow-x-hidden overflow-y-auto">
+        {/* Background decoration */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
+        </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto space-y-6 sm:space-y-8">
-        {/* Main content */}
-        <div className="grid grid-cols-1 gap-6 sm:gap-8">
-          {/* Upload Section */}
-          <Card title="Class Schedule Maker">
-            <div className="flex flex-col items-center justify-center">
-              <p className="text-zinc-400 text-sm max-w-xl text-center mb-8">
-                Upload your PeopleSoft schedule PDF to create a calendar file
-                that syncs with your preferred calendar app.
-              </p>
+        <div className="relative z-10 w-full max-w-6xl mx-auto space-y-6">
+          {/* Main content */}
+          <div className="grid grid-cols-1 gap-6 sm:gap-8">
+            {/* Upload Section */}
+            <Card title="Class Schedule Maker">
+              <div className="flex flex-col items-center justify-center">
+                <p className="text-zinc-400 text-sm max-w-xl text-center mb-8">
+                  Upload your PeopleSoft schedule PDF to create a calendar file
+                  that syncs with your preferred calendar app.
+                </p>
 
-              <div
-                className={`w-full max-w-xl mx-auto border-2 border-dashed rounded-lg ${
-                  parsedSchedule
-                    ? "border-blue-500/50 bg-blue-500/5 hover:bg-blue-500/10"
-                    : "border-zinc-700/50 bg-zinc-800/30 hover:bg-zinc-800/50"
-                } p-8 text-center transition-all duration-300 cursor-pointer`}
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-                onClick={triggerFileInput}
-              >
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  accept=".pdf"
-                  className="hidden"
-                />
+                <div
+                  className={`w-full max-w-xl mx-auto border-2 border-dashed rounded-lg ${
+                    parsedSchedule
+                      ? "border-blue-500/50 bg-blue-500/5 hover:bg-blue-500/10"
+                      : "border-zinc-700/50 bg-zinc-800/30 hover:bg-zinc-800/50"
+                  } p-8 text-center transition-all duration-300 cursor-pointer`}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                  onClick={triggerFileInput}
+                >
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept=".pdf"
+                    className="hidden"
+                  />
 
-                {isLoading ? (
-                  <div className="py-4">
-                    <div className="animate-spin w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full mx-auto mb-3"></div>
-                    <p className="text-zinc-400 text-sm">
-                      Processing your schedule...
-                    </p>
-                  </div>
-                ) : parsedSchedule ? (
-                  <div className="py-2">
-                    <div className="w-10 h-10 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-blue-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
+                  {isLoading ? (
+                    <div className="py-4">
+                      <div className="animate-spin w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full mx-auto mb-3"></div>
+                      <p className="text-zinc-400 text-sm">
+                        Processing your schedule...
+                      </p>
                     </div>
-                    <p className="text-blue-400 font-medium mb-1">
-                      Schedule uploaded successfully
-                    </p>
-                    <p className="text-zinc-500 text-sm">
-                      Click or drag to upload a different file
-                    </p>
-                  </div>
-                ) : (
-                  <div className="py-4">
-                    <div className="w-12 h-12 bg-zinc-800/80 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-zinc-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={1.5}
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
-                        />
-                      </svg>
+                  ) : parsedSchedule ? (
+                    <div className="py-2">
+                      <div className="w-10 h-10 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5 text-blue-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
+                      <p className="text-blue-400 font-medium mb-1">
+                        Schedule uploaded successfully
+                      </p>
+                      <p className="text-zinc-500 text-sm">
+                        Click or drag to upload a different file
+                      </p>
                     </div>
-                    <p className="text-zinc-300 font-medium mb-2">
-                      Drop your schedule PDF here
-                    </p>
-                    <p className="text-zinc-500 text-sm">
-                      or click to browse your files
-                    </p>
-                  </div>
-                )}
+                  ) : (
+                    <div className="py-4">
+                      <div className="w-12 h-12 bg-zinc-800/80 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-zinc-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
+                          />
+                        </svg>
+                      </div>
+                      <p className="text-zinc-300 font-medium mb-2">
+                        Drop your schedule PDF here
+                      </p>
+                      <p className="text-zinc-500 text-sm">
+                        or click to browse your files
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          </Card>
+            </Card>
 
-          {/* Schedule Display */}
-          {renderScheduleSection()}
+            {/* Schedule Display */}
+            {renderScheduleSection()}
+          </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
