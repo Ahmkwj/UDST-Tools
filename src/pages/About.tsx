@@ -11,7 +11,7 @@ export default function About() {
           <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
         </div>
 
-        <div className="relative z-10 w-full max-w-4xl mx-auto space-y-6">
+        <div className="relative z-10 w-full max-w-4xl mx-auto space-y-6 pt-6 sm:pt-8 pb-12 sm:pb-16">
           {/* Header section */}
           <div className="text-center mb-2 md:mb-6">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mt-4 mb-6">

@@ -1629,7 +1629,7 @@ export default function ScheduleMaker() {
           <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
         </div>
 
-        <div className="relative z-10 w-full max-w-6xl mx-auto space-y-6">
+        <div className="relative z-10 w-full max-w-6xl mx-auto space-y-6 pt-6 sm:pt-8 pb-12 sm:pb-16">
           {/* Main content */}
           <div className="grid grid-cols-1 gap-6 sm:gap-8">
             {/* Upload Section */}
