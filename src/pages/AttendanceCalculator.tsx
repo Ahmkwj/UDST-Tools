@@ -3,6 +3,7 @@ import Input from "../components/ui/Input";
 import Select from "../components/ui/Select";
 import Card from "../components/ui/Card";
 import Footer from "../components/ui/Footer";
+import PageHeader from "../components/ui/PageHeader";
 import { useLocale } from "../context/LanguageContext";
 
 type ClassInfo = {
@@ -118,7 +119,18 @@ export default function AttendanceCalculator() {
           <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
         </div>
 
-        <div className="relative z-10 w-full max-w-6xl mx-auto space-y-6 pt-6 sm:pt-8 pb-12 sm:pb-16">
+        <div className="relative z-10 w-full max-w-6xl mx-auto space-y-4 sm:space-y-6 md:space-y-8 pt-6 sm:pt-8 pb-12 sm:pb-16">
+          <PageHeader
+            title={{
+              en: "Attendance Calculator",
+              ar: "حاسبة الحضور"
+            }}
+            description={{
+              en: "Track your class attendance, calculate absence percentages, and plan your remaining absences within the allowed limits.",
+              ar: "تتبع حضورك في المحاضرات، احسب نسب الغياب، وخطط لغياباتك المتبقية ضمن الحدود المسموح بها."
+            }}
+          />
+
           {/* Main content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
             {/* Left Column - Input Sections */}

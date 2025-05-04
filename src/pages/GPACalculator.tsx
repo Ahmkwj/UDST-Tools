@@ -5,6 +5,7 @@ import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Checkbox from "../components/ui/Checkbox";
 import Footer from "../components/ui/Footer";
+import PageHeader from "../components/ui/PageHeader";
 import { useLocale } from "../context/LanguageContext";
 import {
   Chart as ChartJS,
@@ -346,6 +347,17 @@ export default function GPACalculator() {
         </div>
 
         <div className="relative z-10 w-full max-w-6xl mx-auto space-y-4 sm:space-y-6 md:space-y-8 pt-6 sm:pt-8 pb-12 sm:pb-16">
+          <PageHeader
+            title={{
+              en: "GPA Calculator",
+              ar: "حاسبة المعدل التراكمي"
+            }}
+            description={{
+              en: "Calculate your cumulative GPA, track your academic progress, and plan your grades for better academic performance.",
+              ar: "احسب معدلك التراكمي، تتبع تقدمك الأكاديمي، وخطط لدرجاتك لتحقيق أداء أكاديمي أفضل."
+            }}
+          />
+          
           {/* Main content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
             {/* Left Column - Input Sections */}

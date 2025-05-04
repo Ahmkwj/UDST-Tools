@@ -3,6 +3,7 @@ import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import Footer from "../components/ui/Footer";
+import PageHeader from "../components/ui/PageHeader";
 import { useLocale } from "../context/LanguageContext";
 
 type Assignment = {
@@ -44,7 +45,7 @@ export default function GradeCalculator() {
       color: "text-blue-400",
       points: 3.5,
       description: "Very Good",
-      descriptionAr: "جيد جداً مرتفع",
+      descriptionAr: "جيد جدًا مرتفع",
     },
     B: {
       min: 80,
@@ -52,7 +53,7 @@ export default function GradeCalculator() {
       color: "text-blue-400",
       points: 3.0,
       description: "Very Good",
-      descriptionAr: "جيد جداً",
+      descriptionAr: "جيد جدًا",
     },
     "C+": {
       min: 75,
@@ -227,6 +228,17 @@ export default function GradeCalculator() {
         </div>
 
         <div className="relative z-10 w-full max-w-6xl mx-auto space-y-4 sm:space-y-6 pt-6 sm:pt-8 pb-12 sm:pb-16">
+          <PageHeader
+            title={{
+              en: "Grade Calculator",
+              ar: "حاسبة الدرجات"
+            }}
+            description={{
+              en: "Calculate your course grades, track assignment scores, and estimate your final grade based on weighted assignments.",
+              ar: "احسب درجات مقرراتك، تتبع درجات التكليفات، وقدّر درجتك النهائية بناءً على أوزان التكليفات."
+            }}
+          />
+
           {/* Main content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             {/* Left Column - Course and Assignment Management */}
@@ -689,8 +701,8 @@ export default function GradeCalculator() {
                             </td>
                             <td className="px-3 md:px-4 py-2 whitespace-nowrap text-xs md:text-sm">
                               {locale === "ar"
-                                ? `${info.min} إلى ${info.max}`
-                                : `${info.min} to ${info.max}`}
+                                ? `${info.min} - ${info.max}`
+                                : `${info.min} - ${info.max}`}
                             </td>
                             <td className="px-3 md:px-4 py-2 whitespace-nowrap text-xs md:text-sm font-medium">
                               {info.points.toFixed(2)}

@@ -17,7 +17,7 @@ const Home: React.FC = () => {
       <div className={`relative z-10 max-w-3xl w-full text-center px-4 md:px-6 py-8 md:py-12 space-y-8 ${isRTL ? "rtl" : ""}`}>
         {/* Title */}
         <div className="space-y-4">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-transparent">
             {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
           </h1>
           <div className="h-1 w-16 md:w-24 mx-auto bg-gradient-to-r from-blue-500 to-blue-600"></div>
