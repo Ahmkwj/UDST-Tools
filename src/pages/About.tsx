@@ -18,68 +18,12 @@ export default function About() {
               About UDST Tools
             </h1>
             <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto">
-              A suite of tools designed to help UDST students manage their
-              academic journey
+              A collection of tools to help you manage your academic journey
             </p>
           </div>
 
-          {/* Main content */}
-          <Card title="Our Mission">
-            <div className="prose prose-invert max-w-none">
-              <p className="text-zinc-300 leading-relaxed">
-                UDST Tools was created to simplify the academic management
-                process for University of Doha for Science and Technology (UDST)
-                students. From calculating GPA and projecting grades to managing
-                attendance and planning schedules, these tools are designed to
-                give UDST students better control and transparency over their
-                academic progress.
-              </p>
-
-              <p className="text-zinc-300 leading-relaxed mt-4">
-                The goal is simple: make academic planning less stressful and
-                more accessible, allowing students to focus on what truly
-                matters - learning and personal growth.
-              </p>
-            </div>
-          </Card>
-
-          {/* Development and disclaimer section */}
-          <Card title="Development & Disclaimer">
-            <div className="prose prose-invert max-w-none">
-              <p className="text-zinc-300 leading-relaxed">
-                UDST Tools was developed by a student developer with the
-                intention of making academic life a little easier for UDST
-                students. This platform is a personal project created to help
-                fellow UDST students with common challenges faced throughout the
-                university journey.
-              </p>
-
-              <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-4 my-4">
-                <p className="text-yellow-400 font-medium mb-2">
-                  Important Disclaimer:
-                </p>
-                <p className="text-zinc-300">
-                  This platform is{" "}
-                  <span className="font-semibold">
-                    not affiliated with, endorsed by, or connected to
-                  </span>{" "}
-                  University of Doha for Science and Technology (UDST) in any
-                  official capacity. It is an independent student project
-                  created to help the student community.
-                </p>
-              </div>
-
-              <p className="text-zinc-300 leading-relaxed">
-                The calculations and tools provided here are designed to be
-                helpful but should not be considered official. Always verify
-                important academic information with your university's official
-                resources.
-              </p>
-            </div>
-          </Card>
-
-          {/* Features section */}
-          <Card title="Tools & Features">
+          {/* Tools section */}
+          <Card title="Available Tools">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-zinc-800/30 rounded-lg p-4 border border-zinc-700/50">
                 <div className="flex items-center mb-3">
@@ -104,9 +48,8 @@ export default function About() {
                   </h3>
                 </div>
                 <p className="text-sm text-zinc-400">
-                  Calculate your current GPA based on course grades and credit
-                  hours. Track your academic performance across multiple
-                  semesters.
+                  Calculate your GPA and track academic performance across
+                  semesters
                 </p>
               </div>
 
@@ -133,9 +76,7 @@ export default function About() {
                   </h3>
                 </div>
                 <p className="text-sm text-zinc-400">
-                  Estimate your final course grade based on assignment
-                  weightings and scores. Plan what you need to achieve on
-                  upcoming assignments.
+                  Estimate your final course grades based on assignment weights
                 </p>
               </div>
 
@@ -162,9 +103,7 @@ export default function About() {
                   </h3>
                 </div>
                 <p className="text-sm text-zinc-400">
-                  Track your attendance percentage and plan for future absences
-                  without exceeding course limits and risking attendance
-                  failure.
+                  Track attendance and plan absences within course limits
                 </p>
               </div>
 
@@ -191,10 +130,21 @@ export default function About() {
                   </h3>
                 </div>
                 <p className="text-sm text-zinc-400">
-                  Create and organize your weekly class schedule with visual
-                  timetables that help you manage your time effectively.
+                  Convert your PDF schedule into a calendar format
                 </p>
               </div>
+            </div>
+          </Card>
+
+          {/* Disclaimer section */}
+          <Card title="Important Note">
+            <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-4">
+              <p className="text-yellow-400 font-medium mb-2">Disclaimer:</p>
+              <p className="text-zinc-300">
+                This platform is not affiliated with, endorsed by, or connected
+                to University of Doha for Science and Technology (UDST). It is
+                an independent student project.
+              </p>
             </div>
           </Card>
         </div>
