@@ -20,7 +20,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* Types */
+    "types": [],
+    "typeRoots": ["./node_modules/@types", "./src"]
   },
-  "include": ["src"]
+  "include": ["src", "src/types.d.ts"],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts", "**/*.spec.tsx", "**/*.test.tsx"]
 }
