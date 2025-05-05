@@ -30,14 +30,14 @@ const Home: React.FC = () => {
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-transparent">
-              {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
-            </h1>
+            {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
+          </h1>
             <div className="h-1 w-12 md:w-20 mx-auto bg-gradient-to-r from-blue-500 to-blue-600 mt-3"></div>
             <p className="text-sm md:text-base lg:text-lg text-zinc-300 mt-3 max-w-2xl mx-auto px-4">
-              {locale === "ar"
+            {locale === "ar"
                 ? "مجموعة شاملة من الأدوات الأكاديمية لمساعدتك في رحلتك التعليمية"
                 : "A comprehensive suite of academic tools to assist you in your educational journey"}
-            </p>
+          </p>
           </div>
         </div>
 
@@ -235,10 +235,10 @@ const Home: React.FC = () => {
         {/* Disclaimer */}
         <div>
           <p className="text-[10px] sm:text-xs text-zinc-400 max-w-lg mx-auto px-4">
-            {locale === "ar"
-              ? "مشروع طلابي مستقل، غير مرتبط بجامعة الدوحة للعلوم والتكنولوجيا"
-              : "An independent student project, not affiliated with UDST"}
-          </p>
+          {locale === "ar"
+            ? "مشروع طلابي مستقل، غير مرتبط بجامعة الدوحة للعلوم والتكنولوجيا"
+            : "An independent student project, not affiliated with UDST"}
+        </p>
         </div>
       </div>
     </div>

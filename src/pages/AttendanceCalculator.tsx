@@ -20,6 +20,20 @@ export default function AttendanceCalculator() {
   const [classInfos, setClassInfos] = useState<ClassInfo[]>([]);
   const [newAbsenteeismPercentage, setNewAbsenteeismPercentage] =
     useState<number>(0);
+  const [showWarning, setShowWarning] = useState<boolean>(true);
+
+  useEffect(() => {
+    // Check if the warning has been dismissed before
+    const warningDismissed = localStorage.getItem("attendanceWarningDismissed");
+    if (warningDismissed) {
+      setShowWarning(false);
+    }
+  }, []);
+
+  const dismissWarning = () => {
+    setShowWarning(false);
+    localStorage.setItem("attendanceWarningDismissed", "true");
+  };
 
   // Initialize class infos when number of classes changes
   useEffect(() => {
@@ -103,7 +117,6 @@ export default function AttendanceCalculator() {
     setNewAbsenteeismPercentage(calculatedPercentage);
   };
 
-
   const handleCustomInput = (index: number) => {
     const updatedClassInfos = [...classInfos];
     updatedClassInfos[index].missedTimes = "";
@@ -123,11 +136,11 @@ export default function AttendanceCalculator() {
           <PageHeader
             title={{
               en: "Attendance Calculator",
-              ar: "حاسبة الحضور"
+              ar: "حاسبة الحضور",
             }}
             description={{
               en: "Track your class attendance, calculate absence percentages, and plan your remaining absences within the allowed limits.",
-              ar: "تتبع حضورك في المحاضرات، احسب نسب الغياب، وخطط لغياباتك المتبقية ضمن الحدود المسموح بها."
+              ar: "تتبع حضورك في المحاضرات، احسب نسب الغياب، وخطط لغياباتك المتبقية ضمن الحدود المسموح بها.",
             }}
           />
 
@@ -466,6 +479,60 @@ export default function AttendanceCalculator() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Warning Note */}
+                  {showWarning && (
+                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 my-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 text-yellow-500 mt-0.5 ltr:mr-3 rtl:ml-3 flex-shrink-0"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          <div>
+                            <h4 className="text-sm font-medium text-yellow-500 mb-1">
+                              {locale === "ar"
+                                ? "تنبيه مهم"
+                                : "Important Notice"}
+                            </h4>
+                            <p className="text-sm text-zinc-300">
+                              {locale === "ar"
+                                ? "يرجى عدم الاعتماد بشكل كامل على هذه النتائج، خصوصًا في الحالات الحرجة مثل اقتراب نسبة حضورك من الحد الأدنى (14%). قد لا يكون نظام الحضور دقيقًا في جميع الأوقات، لذلك يُنصح بعدم الاعتماد على هذه الأداة في الحالات الحساسة."
+                                : "Please don't rely solely on these results, especially if your attendance is at a critical level (close to 14%). The attendance system may not always be accurate, so it's recommended to not rely on this tool in critical situations."}
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={dismissWarning}
+                          className="text-yellow-500/70 hover:text-yellow-500 transition-colors p-1 -mt-1 -mr-1"
+                          title={
+                            locale === "ar" ? "إغلاق التنبيه" : "Close warning"
+                          }
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Classes Left Section */}
                   <>
