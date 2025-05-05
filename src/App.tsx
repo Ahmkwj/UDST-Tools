@@ -16,6 +16,7 @@ import About from "./pages/About";
 import Privacy from "./pages/Privacy";
 import Guide from "./pages/Guide";
 import ScheduleMaker from "./pages/ScheduleMaker";
+import Feedback from "./pages/Feedback";
 import {
   LanguageProvider,
   useLocale,
@@ -124,6 +125,10 @@ const LocalizedApp = () => {
           {/* Guide routes */}
           <Route path="/en/guide" element={<Guide />} />
           <Route path="/ar/guide" element={<Guide />} />
+
+          {/* Feedback routes */}
+          <Route path="/en/feedback" element={<Feedback />} />
+          <Route path="/ar/feedback" element={<Feedback />} />
 
           {/* Root and wildcard routes */}
           <Route path="/" element={<LocaleRedirect />} />
