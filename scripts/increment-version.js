@@ -1,9 +1,14 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Get the directory name in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Read the version file
 const versionPath = path.join(__dirname, "..", "version.json");
-const versionFile = require(versionPath);
+const versionFile = JSON.parse(fs.readFileSync(versionPath, "utf8"));
 
 // Split version into components
 const [major, minor, patch] = versionFile.version.split(".").map(Number);
