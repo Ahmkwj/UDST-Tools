@@ -179,9 +179,10 @@ export default function Sidebar({
       nameAr: "الجدول الدراسي",
       items: [
         {
-          name: "Schedule Planner",
-          nameAr: "مخطط الجدول",
-          path: "/schedule-planner",
+          name: "Schedule Maker",
+          nameAr: "منشئ الجدول",
+          path: "/schedule-maker",
+          comingSoon: true,
           icon: (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -194,7 +195,7 @@ export default function Sidebar({
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25M3 18.75h18M12 15.75h.008v.008H12v-.008z"
+                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25M3 18.75h18M12 15.75h.008v.008H12v-.008Z"
               />
             </svg>
           ),
