@@ -11,10 +11,11 @@ import Sidebar from "./components/Sidebar";
 import GPACalculator from "./pages/GPACalculator";
 import GradeCalculator from "./pages/GradeCalculator";
 import AttendanceCalculator from "./pages/AttendanceCalculator";
-import ScheduleMaker from "./pages/ScheduleMaker";
 import Calendar from "./pages/Calendar";
 import About from "./pages/About";
 import Privacy from "./pages/Privacy";
+import Guide from "./pages/Guide";
+import ScheduleMaker from "./pages/ScheduleMaker";
 import {
   LanguageProvider,
   useLocale,
@@ -119,6 +120,10 @@ const LocalizedApp = () => {
           {/* Privacy routes */}
           <Route path="/en/privacy" element={<Privacy />} />
           <Route path="/ar/privacy" element={<Privacy />} />
+
+          {/* Guide routes */}
+          <Route path="/en/guide" element={<Guide />} />
+          <Route path="/ar/guide" element={<Guide />} />
 
           {/* Root and wildcard routes */}
           <Route path="/" element={<LocaleRedirect />} />

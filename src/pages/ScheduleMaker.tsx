@@ -57,8 +57,8 @@ export default function ScheduleMaker() {
               </p>
             </div>
 
-            <div className="mt-8 px-4 py-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
-              <p className="text-sm text-blue-400">
+            <div className="mt-8 px-4 py-3 rounded-lg bg-zinc-700/50 border border-zinc-600/50">
+              <p className="text-sm text-zinc-300">
                 {locale === "ar"
                   ? "سيتم إطلاق هذه الميزة قريبًا"
                   : "This feature will be available soon"}
