@@ -297,10 +297,10 @@ export default function Sidebar({
   // Handle responsive behavior
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth < 768) {
-        setIsOpen(false);
-      } else {
+      const isMobileView = window.innerWidth < 768;
+      setIsMobile(isMobileView);
+      // Only allow sidebar to be closed on mobile
+      if (!isMobileView) {
         setIsOpen(true);
       }
     };
@@ -401,7 +401,7 @@ export default function Sidebar({
                   ? "translate-x-full"
                   : "-translate-x-full"
               }`
-            : `relative ${isOpen ? "w-64" : "w-20"}`
+            : "relative w-64"
         } bg-zinc-900 border-r border-zinc-800/50 transition-all duration-300 ease-in-out flex flex-col shrink-0 shadow-lg ${
           isMobile ? "mt-16" : ""
         }`}
@@ -409,64 +409,15 @@ export default function Sidebar({
         {/* Desktop header */}
         {!isMobile && (
           <div
-            className={`flex items-center justify-between ${
-              isOpen ? "px-4 py-3" : "p-3"
-            } border-b border-zinc-800/50`}
+            className={`flex items-center justify-between px-4 py-3 border-b border-zinc-800/50`}
           >
-            {isOpen ? (
-              <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
-              </h3>
-            ) : (
-              <div className="w-full flex justify-center">
-                <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600">
-                  <span className="text-white font-bold text-sm">UT</span>
-                </div>
-              </div>
-            )}
-
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-1.5 text-zinc-400 hover:text-white transition-colors"
-            >
-              {isOpen ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
-                  />
-                </svg>
-              )}
-            </button>
+            <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+              {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
+            </h3>
           </div>
         )}
 
-        <nav
-          className={`flex-1 overflow-y-auto py-5 ${isOpen ? "px-3" : "px-2"}`}
-        >
+        <nav className={`flex-1 overflow-y-auto py-5 px-3`}>
           {navCategories.map((category, index) => (
             <div key={category.name} className={index !== 0 ? "mt-6" : ""}>
               {isOpen && (
@@ -483,9 +434,7 @@ export default function Sidebar({
                         e.preventDefault();
                         handleNavigation(item.path);
                       }}
-                      className={`flex items-center ${
-                        isOpen ? "space-x-3" : "justify-center"
-                      } p-2 rounded-lg ${
+                      className={`flex items-center p-2 rounded-lg ${
                         currentPath === `/${locale}${item.path}` ||
                         (item.path === "/" && currentPath === `/${locale}`)
                           ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium shadow-md"
@@ -510,19 +459,6 @@ export default function Sidebar({
                           </span>
                         )}
                       </div>
-
-                      {/* Tooltip for collapsed state */}
-                      {!isOpen && !isMobile && (
-                        <div
-                          className={`absolute ${
-                            locale === "ar"
-                              ? "right-full mr-2"
-                              : "left-full ml-2"
-                          } px-2 py-1 bg-zinc-800 text-white text-sm rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all`}
-                        >
-                          {locale === "ar" ? item.nameAr : item.name}
-                        </div>
-                      )}
                     </a>
                   </li>
                 ))}
