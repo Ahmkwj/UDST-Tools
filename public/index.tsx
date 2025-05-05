@@ -14,7 +14,11 @@ const Home: React.FC = () => {
       </div>
 
       {/* Main content */}
-      <div className={`relative z-10 max-w-3xl w-full text-center px-4 md:px-6 py-8 md:py-12 space-y-8 ${isRTL ? "rtl" : ""}`}>
+      <div
+        className={`relative z-10 max-w-3xl w-full text-center px-4 md:px-6 py-8 md:py-12 space-y-8 ${
+          isRTL ? "rtl" : ""
+        }`}
+      >
         {/* Title */}
         <div className="space-y-4">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-transparent">
@@ -22,12 +26,14 @@ const Home: React.FC = () => {
           </h1>
           <div className="h-1 w-16 md:w-24 mx-auto bg-gradient-to-r from-blue-500 to-blue-600"></div>
           <p className="text-lg md:text-xl text-zinc-300">
-            {locale === "ar" ? "أدوات أكاديمية للطلاب" : "Academic Tools for Students"}
+            {locale === "ar"
+              ? "أدوات أكاديمية للطلاب"
+              : "Academic Tools for Students"}
           </p>
         </div>
 
         {/* Quick Links */}
-        <div className="grid grid-cols-2 gap-3 max-w-lg mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-lg mx-auto">
           <a
             href="/gpa-calculator"
             className="p-4 rounded-xl backdrop-blur-sm bg-zinc-900/70 ring-1 ring-zinc-800/50 hover:ring-blue-500/50 transition-all group"
@@ -36,7 +42,9 @@ const Home: React.FC = () => {
               {locale === "ar" ? "حاسبة المعدل" : "GPA Calculator"}
             </h2>
             <p className="text-sm text-zinc-400">
-              {locale === "ar" ? "تتبع تقدمك الأكاديمي" : "Track your academic progress"}
+              {locale === "ar"
+                ? "تتبع تقدمك الأكاديمي"
+                : "Track your academic progress"}
             </p>
           </a>
           <a
@@ -58,7 +66,9 @@ const Home: React.FC = () => {
               {locale === "ar" ? "حاسبة الحضور" : "Attendance"}
             </h2>
             <p className="text-sm text-zinc-400">
-              {locale === "ar" ? "تتبع حضور محاضراتك" : "Monitor class attendance"}
+              {locale === "ar"
+                ? "تتبع حضور محاضراتك"
+                : "Monitor class attendance"}
             </p>
           </a>
           <a
@@ -72,11 +82,22 @@ const Home: React.FC = () => {
               {locale === "ar" ? "أنشئ جدولك الدراسي" : "Create your timetable"}
             </p>
           </a>
+          <a
+            href="/calendar"
+            className="p-4 rounded-xl backdrop-blur-sm bg-zinc-900/70 ring-1 ring-zinc-800/50 hover:ring-blue-500/50 transition-all group"
+          >
+            <h2 className="font-medium text-white mb-1">
+              {locale === "ar" ? "التقويم الأكاديمي" : "Calendar"}
+            </h2>
+            <p className="text-sm text-zinc-400">
+              {locale === "ar" ? "عرض المواعيد المهمة" : "View important dates"}
+            </p>
+          </a>
         </div>
 
         {/* Disclaimer */}
         <p className="text-sm text-zinc-400 max-w-lg mx-auto">
-          {locale === "ar" 
+          {locale === "ar"
             ? "مشروع طلابي مستقل، غير مرتبط بجامعة الدوحة للعلوم والتكنولوجيا"
             : "An independent student project, not affiliated with UDST"}
         </p>

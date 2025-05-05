@@ -8,17 +8,18 @@ import {
   useNavigate,
 } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
-import Home from "../public/index.tsx";
 import GPACalculator from "./pages/GPACalculator";
 import GradeCalculator from "./pages/GradeCalculator";
 import AttendanceCalculator from "./pages/AttendanceCalculator";
 import ScheduleMaker from "./pages/ScheduleMaker";
+import Calendar from "./pages/Calendar";
 import About from "./pages/About";
 import {
   LanguageProvider,
   useLocale,
   useSetLocale,
 } from "./context/LanguageContext";
+import Home from "../public";
 
 // Redirect component to handle locale in routes
 function LocaleRedirect() {
@@ -105,6 +106,10 @@ const LocalizedApp = () => {
           {/* Schedule Maker routes */}
           <Route path="/en/schedule-maker" element={<ScheduleMaker />} />
           <Route path="/ar/schedule-maker" element={<ScheduleMaker />} />
+
+          {/* Calendar routes */}
+          <Route path="/en/calendar" element={<Calendar />} />
+          <Route path="/ar/calendar" element={<Calendar />} />
 
           {/* About routes */}
           <Route path="/en/about" element={<About />} />
