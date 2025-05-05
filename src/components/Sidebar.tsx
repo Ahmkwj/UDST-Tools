@@ -442,7 +442,7 @@ export default function Sidebar({
                           </span>
                         </div>
                         {item.comingSoon && (
-                          <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/20">
+                          <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-700/50 text-zinc-300 border border-zinc-600/50">
                             {locale === "ar" ? "قريبًا" : "Soon"}
                           </span>
                         )}
