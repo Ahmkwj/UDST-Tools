@@ -15,6 +15,7 @@ interface NavItem {
   path: string;
   icon: React.ReactNode;
   nameAr?: string; // Arabic name for menu items
+  comingSoon?: boolean;
 }
 
 interface NavCategory {
@@ -137,8 +138,9 @@ export default function Sidebar({
         },
         {
           name: "Schedule",
-          nameAr: "الجدول",
+          nameAr: "منظم الجدول",
           path: "/schedule-maker",
+          comingSoon: true,
           icon: (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -151,7 +153,7 @@ export default function Sidebar({
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"
+                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25M3 18.75h18M12 15.75h.008v.008H12v-.008z"
               />
             </svg>
           ),
@@ -200,6 +202,27 @@ export default function Sidebar({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+              />
+            </svg>
+          ),
+        },
+        {
+          name: "Privacy",
+          nameAr: "الخصوصية",
+          path: "/privacy",
+          icon: (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z"
               />
             </svg>
           ),
@@ -407,16 +430,23 @@ export default function Sidebar({
                       } transition-colors group relative`}
                       title={locale === "ar" ? item.nameAr : item.name}
                     >
-                      <span className="text-white">{item.icon}</span>
-                      {isOpen && (
-                        <span
-                          className={`text-white ${
-                            locale === "ar" ? "mr-3" : "ml-3"
-                          }`}
-                        >
-                          {locale === "ar" ? item.nameAr : item.name}
-                        </span>
-                      )}
+                      <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center">
+                          <div className="w-5 h-5 flex-shrink-0">
+                            {item.icon}
+                          </div>
+                          <span className="ltr:ml-3 rtl:mr-3">
+                            {locale === "ar" && item.nameAr
+                              ? item.nameAr
+                              : item.name}
+                          </span>
+                        </div>
+                        {item.comingSoon && (
+                          <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/20">
+                            {locale === "ar" ? "قريبًا" : "Soon"}
+                          </span>
+                        )}
+                      </div>
 
                       {/* Tooltip for collapsed state */}
                       {!isOpen && !isMobile && (

@@ -14,6 +14,7 @@ import AttendanceCalculator from "./pages/AttendanceCalculator";
 import ScheduleMaker from "./pages/ScheduleMaker";
 import Calendar from "./pages/Calendar";
 import About from "./pages/About";
+import Privacy from "./pages/Privacy";
 import {
   LanguageProvider,
   useLocale,
@@ -114,6 +115,10 @@ const LocalizedApp = () => {
           {/* About routes */}
           <Route path="/en/about" element={<About />} />
           <Route path="/ar/about" element={<About />} />
+
+          {/* Privacy routes */}
+          <Route path="/en/privacy" element={<Privacy />} />
+          <Route path="/ar/privacy" element={<Privacy />} />
 
           {/* Root and wildcard routes */}
           <Route path="/" element={<LocaleRedirect />} />
