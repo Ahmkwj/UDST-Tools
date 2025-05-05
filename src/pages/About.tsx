@@ -61,8 +61,8 @@ export default function About() {
                     welcome any suggestions for improvement.
                   </>
                 )}
-              </p>
-            </div>
+            </p>
+          </div>
           </Card>
 
           {/* Tools section */}

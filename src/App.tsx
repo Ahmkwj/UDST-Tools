@@ -15,7 +15,7 @@ import Calendar from "./pages/Calendar";
 import About from "./pages/About";
 import Privacy from "./pages/Privacy";
 import Guide from "./pages/Guide";
-import ScheduleMaker from "./pages/ScheduleMaker";
+import SchedulePlanner from "./pages/SchedulePlanner";
 import Feedback from "./pages/Feedback";
 import Links from "./pages/Links";
 import {
@@ -107,9 +107,9 @@ const LocalizedApp = () => {
             element={<AttendanceCalculator />}
           />
 
-          {/* Schedule Maker routes */}
-          <Route path="/en/schedule-maker" element={<ScheduleMaker />} />
-          <Route path="/ar/schedule-maker" element={<ScheduleMaker />} />
+          {/* Schedule Planner routes */}
+          <Route path="/en/schedule-planner" element={<SchedulePlanner />} />
+          <Route path="/ar/schedule-planner" element={<SchedulePlanner />} />
 
           {/* Calendar routes */}
           <Route path="/en/calendar" element={<Calendar />} />
