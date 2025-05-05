@@ -242,6 +242,63 @@ export default function Guide() {
               </div>
             </div>
           </Card>
+
+          {/* Schedule Planner Guide */}
+          <Card title={locale === "ar" ? "مخطط الجدول" : "Schedule Planner"}>
+            <div className="space-y-6">
+              <div className="prose prose-invert max-w-none">
+                <h3 className="text-lg font-medium text-white mb-4">
+                  {locale === "ar" ? "كيفية الاستخدام" : "How to Use"}
+                </h3>
+                <ol className="list-decimal list-inside space-y-4 text-zinc-300">
+                  {locale === "ar" ? (
+                    <>
+                      <li>
+                        انقر على "إضافة مادة" لإضافة مادة جديدة إلى جدولك.
+                      </li>
+                      <li>
+                        لكل مادة:
+                        <ul className="list-disc list-inside mt-2 mr-6 text-zinc-400">
+                          <li>أدخل اسم المادة</li>
+                          <li>انقر على "إضافة موعد" لإضافة وقت المحاضرة</li>
+                          <li>اختر يوم المحاضرة</li>
+                          <li>حدد وقت بداية ونهاية المحاضرة</li>
+                        </ul>
+                      </li>
+                      <li>يمكنك إضافة عدة مواعيد لنفس المادة</li>
+                      <li>سيتم عرض أي تعارضات في المواعيد تلقائيًا</li>
+                      <li>يمكنك تعديل أو حذف المواد والمواعيد في أي وقت</li>
+                    </>
+                  ) : (
+                    <>
+                      <li>
+                        Click "Add Course" to add a new course to your schedule.
+                      </li>
+                      <li>
+                        For each course:
+                        <ul className="list-disc list-inside mt-2 ml-6 text-zinc-400">
+                          <li>Enter the course name</li>
+                          <li>Click "Add Time Slot" to add a lecture time</li>
+                          <li>Select the lecture day</li>
+                          <li>Set the start and end time</li>
+                        </ul>
+                      </li>
+                      <li>
+                        You can add multiple time slots for the same course
+                      </li>
+                      <li>
+                        Any time conflicts will be displayed automatically
+                      </li>
+                      <li>
+                        You can modify or delete courses and time slots at any
+                        time
+                      </li>
+                    </>
+                  )}
+                </ol>
+              </div>
+            </div>
+          </Card>
         </div>
       </div>
       <Footer />

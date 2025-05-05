@@ -30,14 +30,14 @@ const Home: React.FC = () => {
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-transparent">
-            {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
-          </h1>
+              {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
+            </h1>
             <div className="h-1 w-12 md:w-20 mx-auto bg-gradient-to-r from-blue-500 to-blue-600 mt-3"></div>
             <p className="text-sm md:text-base lg:text-lg text-zinc-300 mt-3 max-w-2xl mx-auto px-4">
-            {locale === "ar"
+              {locale === "ar"
                 ? "مجموعة شاملة من الأدوات الأكاديمية لمساعدتك في رحلتك التعليمية"
                 : "A comprehensive suite of academic tools to assist you in your educational journey"}
-          </p>
+            </p>
           </div>
         </div>
 
@@ -134,7 +134,7 @@ const Home: React.FC = () => {
           </a>
 
           <a
-            href="/schedule-maker"
+            href="/schedule-planner"
             className="p-3 sm:p-4 rounded-xl backdrop-blur-sm bg-zinc-900/70 ring-1 ring-zinc-800/50 hover:ring-blue-500/50 hover:transform hover:scale-105 transition-all duration-300 group"
           >
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center mb-2 sm:mb-3 mx-auto group-hover:scale-110 transition-transform">
@@ -154,12 +154,12 @@ const Home: React.FC = () => {
               </svg>
             </div>
             <h2 className="font-medium text-sm sm:text-base text-white mb-0.5 sm:mb-1">
-              {locale === "ar" ? "منظم الجدول" : "Schedule"}
+              {locale === "ar" ? "مخطط الجدول" : "Schedule Planner"}
             </h2>
             <p className="text-[10px] sm:text-xs text-zinc-400">
               {locale === "ar"
-                ? "حوّل جدولك إلى تنسيق رقمي"
-                : "Convert your schedule to digital format"}
+                ? "خطط جدولك واكتشف التعارضات"
+                : "Plan schedule and detect conflicts"}
             </p>
           </a>
 
@@ -235,10 +235,10 @@ const Home: React.FC = () => {
         {/* Disclaimer */}
         <div>
           <p className="text-[10px] sm:text-xs text-zinc-400 max-w-lg mx-auto px-4">
-          {locale === "ar"
-            ? "مشروع طلابي مستقل، غير مرتبط بجامعة الدوحة للعلوم والتكنولوجيا"
-            : "An independent student project, not affiliated with UDST"}
-        </p>
+            {locale === "ar"
+              ? "مشروع طلابي مستقل، غير مرتبط بجامعة الدوحة للعلوم والتكنولوجيا"
+              : "An independent student project, not affiliated with UDST"}
+          </p>
         </div>
       </div>
     </div>

@@ -61,8 +61,8 @@ export default function About() {
                     welcome any suggestions for improvement.
                   </>
                 )}
-            </p>
-          </div>
+              </p>
+            </div>
           </Card>
 
           {/* Tools section */}
@@ -156,6 +156,64 @@ export default function About() {
                     : "Track attendance and plan absences within course limits"}
                 </p>
               </div>
+
+              <div className="group bg-zinc-800/30 hover:bg-zinc-800/50 rounded-lg p-4 border border-zinc-700/50 transition-all duration-300">
+                <div className="flex items-center mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center ltr:mr-3 rtl:ml-3 group-hover:scale-110 transition-transform duration-300">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-6 h-6 text-blue-400"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25M3 18.75h18M12 15.75h.008v.008H12v-.008z"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium text-white">
+                    {locale === "ar" ? "مخطط الجدول" : "Schedule Planner"}
+                  </h3>
+                </div>
+                <p className="text-sm text-zinc-400">
+                  {locale === "ar"
+                    ? "خطط جدولك الدراسي واكتشف تعارضات المواعيد مباشرة"
+                    : "Plan your schedule and detect time conflicts instantly"}
+                </p>
+              </div>
+
+              <div className="group bg-zinc-800/30 hover:bg-zinc-800/50 rounded-lg p-4 border border-zinc-700/50 transition-all duration-300">
+                <div className="flex items-center mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center ltr:mr-3 rtl:ml-3 group-hover:scale-110 transition-transform duration-300">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-6 h-6 text-blue-400"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium text-white">
+                    {locale === "ar" ? "التقويم الأكاديمي" : "Calendar"}
+                  </h3>
+                </div>
+                <p className="text-sm text-zinc-400">
+                  {locale === "ar"
+                    ? "تتبع المواعيد المهمة"
+                    : "Track important academic dates"}
+                </p>
+              </div>
             </div>
           </Card>
 
@@ -188,35 +246,6 @@ export default function About() {
                   {locale === "ar"
                     ? "احفظ تقدمك وخصص تجربتك"
                     : "Save your progress and personalize your experience"}
-                </p>
-              </div>
-
-              <div className="group bg-zinc-800/30 hover:bg-zinc-800/50 rounded-lg p-4 border border-zinc-700/50 transition-all duration-300">
-                <div className="flex items-center mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center ltr:mr-3 rtl:ml-3 group-hover:scale-110 transition-transform duration-300">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-6 h-6 text-blue-400"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25M3 18.75h18M12 15.75h.008v.008H12v-.008z"
-                      />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-medium text-white">
-                    {locale === "ar" ? "منشئ الجدول" : "Schedule Maker"}
-                  </h3>
-                </div>
-                <p className="text-sm text-zinc-400">
-                  {locale === "ar"
-                    ? "حوّل جدولك من PDF إلى تنسيق التقويم"
-                    : "Convert your PDF schedule into a calendar format"}
                 </p>
               </div>
             </div>

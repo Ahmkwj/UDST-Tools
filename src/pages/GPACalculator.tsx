@@ -350,14 +350,14 @@ export default function GPACalculator() {
           <PageHeader
             title={{
               en: "GPA Calculator",
-              ar: "حاسبة المعدل التراكمي"
+              ar: "حاسبة المعدل التراكمي",
             }}
             description={{
               en: "Calculate your cumulative GPA, track your academic progress, and plan your grades for better academic performance.",
-              ar: "احسب معدلك التراكمي، تتبع تقدمك الأكاديمي، وخطط لدرجاتك لتحقيق أداء أكاديمي أفضل."
+              ar: "احسب معدلك التراكمي، تتبع تقدمك الأكاديمي، وخطط لدرجاتك لتحقيق أداء أكاديمي أفضل.",
             }}
           />
-          
+
           {/* Main content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
             {/* Left Column - Input Sections */}
@@ -419,9 +419,7 @@ export default function GPACalculator() {
                   </div>
 
                   <Select
-                    label={
-                      locale === "ar" ? "عدد المواد" : "Number of Courses"
-                    }
+                    label={locale === "ar" ? "عدد المواد" : "Number of Courses"}
                     value={numberOfCourses}
                     onChange={(e) =>
                       setNumberOfCourses(parseInt(e.target.value))
@@ -466,7 +464,7 @@ export default function GPACalculator() {
                     </svg>
                     <p className="text-zinc-400 text-sm sm:text-base md:text-lg mb-1 sm:mb-2">
                       {locale === "ar"
-                        ? "لم يتم اختيار أي مادةات"
+                        ? "لم يتم اختيار أي مادة"
                         : "No Courses Selected"}
                     </p>
                     <p className="text-zinc-500 text-xs sm:text-sm max-w-[180px] sm:max-w-[250px]">
