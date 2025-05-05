@@ -24,6 +24,7 @@ import {
   useSetLocale,
 } from "./context/LanguageContext";
 import Home from "../public";
+import StudyTimeCalculator from "./pages/StudyTimeCalculator";
 
 // Redirect component to handle locale in routes
 function LocaleRedirect() {
@@ -134,6 +135,10 @@ const LocalizedApp = () => {
           {/* Feedback routes */}
           <Route path="/en/feedback" element={<Feedback />} />
           <Route path="/ar/feedback" element={<Feedback />} />
+
+          {/* Study Time Calculator routes */}
+          <Route path="/en/study-time-calculator" element={<StudyTimeCalculator />} />
+          <Route path="/ar/study-time-calculator" element={<StudyTimeCalculator />} />
 
           {/* Root and wildcard routes */}
           <Route path="/" element={<LocaleRedirect />} />
