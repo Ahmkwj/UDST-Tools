@@ -246,6 +246,52 @@ export default function Sidebar({
         locale === "ar" ? "rtl" : "ltr"
       }`}
     >
+      {/* Mobile header */}
+      {isMobile && (
+        <div className="fixed top-0 left-0 right-0 h-16 bg-zinc-900/95 backdrop-blur-sm border-b border-zinc-800/50 z-20 flex items-center px-4">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-2 rounded-lg text-white"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+          >
+            {isOpen ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                />
+              </svg>
+            )}
+          </button>
+          <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mx-4">
+            {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
+          </h3>
+        </div>
+      )}
+
       {/* Mobile overlay */}
       {isMobile && (
         <div
@@ -270,26 +316,29 @@ export default function Sidebar({
                   : "-translate-x-full"
               }`
             : `relative ${isOpen ? "w-64" : "w-20"}`
-        } bg-zinc-900 border-r border-zinc-800/50 transition-all duration-300 ease-in-out flex flex-col shrink-0 shadow-lg`}
+        } bg-zinc-900 border-r border-zinc-800/50 transition-all duration-300 ease-in-out flex flex-col shrink-0 shadow-lg ${
+          isMobile ? "mt-16" : ""
+        }`}
       >
-        <div
-          className={`flex items-center justify-between ${
-            isOpen ? "px-4 py-3" : "p-3"
-          } border-b border-zinc-800/50`}
-        >
-          {(!isMobile && isOpen) || (isMobile && isOpen) ? (
-            <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-              {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
-            </h3>
-          ) : !isMobile ? (
-            <div className="w-full flex justify-center">
-              <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600">
-                <span className="text-white font-bold text-sm">UT</span>
+        {/* Desktop header */}
+        {!isMobile && (
+          <div
+            className={`flex items-center justify-between ${
+              isOpen ? "px-4 py-3" : "p-3"
+            } border-b border-zinc-800/50`}
+          >
+            {isOpen ? (
+              <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
+              </h3>
+            ) : (
+              <div className="w-full flex justify-center">
+                <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600">
+                  <span className="text-white font-bold text-sm">UT</span>
+                </div>
               </div>
-            </div>
-          ) : null}
+            )}
 
-          {!isMobile && (
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-1.5 text-zinc-400 hover:text-white transition-colors"
@@ -326,8 +375,8 @@ export default function Sidebar({
                 </svg>
               )}
             </button>
-          )}
-        </div>
+          </div>
+        )}
 
         <nav
           className={`flex-1 overflow-y-auto py-5 ${isOpen ? "px-3" : "px-2"}`}
@@ -417,60 +466,11 @@ export default function Sidebar({
         </div>
       </div>
 
-      {/* Mobile menu button */}
-      {isMobile && (
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className={`fixed top-4 ${
-            locale === "ar" ? "right-4" : "left-4"
-          } z-40 p-2 rounded-lg bg-zinc-900/90 backdrop-blur-sm text-white shadow-lg border border-zinc-800/50 transition-transform duration-300 ${
-            isOpen
-              ? locale === "ar"
-                ? "-translate-x-[280px]"
-                : "translate-x-[280px]"
-              : "translate-x-0"
-          }`}
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-        >
-          {isOpen ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-              />
-            </svg>
-          )}
-        </button>
-      )}
-
       {/* Main content */}
       <div
         className={`flex-1 h-full overflow-auto ${
           locale === "ar" ? "text-right" : "text-left"
-        }`}
+        } ${isMobile ? "pt-16" : ""}`}
       >
         {children}
       </div>
