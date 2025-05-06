@@ -83,6 +83,7 @@ const LocalizedApp = () => {
   const [currentPath, setCurrentPath] = useState(location.pathname);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const locale = useLocale();
 
   // Update currentPath when location changes
   useEffect(() => {
@@ -96,10 +97,9 @@ const LocalizedApp = () => {
       (location.pathname.includes("/login") ||
         location.pathname.includes("/signup"))
     ) {
-      const locale = location.pathname.split("/")[1];
       navigate(`/${locale}`);
     }
-  }, [user, location.pathname, navigate]);
+  }, [user, location.pathname, navigate, locale]);
 
   // Check if the current page is Login or SignUp to hide sidebar
   const isAuthPage =
@@ -119,11 +119,23 @@ const LocalizedApp = () => {
       ) : (
         <Sidebar currentPath={currentPath} onNavigate={setCurrentPath}>
           <Routes>
-            {/* Home routes */}
+            {/* Home routes - Public */}
             <Route path="/en" element={<Home />} />
             <Route path="/ar" element={<Home />} />
 
-            {/* Profile route - protected */}
+            {/* Public routes */}
+            <Route path="/en/calendar" element={<Calendar />} />
+            <Route path="/ar/calendar" element={<Calendar />} />
+            <Route path="/en/links" element={<Links />} />
+            <Route path="/ar/links" element={<Links />} />
+            <Route path="/en/about" element={<About />} />
+            <Route path="/ar/about" element={<About />} />
+            <Route path="/en/guide" element={<Guide />} />
+            <Route path="/ar/guide" element={<Guide />} />
+            <Route path="/en/privacy" element={<Privacy />} />
+            <Route path="/ar/privacy" element={<Privacy />} />
+
+            {/* Protected routes - require authentication */}
             <Route
               path="/en/profile"
               element={
@@ -140,61 +152,101 @@ const LocalizedApp = () => {
                 </ProtectedRoute>
               }
             />
-
-            {/* GPA Calculator routes */}
-            <Route path="/en/gpa-calculator" element={<GPACalculator />} />
-            <Route path="/ar/gpa-calculator" element={<GPACalculator />} />
-
-            {/* Grade Calculator routes */}
-            <Route path="/en/grade-calculator" element={<GradeCalculator />} />
-            <Route path="/ar/grade-calculator" element={<GradeCalculator />} />
-
-            {/* Attendance Calculator routes */}
+            <Route
+              path="/en/gpa-calculator"
+              element={
+                <ProtectedRoute>
+                  <GPACalculator />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ar/gpa-calculator"
+              element={
+                <ProtectedRoute>
+                  <GPACalculator />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/en/grade-calculator"
+              element={
+                <ProtectedRoute>
+                  <GradeCalculator />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ar/grade-calculator"
+              element={
+                <ProtectedRoute>
+                  <GradeCalculator />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/en/attendance-calculator"
-              element={<AttendanceCalculator />}
+              element={
+                <ProtectedRoute>
+                  <AttendanceCalculator />
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/ar/attendance-calculator"
-              element={<AttendanceCalculator />}
+              element={
+                <ProtectedRoute>
+                  <AttendanceCalculator />
+                </ProtectedRoute>
+              }
             />
-
-            {/* Schedule Planner routes */}
-            <Route path="/en/schedule-planner" element={<SchedulePlanner />} />
-            <Route path="/ar/schedule-planner" element={<SchedulePlanner />} />
-
-            {/* Calendar routes */}
-            <Route path="/en/calendar" element={<Calendar />} />
-            <Route path="/ar/calendar" element={<Calendar />} />
-
-            {/* Links routes */}
-            <Route path="/en/links" element={<Links />} />
-            <Route path="/ar/links" element={<Links />} />
-
-            {/* About routes */}
-            <Route path="/en/about" element={<About />} />
-            <Route path="/ar/about" element={<About />} />
-
-            {/* Privacy routes */}
-            <Route path="/en/privacy" element={<Privacy />} />
-            <Route path="/ar/privacy" element={<Privacy />} />
-
-            {/* Guide routes */}
-            <Route path="/en/guide" element={<Guide />} />
-            <Route path="/ar/guide" element={<Guide />} />
-
-            {/* Feedback routes */}
-            <Route path="/en/feedback" element={<Feedback />} />
-            <Route path="/ar/feedback" element={<Feedback />} />
-
-            {/* Study Time Calculator routes */}
+            <Route
+              path="/en/schedule-planner"
+              element={
+                <ProtectedRoute>
+                  <SchedulePlanner />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ar/schedule-planner"
+              element={
+                <ProtectedRoute>
+                  <SchedulePlanner />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/en/feedback"
+              element={
+                <ProtectedRoute>
+                  <Feedback />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ar/feedback"
+              element={
+                <ProtectedRoute>
+                  <Feedback />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/en/study-time-calculator"
-              element={<StudyTimeCalculator />}
+              element={
+                <ProtectedRoute>
+                  <StudyTimeCalculator />
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/ar/study-time-calculator"
-              element={<StudyTimeCalculator />}
+              element={
+                <ProtectedRoute>
+                  <StudyTimeCalculator />
+                </ProtectedRoute>
+              }
             />
 
             {/* Root and wildcard routes */}

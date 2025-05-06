@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocale } from "../context/LanguageContext";
 import { useAuth } from "../context/AuthContext";
@@ -26,6 +26,16 @@ interface NavCategory {
   items: NavItem[];
 }
 
+// Define which pages should be accessible without authentication
+const UNRESTRICTED_PATHS = [
+  "/",
+  "/calendar",
+  "/links",
+  "/about",
+  "/guide",
+  "/privacy",
+];
+
 export default function Sidebar({
   children,
   currentPath,
@@ -33,9 +43,26 @@ export default function Sidebar({
 }: SidebarProps) {
   const locale = useLocale();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const [isOpen, setIsOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target as Node)
+      ) {
+        setProfileDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Navigation categories
   const navCategories: NavCategory[] = [
@@ -230,27 +257,6 @@ export default function Sidebar({
       nameAr: "الحساب",
       items: [
         {
-          name: "Profile",
-          nameAr: "الملف الشخصي",
-          path: "/profile",
-          icon: (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-              />
-            </svg>
-          ),
-        },
-        {
           name: "Log In",
           nameAr: "تسجيل الدخول",
           path: "/login",
@@ -420,6 +426,15 @@ export default function Sidebar({
     navigate(localizedPath);
   };
 
+  // Function to check if a menu item should be shown based on auth state
+  const shouldShowMenuItem = (path: string) => {
+    // If user is logged in, show all items
+    if (user) return true;
+
+    // If user is not logged in, only show unrestricted paths
+    return UNRESTRICTED_PATHS.includes(path);
+  };
+
   return (
     <div
       className={`flex h-screen w-screen overflow-hidden bg-black text-white ${
@@ -511,25 +526,133 @@ export default function Sidebar({
           </div>
         )}
 
-        <nav className={`flex-1 overflow-y-auto py-5 px-3`}>
-          {navCategories.map((category, index) => (
-            <div key={category.name} className={index !== 0 ? "mt-6" : ""}>
-              {isOpen && (
-                <h4 className="px-2 mb-2 text-xs font-medium text-zinc-500 uppercase tracking-wider">
-                  {locale === "ar" ? category.nameAr : category.name}
-                </h4>
-              )}
-              <ul className="space-y-1">
-                {category.items.map((item) => {
-                  // Skip items that should be hidden based on auth state
-                  if (
-                    (item.hideIfAuthenticated && user) ||
-                    (item.path === "/profile" && !user)
-                  ) {
-                    return null;
-                  }
+        {/* User Profile Box - Only show if logged in */}
+        {user && (
+          <div className="px-4 py-4 border-b border-zinc-800/50">
+            <div className="relative" ref={profileDropdownRef}>
+              <button
+                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-gradient-to-br from-zinc-800/50 to-zinc-800/30 hover:from-zinc-800 hover:to-zinc-800/50 border border-zinc-700/50 text-white transition-all duration-200 group"
+              >
+                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-lg font-semibold shadow-lg shadow-blue-500/20">
+                  {user.user_metadata?.name
+                    ? user.user_metadata.name.charAt(0).toUpperCase()
+                    : user.email?.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0 text-left">
+                  <div className="truncate font-medium text-sm text-white group-hover:text-white transition-colors">
+                    {user.user_metadata?.name || user.email}
+                  </div>
+                  <div className="text-xs text-zinc-400 truncate group-hover:text-zinc-300 transition-colors">
+                    {user.email}
+                  </div>
+                </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  className={`w-5 h-5 text-zinc-400 group-hover:text-zinc-300 transition-all duration-200 ${
+                    profileDropdownOpen ? "transform rotate-180" : ""
+                  }`}
+                  strokeWidth="1.5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  />
+                </svg>
+              </button>
 
-                  return (
+              {/* Dropdown Menu */}
+              {profileDropdownOpen && (
+                <div className="absolute z-10 mt-2 w-full rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 shadow-xl shadow-black/20 border border-zinc-700/50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-150">
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation("/profile");
+                      setProfileDropdownOpen(false);
+                    }}
+                    className="flex items-center px-4 py-2.5 text-sm text-zinc-300 hover:text-white hover:bg-zinc-700/50 transition-colors"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      className="w-4 h-4 mr-3"
+                      strokeWidth="1.5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                      />
+                    </svg>
+                    {locale === "ar" ? "الملف الشخصي" : "Profile"}
+                  </a>
+                  <div className="h-px bg-zinc-700/50 my-1"></div>
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      signOut();
+                      setProfileDropdownOpen(false);
+                    }}
+                    className="flex items-center px-4 py-2.5 text-sm text-zinc-300 hover:text-white hover:bg-zinc-700/50 transition-colors"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      className="w-4 h-4 mr-3"
+                      strokeWidth="1.5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                      />
+                    </svg>
+                    {locale === "ar" ? "تسجيل الخروج" : "Sign Out"}
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        <nav className={`flex-1 overflow-y-auto py-5 px-3`}>
+          {navCategories.map((category, index) => {
+            // Check if category has any visible items
+            const visibleItems = category.items.filter((item) => {
+              // Skip items that should be hidden based on auth state
+              if (
+                (item.hideIfAuthenticated && user) ||
+                (item.path === "/profile" && !user)
+              ) {
+                return false;
+              }
+
+              // Check if the item should be shown based on authentication status
+              return shouldShowMenuItem(item.path);
+            });
+
+            // Skip the category if it has no visible items
+            if (visibleItems.length === 0) return null;
+
+            return (
+              <div key={category.name} className={index !== 0 ? "mt-6" : ""}>
+                {isOpen && (
+                  <h4 className="px-2 mb-2 text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                    {locale === "ar" ? category.nameAr : category.name}
+                  </h4>
+                )}
+                <ul className="space-y-1">
+                  {visibleItems.map((item) => (
                     <li key={item.path}>
                       <a
                         href="#"
@@ -564,11 +687,11 @@ export default function Sidebar({
                         </div>
                       </a>
                     </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
 
           {/* Language Switcher */}
           {isOpen && (
@@ -581,6 +704,54 @@ export default function Sidebar({
             </div>
           )}
         </nav>
+
+        {/* Login/Signup buttons for non-authenticated users */}
+        {!user && isOpen && (
+          <div className="p-4 border-t border-zinc-800/50">
+            <div className="space-y-2.5">
+              <button
+                onClick={() => handleNavigation("/login")}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-lg shadow-blue-500/20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:ring-offset-2 focus:ring-offset-zinc-900"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
+                  />
+                </svg>
+                {locale === "ar" ? "تسجيل الدخول" : "Log In"}
+              </button>
+              <button
+                onClick={() => handleNavigation("/signup")}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-br from-zinc-800/50 to-zinc-800/30 hover:from-zinc-800 hover:to-zinc-800/50 text-zinc-300 hover:text-white font-medium border border-zinc-700/50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-zinc-500/30 focus:ring-offset-2 focus:ring-offset-zinc-900"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
+                  />
+                </svg>
+                {locale === "ar" ? "إنشاء حساب" : "Sign Up"}
+              </button>
+            </div>
+          </div>
+        )}
 
         <div
           className={`${

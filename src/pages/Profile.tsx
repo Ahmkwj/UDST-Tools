@@ -206,22 +206,18 @@ export default function Profile() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  disabled
                 />
 
                 <button
                   type="submit"
                   disabled={profileLoading}
-                  className="relative w-full px-4 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:ring-offset-2 focus:ring-offset-zinc-900"
                 >
-                  <span
-                    className={profileLoading ? "opacity-0" : "opacity-100"}
-                  >
-                    {translations.saveChanges[locale]}
-                  </span>
-                  {profileLoading && (
-                    <span className="absolute inset-0 flex items-center justify-center">
+                  {profileLoading ? (
+                    <div className="flex items-center justify-center">
                       <svg
-                        className="w-5 h-5 text-white animate-spin"
+                        className="animate-spin h-5 w-5 text-white"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -240,10 +236,21 @@ export default function Profile() {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                    </span>
+                    </div>
+                  ) : (
+                    translations.saveChanges[locale]
                   )}
                 </button>
               </form>
+
+              <div className="mt-6 pt-6 border-t border-zinc-800/50">
+                <button
+                  onClick={handleSignOut}
+                  className="w-full px-4 py-2.5 rounded-xl bg-gradient-to-br from-zinc-800/50 to-zinc-800/30 hover:from-zinc-800 hover:to-zinc-800/50 text-zinc-300 hover:text-white font-medium border border-zinc-700/50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-zinc-500/30 focus:ring-offset-2 focus:ring-offset-zinc-900"
+                >
+                  {translations.signOut[locale]}
+                </button>
+              </div>
             </Card>
 
             {/* Security */}
@@ -278,17 +285,12 @@ export default function Profile() {
                 <button
                   type="submit"
                   disabled={passwordLoading}
-                  className="relative w-full px-4 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:ring-offset-2 focus:ring-offset-zinc-900"
                 >
-                  <span
-                    className={passwordLoading ? "opacity-0" : "opacity-100"}
-                  >
-                    {translations.updatePassword[locale]}
-                  </span>
-                  {passwordLoading && (
-                    <span className="absolute inset-0 flex items-center justify-center">
+                  {passwordLoading ? (
+                    <div className="flex items-center justify-center">
                       <svg
-                        className="w-5 h-5 text-white animate-spin"
+                        className="animate-spin h-5 w-5 text-white"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -307,18 +309,10 @@ export default function Profile() {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                    </span>
+                    </div>
+                  ) : (
+                    translations.updatePassword[locale]
                   )}
-                </button>
-
-                <div className="h-px bg-zinc-800"></div>
-
-                <button
-                  onClick={handleSignOut}
-                  type="button"
-                  className="w-full px-4 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-200"
-                >
-                  {translations.signOut[locale]}
                 </button>
               </form>
             </Card>
