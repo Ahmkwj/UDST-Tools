@@ -7,6 +7,7 @@ import Checkbox from "../components/ui/Checkbox";
 import Footer from "../components/ui/Footer";
 import PageHeader from "../components/ui/PageHeader";
 import { useLocale } from "../context/LanguageContext";
+import { useAuth } from "../context/AuthContext";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -18,6 +19,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { supabase } from "../utils/supabaseClient";
 
 // Feature flags
 const SHOW_FUTURE_SCENARIOS = false;
@@ -48,10 +50,12 @@ type Scenario = {
 
 export default function GPACalculator() {
   const locale = useLocale();
+  const { user } = useAuth();
   const [totalGradePoints, setTotalGradePoints] = useState<number | string>("");
   const [totalCredits, setTotalCredits] = useState<number | string>("");
   const [numberOfCourses, setNumberOfCourses] = useState<number>(0);
   const [courses, setCourses] = useState<Course[]>([]);
+  const [loadingAcademicInfo, setLoadingAcademicInfo] = useState<boolean>(true);
   const [scenarios, setScenarios] = useState<Scenario[]>([
     { numCourses: 4, grades: [], termGPA: 0, cumulativeGPA: 0 },
     { numCourses: 3, grades: [], termGPA: 0, cumulativeGPA: 0 },
@@ -62,6 +66,39 @@ export default function GPACalculator() {
   const [previousCumulativeGPA, setPreviousCumulativeGPA] = useState<number>(0);
   const [newTotalGradePoints, setNewTotalGradePoints] = useState<number>(0);
   const [newTotalCredits, setNewTotalCredits] = useState<number>(0);
+
+  // Add a new useEffect to load academic info
+  useEffect(() => {
+    if (user) {
+      loadAcademicInfo();
+    }
+  }, [user]);
+
+  // Add the loadAcademicInfo function
+  const loadAcademicInfo = async () => {
+    try {
+      setLoadingAcademicInfo(true);
+
+      const { data, error } = await supabase
+        .from("academic_info")
+        .select("*")
+        .eq("user_id", user?.id)
+        .single();
+
+      if (error && error.code !== "PGRST116") {
+        console.error("Error loading academic info:", error);
+      } else if (data) {
+        // Set the data from the database
+        setTotalGradePoints(data.total_grade_points);
+        setTotalCredits(data.total_credits);
+        setNumberOfCourses(data.current_subjects || 0);
+      }
+    } catch (err) {
+      console.error("Unexpected error loading academic info:", err);
+    } finally {
+      setLoadingAcademicInfo(false);
+    }
+  };
 
   // Initialize courses when number of courses changes
   useEffect(() => {
@@ -362,81 +399,80 @@ export default function GPACalculator() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
             {/* Left Column - Input Sections */}
             <div className="space-y-6 md:space-y-8 h-full flex flex-col">
-              {/* Basic Information Card */}
+              {/* Current GPA */}
               <Card
                 title={
-                  locale === "ar"
-                    ? "معلومات المعدل التراكمي الحالي"
-                    : "Current GPA Information"
+                  locale === "ar" ? "المعدل التراكمي الحالي" : "Current GPA"
                 }
-                className="relative"
               >
-                <form className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
-                    <Input
-                      label={
-                        locale === "ar"
-                          ? "مجموع نقاط الدرجات"
-                          : "Total Grade Points"
-                      }
-                      type="number"
-                      min="0"
-                      step="1"
-                      placeholder={
-                        locale === "ar" ? "مثال: 95.500" : "e.g. 95.500"
-                      }
-                      value={totalGradePoints}
-                      onChange={(e) => {
-                        const value = parseFloat(e.target.value);
-                        if (e.target.value === "" || isNaN(value)) {
-                          setTotalGradePoints("");
-                        } else {
-                          setTotalGradePoints(Math.max(0, value));
-                        }
-                      }}
-                    />
-
-                    <Input
-                      label={
-                        locale === "ar"
-                          ? "إجمالي الساعات المكتسبة"
-                          : "Total Earned Credits"
-                      }
-                      type="number"
-                      min="0"
-                      step="1"
-                      placeholder={locale === "ar" ? "مثال: 50" : "e.g. 50"}
-                      value={totalCredits}
-                      onChange={(e) => {
-                        const value = parseFloat(e.target.value);
-                        if (e.target.value === "" || isNaN(value)) {
-                          setTotalCredits("");
-                        } else {
-                          setTotalCredits(Math.max(0, value));
-                        }
-                      }}
-                    />
+                {loadingAcademicInfo ? (
+                  <div className="flex items-center justify-center py-6">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
                   </div>
+                ) : (
+                  <div className="space-y-6">
+                    <div className="text-center">
+                      <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+                        {previousCumulativeGPA.toFixed(2)}
+                      </div>
+                      <p className="text-zinc-400 text-sm md:text-base">
+                        {locale === "ar"
+                          ? "معدلك التراكمي الحالي"
+                          : "Your Current Cumulative GPA"}
+                      </p>
+                    </div>
 
-                  <Select
-                    label={locale === "ar" ? "عدد المواد" : "Number of Courses"}
-                    value={numberOfCourses}
-                    onChange={(e) =>
-                      setNumberOfCourses(parseInt(e.target.value))
-                    }
-                    helperText={
-                      locale === "ar"
-                        ? "اختر عدد المواد التي تدرسها حاليًا"
-                        : "Choose the number of courses you are currently taking"
-                    }
-                  >
-                    {[0, 1, 2, 3, 4, 5, 6].map((num) => (
-                      <option key={num} value={num}>
-                        {num}
-                      </option>
-                    ))}
-                  </Select>
-                </form>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
+                      <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-4 text-center">
+                        <span className="block text-xl font-semibold text-white">
+                          {typeof totalGradePoints === "string"
+                            ? parseFloat(totalGradePoints).toFixed(1)
+                            : totalGradePoints.toFixed(1)}
+                        </span>
+                        <span className="block text-sm text-zinc-400 mt-1">
+                          {locale === "ar" ? "نقاط الدرجات" : "Grade Points"}
+                        </span>
+                      </div>
+                      <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-4 text-center">
+                        <span className="block text-xl font-semibold text-white">
+                          {typeof totalCredits === "string"
+                            ? parseFloat(totalCredits)
+                            : totalCredits}
+                        </span>
+                        <span className="block text-sm text-zinc-400 mt-1">
+                          {locale === "ar" ? "الساعات المعتمدة" : "Credits"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="text-center pt-2">
+                      <a
+                        href={`/${locale}/academic-info`}
+                        className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors"
+                      >
+                        {locale === "ar"
+                          ? "تعديل المعلومات الأكاديمية"
+                          : "Edit Academic Information"}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className={`h-4 w-4 ${
+                            locale === "ar" ? "mr-1" : "ml-1"
+                          }`}
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                          />
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                )}
               </Card>
 
               {/* Course Information Card */}

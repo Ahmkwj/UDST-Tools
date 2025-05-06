@@ -21,6 +21,7 @@ import Links from "./pages/Links";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
+import AcademicInfo from "./pages/AcademicInfo";
 import ProtectedRoute from "./components/ProtectedRoute";
 import {
   LanguageProvider,
@@ -245,6 +246,22 @@ const LocalizedApp = () => {
               element={
                 <ProtectedRoute>
                   <StudyTimeCalculator />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/en/academic-info"
+              element={
+                <ProtectedRoute>
+                  <AcademicInfo />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ar/academic-info"
+              element={
+                <ProtectedRoute>
+                  <AcademicInfo />
                 </ProtectedRoute>
               }
             />
