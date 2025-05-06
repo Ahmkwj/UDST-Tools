@@ -557,8 +557,8 @@ export default function SwapWithMe() {
                         ) : (
                           <a
                             href={`mailto:${
-                              request.creator_email
-                            }?subject=${encodeURIComponent(
+                              request.creator_student_id
+                            }@udst.edu.qa?subject=${encodeURIComponent(
                               `Swap Request: ${request.course_name}`
                             )}`}
                             className="px-4 py-2 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 text-sm transition-colors text-center"
