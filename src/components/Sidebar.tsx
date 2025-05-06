@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocale } from "../context/LanguageContext";
+import { useAuth } from "../context/AuthContext";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { version } from "../../version.json";
 
@@ -16,6 +17,7 @@ interface NavItem {
   icon: React.ReactNode;
   nameAr?: string; // Arabic name for menu items
   comingSoon?: boolean;
+  hideIfAuthenticated?: boolean; // New property to conditionally hide items when authenticated
 }
 
 interface NavCategory {
@@ -31,6 +33,7 @@ export default function Sidebar({
 }: SidebarProps) {
   const locale = useLocale();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -216,6 +219,77 @@ export default function Sidebar({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25M3 18.75h18M12 15.75h.008v.008H12v-.008Z"
+              />
+            </svg>
+          ),
+        },
+      ],
+    },
+    {
+      name: "Account",
+      nameAr: "الحساب",
+      items: [
+        {
+          name: "Profile",
+          nameAr: "الملف الشخصي",
+          path: "/profile",
+          icon: (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+              />
+            </svg>
+          ),
+        },
+        {
+          name: "Log In",
+          nameAr: "تسجيل الدخول",
+          path: "/login",
+          hideIfAuthenticated: true,
+          icon: (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+              />
+            </svg>
+          ),
+        },
+        {
+          name: "Sign Up",
+          nameAr: "إنشاء حساب",
+          path: "/signup",
+          hideIfAuthenticated: true,
+          icon: (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM4 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 10.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
               />
             </svg>
           ),
@@ -446,42 +520,52 @@ export default function Sidebar({
                 </h4>
               )}
               <ul className="space-y-1">
-                {category.items.map((item) => (
-                  <li key={item.path}>
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleNavigation(item.path);
-                      }}
-                      className={`flex items-center p-2 rounded-lg ${
-                        currentPath === `/${locale}${item.path}` ||
-                        (item.path === "/" && currentPath === `/${locale}`)
-                          ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium shadow-md"
-                          : "text-zinc-400 hover:text-white hover:bg-zinc-800"
-                      } transition-colors group relative`}
-                      title={locale === "ar" ? item.nameAr : item.name}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <div className="flex items-center">
-                          <div className="w-5 h-5 flex-shrink-0">
-                            {item.icon}
+                {category.items.map((item) => {
+                  // Skip items that should be hidden based on auth state
+                  if (
+                    (item.hideIfAuthenticated && user) ||
+                    (item.path === "/profile" && !user)
+                  ) {
+                    return null;
+                  }
+
+                  return (
+                    <li key={item.path}>
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleNavigation(item.path);
+                        }}
+                        className={`flex items-center p-2 rounded-lg ${
+                          currentPath === `/${locale}${item.path}` ||
+                          (item.path === "/" && currentPath === `/${locale}`)
+                            ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium shadow-md"
+                            : "text-zinc-400 hover:text-white hover:bg-zinc-800"
+                        } transition-colors group relative`}
+                        title={locale === "ar" ? item.nameAr : item.name}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className="flex items-center">
+                            <div className="w-5 h-5 flex-shrink-0">
+                              {item.icon}
+                            </div>
+                            <span className="ltr:ml-3 rtl:mr-3">
+                              {locale === "ar" && item.nameAr
+                                ? item.nameAr
+                                : item.name}
+                            </span>
                           </div>
-                          <span className="ltr:ml-3 rtl:mr-3">
-                            {locale === "ar" && item.nameAr
-                              ? item.nameAr
-                              : item.name}
-                          </span>
+                          {item.comingSoon && (
+                            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-700/50 text-zinc-300 border border-zinc-600/50">
+                              {locale === "ar" ? "قريبًا" : "Soon"}
+                            </span>
+                          )}
                         </div>
-                        {item.comingSoon && (
-                          <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-700/50 text-zinc-300 border border-zinc-600/50">
-                            {locale === "ar" ? "قريبًا" : "Soon"}
-                          </span>
-                        )}
-                      </div>
-                    </a>
-                  </li>
-                ))}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}

@@ -18,11 +18,16 @@ import Guide from "./pages/Guide";
 import SchedulePlanner from "./pages/SchedulePlanner";
 import Feedback from "./pages/Feedback";
 import Links from "./pages/Links";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 import {
   LanguageProvider,
   useLocale,
   useSetLocale,
 } from "./context/LanguageContext";
+import { AuthProvider } from "./context/AuthContext";
 import Home from "../public";
 import StudyTimeCalculator from "./pages/StudyTimeCalculator";
 
@@ -82,69 +87,108 @@ const LocalizedApp = () => {
     setCurrentPath(location.pathname);
   }, [location.pathname]);
 
+  // Check if the current page is Login or SignUp to hide sidebar
+  const isAuthPage =
+    location.pathname.includes("/login") ||
+    location.pathname.includes("/signup");
+
   return (
     <LocalizedLayout>
-      <Sidebar currentPath={currentPath} onNavigate={setCurrentPath}>
+      {isAuthPage ? (
         <Routes>
-          {/* Home routes */}
-          <Route path="/en" element={<Home />} />
-          <Route path="/ar" element={<Home />} />
-
-          {/* GPA Calculator routes */}
-          <Route path="/en/gpa-calculator" element={<GPACalculator />} />
-          <Route path="/ar/gpa-calculator" element={<GPACalculator />} />
-
-          {/* Grade Calculator routes */}
-          <Route path="/en/grade-calculator" element={<GradeCalculator />} />
-          <Route path="/ar/grade-calculator" element={<GradeCalculator />} />
-
-          {/* Attendance Calculator routes */}
-          <Route
-            path="/en/attendance-calculator"
-            element={<AttendanceCalculator />}
-          />
-          <Route
-            path="/ar/attendance-calculator"
-            element={<AttendanceCalculator />}
-          />
-
-          {/* Schedule Planner routes */}
-          <Route path="/en/schedule-planner" element={<SchedulePlanner />} />
-          <Route path="/ar/schedule-planner" element={<SchedulePlanner />} />
-
-          {/* Calendar routes */}
-          <Route path="/en/calendar" element={<Calendar />} />
-          <Route path="/ar/calendar" element={<Calendar />} />
-
-          {/* Links routes */}
-          <Route path="/en/links" element={<Links />} />
-          <Route path="/ar/links" element={<Links />} />
-
-          {/* About routes */}
-          <Route path="/en/about" element={<About />} />
-          <Route path="/ar/about" element={<About />} />
-
-          {/* Privacy routes */}
-          <Route path="/en/privacy" element={<Privacy />} />
-          <Route path="/ar/privacy" element={<Privacy />} />
-
-          {/* Guide routes */}
-          <Route path="/en/guide" element={<Guide />} />
-          <Route path="/ar/guide" element={<Guide />} />
-
-          {/* Feedback routes */}
-          <Route path="/en/feedback" element={<Feedback />} />
-          <Route path="/ar/feedback" element={<Feedback />} />
-
-          {/* Study Time Calculator routes */}
-          <Route path="/en/study-time-calculator" element={<StudyTimeCalculator />} />
-          <Route path="/ar/study-time-calculator" element={<StudyTimeCalculator />} />
-
-          {/* Root and wildcard routes */}
-          <Route path="/" element={<LocaleRedirect />} />
-          <Route path="*" element={<LocaleRedirect />} />
+          {/* Auth routes */}
+          <Route path="/en/login" element={<Login />} />
+          <Route path="/ar/login" element={<Login />} />
+          <Route path="/en/signup" element={<SignUp />} />
+          <Route path="/ar/signup" element={<SignUp />} />
         </Routes>
-      </Sidebar>
+      ) : (
+        <Sidebar currentPath={currentPath} onNavigate={setCurrentPath}>
+          <Routes>
+            {/* Home routes */}
+            <Route path="/en" element={<Home />} />
+            <Route path="/ar" element={<Home />} />
+
+            {/* Profile route - protected */}
+            <Route
+              path="/en/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ar/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* GPA Calculator routes */}
+            <Route path="/en/gpa-calculator" element={<GPACalculator />} />
+            <Route path="/ar/gpa-calculator" element={<GPACalculator />} />
+
+            {/* Grade Calculator routes */}
+            <Route path="/en/grade-calculator" element={<GradeCalculator />} />
+            <Route path="/ar/grade-calculator" element={<GradeCalculator />} />
+
+            {/* Attendance Calculator routes */}
+            <Route
+              path="/en/attendance-calculator"
+              element={<AttendanceCalculator />}
+            />
+            <Route
+              path="/ar/attendance-calculator"
+              element={<AttendanceCalculator />}
+            />
+
+            {/* Schedule Planner routes */}
+            <Route path="/en/schedule-planner" element={<SchedulePlanner />} />
+            <Route path="/ar/schedule-planner" element={<SchedulePlanner />} />
+
+            {/* Calendar routes */}
+            <Route path="/en/calendar" element={<Calendar />} />
+            <Route path="/ar/calendar" element={<Calendar />} />
+
+            {/* Links routes */}
+            <Route path="/en/links" element={<Links />} />
+            <Route path="/ar/links" element={<Links />} />
+
+            {/* About routes */}
+            <Route path="/en/about" element={<About />} />
+            <Route path="/ar/about" element={<About />} />
+
+            {/* Privacy routes */}
+            <Route path="/en/privacy" element={<Privacy />} />
+            <Route path="/ar/privacy" element={<Privacy />} />
+
+            {/* Guide routes */}
+            <Route path="/en/guide" element={<Guide />} />
+            <Route path="/ar/guide" element={<Guide />} />
+
+            {/* Feedback routes */}
+            <Route path="/en/feedback" element={<Feedback />} />
+            <Route path="/ar/feedback" element={<Feedback />} />
+
+            {/* Study Time Calculator routes */}
+            <Route
+              path="/en/study-time-calculator"
+              element={<StudyTimeCalculator />}
+            />
+            <Route
+              path="/ar/study-time-calculator"
+              element={<StudyTimeCalculator />}
+            />
+
+            {/* Root and wildcard routes */}
+            <Route path="/" element={<LocaleRedirect />} />
+            <Route path="*" element={<LocaleRedirect />} />
+          </Routes>
+        </Sidebar>
+      )}
     </LocalizedLayout>
   );
 };
@@ -157,9 +201,11 @@ const App: React.FC = () => {
 
   return (
     <LanguageProvider>
-      <Router>
-        <LocalizedApp />
-      </Router>
+      <AuthProvider>
+        <Router>
+          <LocalizedApp />
+        </Router>
+      </AuthProvider>
     </LanguageProvider>
   );
 };
