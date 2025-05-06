@@ -226,7 +226,7 @@ export default function SchedulePlanner() {
             <div className="prose prose-invert max-w-none">
               <p className="text-zinc-300 leading-relaxed">
                 {locale === "ar"
-                  ? "نعلم جيدًا مدى الإحباط الناتج عن التسجيل في المقررات عبر بيبول سوفت. تقوم باختيار أوقات كل مقرر بدقة وعناية، لتتفاجأ برسالة خطأ تشير إلى تعارض في الجدول عند النقر على 'حفظ'. مع مخطط الجدول، يمكنك إضافة المقررات وأوقاتها بسهولة، وسنقوم بإشعارك فورًا بأي تعارضات في الجدول بشكل آني."
+                  ? "نعلم جيدًا مدى الإحباط الناتج عن التسجيل في المواد عبر بيبول سوفت. تقوم باختيار أوقات كل مقرر بدقة وعناية، لتتفاجأ برسالة خطأ تشير إلى تعارض في الجدول عند النقر على 'حفظ'. مع مخطط الجدول، يمكنك إضافة المواد وأوقاتها بسهولة، وسنقوم بإشعارك فورًا بأي تعارضات في الجدول بشكل آني."
                   : "We understand the frustration of enrolling in courses on PeopleSoft. You meticulously select the timings for each course, only to encounter a scheduling conflict error upon clicking 'Save'. With Schedule Planner, you can effortlessly add your courses and their timings, and we’ll instantly alert you to any conflicts in real-time."}
               </p>
             </div>

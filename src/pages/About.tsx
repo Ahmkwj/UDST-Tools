@@ -123,7 +123,7 @@ export default function About() {
                 </div>
                 <p className="text-sm text-zinc-400">
                   {locale === "ar"
-                    ? "قدّر درجاتك النهائية في المقررات بناءً على أوزان التقييمات"
+                    ? "قدّر درجاتك النهائية في المواد بناءً على أوزان التقييمات"
                     : "Estimate your final course grades based on assignment weights"}
                 </p>
               </div>

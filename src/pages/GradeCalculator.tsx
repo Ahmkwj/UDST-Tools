@@ -231,11 +231,11 @@ export default function GradeCalculator() {
           <PageHeader
             title={{
               en: "Grade Calculator",
-              ar: "حاسبة الدرجات"
+              ar: "حاسبة الدرجات",
             }}
             description={{
               en: "Calculate your course grades, track assignment scores, and estimate your final grade based on weighted assignments.",
-              ar: "احسب درجات مقرراتك، تتبع درجات التكليفات، وقدّر درجتك النهائية بناءً على أوزان التكليفات."
+              ar: "احسب درجات مقرراتك، تتبع درجات التكليفات، وقدّر درجتك النهائية بناءً على أوزان التكليفات.",
             }}
           />
 
@@ -646,7 +646,7 @@ export default function GradeCalculator() {
                         <div>
                           <div className="text-xs text-zinc-500 mb-1">
                             {locale === "ar"
-                              ? "تقدم المقرر"
+                              ? "تقدم المادة"
                               : "Course Progress"}
                           </div>
                           <div className="text-base md:text-lg font-medium text-zinc-200">

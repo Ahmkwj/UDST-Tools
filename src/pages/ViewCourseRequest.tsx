@@ -45,7 +45,7 @@ export default function ViewCourseRequest() {
     },
     description: {
       en: "View details of the requested course section",
-      ar: "عرض تفاصيل طلب فتح شعبة المقرر",
+      ar: "عرض تفاصيل طلب فتح شعبة المادة",
     },
     loading: {
       en: "Loading request information...",
@@ -57,7 +57,7 @@ export default function ViewCourseRequest() {
     },
     errorMessage: {
       en: "The requested course request information could not be found.",
-      ar: "لم يتم العثور على معلومات طلب المقرر المطلوب.",
+      ar: "لم يتم العثور على معلومات طلب المادة المطلوب.",
     },
     createdBy: {
       en: "Created by",
@@ -65,7 +65,7 @@ export default function ViewCourseRequest() {
     },
     requestedCourse: {
       en: "Requested Course",
-      ar: "المقرر المطلوب",
+      ar: "المادة المطلوبة",
     },
     studentId: {
       en: "Student ID",
@@ -81,7 +81,7 @@ export default function ViewCourseRequest() {
     },
     studentCount: {
       en: "students interested in this course",
-      ar: "طالب مهتم بهذا المقرر",
+      ar: "طالب مهتم بهذه المادة",
     },
     name: {
       en: "Name",
@@ -117,7 +117,7 @@ export default function ViewCourseRequest() {
     },
     submit: {
       en: "Add Me to This Course",
-      ar: "أضفني لهذا المقرر",
+      ar: "أضفني لهذه المادة",
     },
     adding: {
       en: "Adding...",
@@ -125,11 +125,11 @@ export default function ViewCourseRequest() {
     },
     successAdded: {
       en: "You've been added to the course request!",
-      ar: "تمت إضافتك إلى طلب المقرر!",
+      ar: "تمت إضافتك إلى طلب المادة!",
     },
     errorAdding: {
       en: "Error adding you to the course request",
-      ar: "خطأ في إضافتك إلى طلب المقرر",
+      ar: "خطأ في إضافتك إلى طلب المادة",
     },
     expiresIn: {
       en: "This request expires in",

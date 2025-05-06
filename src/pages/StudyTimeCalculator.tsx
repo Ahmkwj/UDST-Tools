@@ -153,7 +153,7 @@ export default function StudyTimeCalculator() {
             }}
             description={{
               en: "Plan your study schedule effectively based on your course load",
-              ar: "خطط جدول دراستك بفعالية بناءً على عبء المقررات",
+              ar: "خطط جدول دراستك بفعالية بناءً على عبء المواد",
             }}
           />
 
@@ -167,7 +167,7 @@ export default function StudyTimeCalculator() {
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-medium">
                       {locale === "ar"
-                        ? `المقرر ${index + 1}`
+                        ? `المادة ${index + 1}`
                         : `Course ${index + 1}`}
                     </h3>
                     {courses.length > 1 && (
@@ -199,14 +199,14 @@ export default function StudyTimeCalculator() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
-                      label={locale === "ar" ? "اسم المقرر" : "Course Name"}
+                      label={locale === "ar" ? "اسم المادة" : "Course Name"}
                       value={course.name}
                       onChange={(e) =>
                         updateCourse(course.id, "name", e.target.value)
                       }
                       placeholder={
                         locale === "ar"
-                          ? "أدخل اسم المقرر"
+                          ? "أدخل اسم المادة"
                           : "Enter course name"
                       }
                     />
@@ -248,7 +248,9 @@ export default function StudyTimeCalculator() {
 
                     <div className="flex flex-col gap-3">
                       <Checkbox
-                        label={locale === "ar" ? "لديه واجبات" : "Has Assignments"}
+                        label={
+                          locale === "ar" ? "لديه واجبات" : "Has Assignments"
+                        }
                         checked={course.hasAssignments}
                         onChange={(e) =>
                           updateCourse(
@@ -304,7 +306,9 @@ export default function StudyTimeCalculator() {
                 </Button>
 
                 <Button onClick={calculateStudyTime}>
-                  {locale === "ar" ? "حساب وقت الدراسة" : "Calculate Study Time"}
+                  {locale === "ar"
+                    ? "حساب وقت الدراسة"
+                    : "Calculate Study Time"}
                 </Button>
               </div>
             </div>
@@ -313,7 +317,9 @@ export default function StudyTimeCalculator() {
           {results && (
             <Card
               title={
-                locale === "ar" ? "توصيات وقت الدراسة" : "Study Time Recommendations"
+                locale === "ar"
+                  ? "توصيات وقت الدراسة"
+                  : "Study Time Recommendations"
               }
             >
               <div className="space-y-6">
@@ -349,15 +355,11 @@ export default function StudyTimeCalculator() {
 
                 <div className="p-4 bg-zinc-800/30 rounded-lg">
                   <h4 className="text-lg font-medium mb-4">
-                    {locale === "ar"
-                      ? "التقسيم الأسبوعي"
-                      : "Weekly Breakdown"}
+                    {locale === "ar" ? "التقسيم الأسبوعي" : "Weekly Breakdown"}
                   </h4>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <span>
-                        {locale === "ar" ? "المحاضرات" : "Lectures"}
-                      </span>
+                      <span>{locale === "ar" ? "المحاضرات" : "Lectures"}</span>
                       <span className="font-medium">
                         {results.weeklyBreakdown.lectures}{" "}
                         {locale === "ar" ? "ساعة" : "hours"}
@@ -425,4 +427,4 @@ export default function StudyTimeCalculator() {
       <Footer />
     </div>
   );
-} 
+}

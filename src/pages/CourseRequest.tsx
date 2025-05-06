@@ -68,11 +68,11 @@ export default function CourseRequest() {
     },
     courseNameLabel: {
       en: "Course Name",
-      ar: "اسم المقرر",
+      ar: "اسم المادة",
     },
     courseNameHelper: {
       en: "Enter the full course name and code (e.g. MATH 101: Calculus I)",
-      ar: "أدخل اسم المقرر الكامل ورمزه (مثال: MATH 101: حساب التفاضل والتكامل 1)",
+      ar: "أدخل اسم المادة الكامل ورمزه (مثال: MATH 101: حساب التفاضل والتكامل 1)",
     },
     interestedStudentsLabel: {
       en: "Interested Students",
@@ -80,7 +80,7 @@ export default function CourseRequest() {
     },
     interestedStudentsHelper: {
       en: "Add students who are interested in this course",
-      ar: "أضف الطلاب المهتمين بهذا المقرر",
+      ar: "أضف الطلاب المهتمين بهذه المادة",
     },
     studentNameLabel: {
       en: "Student Name",
@@ -108,11 +108,11 @@ export default function CourseRequest() {
     },
     linkGeneratedSuccess: {
       en: "Course request link generated successfully!",
-      ar: "تم إنشاء رابط طلب المقرر بنجاح!",
+      ar: "تم إنشاء رابط طلب المادة بنجاح!",
     },
     errorGeneratingLink: {
       en: "Error generating course request link",
-      ar: "خطأ في إنشاء رابط طلب المقرر",
+      ar: "خطأ في إنشاء رابط طلب المادة",
     },
     shareLinkText: {
       en: "Share this link with your department coordinator:",
@@ -347,7 +347,7 @@ export default function CourseRequest() {
           <Card
             title={
               locale === "ar"
-                ? "معلومات طلب المقرر"
+                ? "معلومات طلب المادة"
                 : "Course Request Information"
             }
           >

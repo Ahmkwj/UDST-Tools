@@ -34,6 +34,7 @@ import Home from "../public";
 import StudyTimeCalculator from "./pages/StudyTimeCalculator";
 import CourseRequest from "./pages/CourseRequest";
 import ViewCourseRequest from "./pages/ViewCourseRequest";
+import SwapWithMe from "./pages/SwapWithMe";
 
 // Redirect component to handle locale in routes
 function LocaleRedirect() {
@@ -292,6 +293,22 @@ const LocalizedApp = () => {
             <Route
               path="/ar/view-request/:slug"
               element={<ViewCourseRequest />}
+            />
+            <Route
+              path="/en/swap-with-me"
+              element={
+                <ProtectedRoute>
+                  <SwapWithMe />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ar/swap-with-me"
+              element={
+                <ProtectedRoute>
+                  <SwapWithMe />
+                </ProtectedRoute>
+              }
             />
 
             {/* Root and wildcard routes */}

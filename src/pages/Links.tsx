@@ -38,7 +38,7 @@ export default function Links() {
           },
           description: {
             en: "Access your courses, assignments, and learning materials through UDST's Learning Management System.",
-            ar: "الوصول إلى المقررات والواجبات والمواد التعليمية من خلال نظام إدارة التعلم.",
+            ar: "الوصول إلى المواد والواجبات والمواد التعليمية من خلال نظام إدارة التعلم.",
           },
           url: "https://d2l.udst.edu.qa/",
           icon: (
