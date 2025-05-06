@@ -39,3 +39,71 @@ html[dir="rtl"] {
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-zinc-500;
 }
+
+/* Print-specific styles */
+@media print {
+  /* Hide elements that shouldn't be printed */
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Show elements that should only be visible when printing */
+  .hidden.print\:block {
+    display: block !important;
+  }
+
+  /* Remove background colors and gradients */
+  .print\:bg-white {
+    background: white !important;
+    background-image: none !important;
+  }
+
+  /* Set text color to black for better printing */
+  .print\:text-black {
+    color: black !important;
+  }
+
+  .print\:text-gray-600 {
+    color: #4b5563 !important;
+  }
+
+  .print\:text-gray-700 {
+    color: #374151 !important;
+  }
+
+  .print\:text-gray-900 {
+    color: #111827 !important;
+  }
+
+  /* Border colors for printing */
+  .print\:border-gray-200 {
+    border-color: #e5e7eb !important;
+  }
+
+  .print\:border-gray-300 {
+    border-color: #d1d5db !important;
+  }
+
+  .print\:bg-gray-100 {
+    background-color: #f3f4f6 !important;
+  }
+
+  .print\:divide-gray-200 > * + * {
+    border-color: #e5e7eb !important;
+  }
+
+  .print\:divide-gray-300 > * + * {
+    border-color: #d1d5db !important;
+  }
+
+  /* Remove box shadows in print */
+  .print\:shadow-none {
+    box-shadow: none !important;
+  }
+
+  /* Add border for visible separation in print */
+  .print\:border {
+    border-width: 1px !important;
+    border-style: solid !important;
+  }
+}

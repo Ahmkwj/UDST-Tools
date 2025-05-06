@@ -31,6 +31,8 @@ import {
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Home from "../public";
 import StudyTimeCalculator from "./pages/StudyTimeCalculator";
+import CourseRequest from "./pages/CourseRequest";
+import ViewCourseRequest from "./pages/ViewCourseRequest";
 
 // Redirect component to handle locale in routes
 function LocaleRedirect() {
@@ -264,6 +266,30 @@ const LocalizedApp = () => {
                   <AcademicInfo />
                 </ProtectedRoute>
               }
+            />
+            <Route
+              path="/en/course-request"
+              element={
+                <ProtectedRoute>
+                  <CourseRequest />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ar/course-request"
+              element={
+                <ProtectedRoute>
+                  <CourseRequest />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/en/view-request/:slug"
+              element={<ViewCourseRequest />}
+            />
+            <Route
+              path="/ar/view-request/:slug"
+              element={<ViewCourseRequest />}
             />
 
             {/* Root and wildcard routes */}
