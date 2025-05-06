@@ -30,7 +30,7 @@ import {
   useSetLocale,
 } from "./context/LanguageContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import Home from "../public";
+import Home from "..";
 import StudyTimeCalculator from "./pages/StudyTimeCalculator";
 import CourseRequest from "./pages/CourseRequest";
 import ViewCourseRequest from "./pages/ViewCourseRequest";

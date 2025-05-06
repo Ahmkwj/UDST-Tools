@@ -1,7 +1,7 @@
 import * as React from "react";
-import { useLocale } from "../src/context/LanguageContext";
+import { useLocale } from "./src/context/LanguageContext";
 import { motion } from "framer-motion";
-import { useAuth } from "../src/context/AuthContext";
+import { useAuth } from "./src/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
@@ -59,9 +59,14 @@ const Home: React.FC = () => {
               UT
             </span>
           </motion.div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-transparent">
-            {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
-          </h1>
+          <div className="flex items-center justify-center gap-3">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-transparent">
+              {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
+            </h1>
+            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+              BETA
+            </span>
+          </div>
           <p className="text-lg md:text-xl lg:text-2xl text-zinc-300 max-w-3xl mx-auto">
             {locale === "ar"
               ? "مجموعة شاملة من الأدوات الأكاديمية المصممة خصيصًا لتحسين تجربتك التعليمية"
