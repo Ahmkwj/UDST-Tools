@@ -23,6 +23,7 @@ import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import AcademicInfo from "./pages/AcademicInfo";
 import ProtectedRoute from "./components/ProtectedRoute";
+import NotFound from "./pages/NotFound";
 import {
   LanguageProvider,
   useLocale,
@@ -118,6 +119,7 @@ const LocalizedApp = () => {
           <Route path="/ar/login" element={<Login />} />
           <Route path="/en/signup" element={<SignUp />} />
           <Route path="/ar/signup" element={<SignUp />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       ) : (
         <Sidebar currentPath={currentPath} onNavigate={setCurrentPath}>
@@ -294,7 +296,7 @@ const LocalizedApp = () => {
 
             {/* Root and wildcard routes */}
             <Route path="/" element={<LocaleRedirect />} />
-            <Route path="*" element={<LocaleRedirect />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Sidebar>
       )}

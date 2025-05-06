@@ -75,7 +75,7 @@ const Home: React.FC = () => {
               {locale === "ar" ? "ابدأ الآن" : "Get Started"}
             </a>
             <a
-              href="/about"
+              href={`/${locale}/about`}
               className="px-8 py-3 rounded-xl bg-zinc-800/50 text-white font-medium hover:bg-zinc-800 transition-all duration-300 transform hover:scale-105"
             >
               {locale === "ar" ? "تعرف علينا" : "Learn More"}
