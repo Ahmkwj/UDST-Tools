@@ -27,7 +27,7 @@ import {
   useLocale,
   useSetLocale,
 } from "./context/LanguageContext";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import Home from "../public";
 import StudyTimeCalculator from "./pages/StudyTimeCalculator";
 
@@ -81,11 +81,25 @@ function LocalizedLayout({ children }: { children: React.ReactNode }) {
 const LocalizedApp = () => {
   const location = useLocation();
   const [currentPath, setCurrentPath] = useState(location.pathname);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   // Update currentPath when location changes
   useEffect(() => {
     setCurrentPath(location.pathname);
   }, [location.pathname]);
+
+  // Redirect authenticated users away from auth pages
+  useEffect(() => {
+    if (
+      user &&
+      (location.pathname.includes("/login") ||
+        location.pathname.includes("/signup"))
+    ) {
+      const locale = location.pathname.split("/")[1];
+      navigate(`/${locale}`);
+    }
+  }, [user, location.pathname, navigate]);
 
   // Check if the current page is Login or SignUp to hide sidebar
   const isAuthPage =

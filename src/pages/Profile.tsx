@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useLocale } from "../context/LanguageContext";
+import Card from "../components/ui/Card";
+import Input from "../components/ui/Input";
+import PageHeader from "../components/ui/PageHeader";
 
 export default function Profile() {
   const { user, signOut, updateProfile, updatePassword } = useAuth();
@@ -23,6 +26,10 @@ export default function Profile() {
     title: {
       en: "Profile",
       ar: "الملف الشخصي",
+    },
+    description: {
+      en: "Manage your account settings and preferences",
+      ar: "إدارة إعدادات وتفضيلات حسابك",
     },
     nameLabel: {
       en: "Full Name",
@@ -151,191 +158,171 @@ export default function Profile() {
   };
 
   return (
-    <div className="container px-4 py-8 mx-auto">
-      <h1 className="mb-6 text-3xl font-bold text-white">
-        {translations.title[locale]}
-      </h1>
-
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        {/* Profile Information */}
-        <div className="p-6 bg-zinc-800 rounded-lg shadow-md">
-          <h2 className="mb-4 text-xl font-semibold text-white">
-            {translations.profileSection[locale]}
-          </h2>
-
-          <form onSubmit={handleProfileUpdate}>
-            {profileError && (
-              <div className="p-3 mb-4 text-sm text-white bg-red-500 rounded">
-                {profileError}
-              </div>
-            )}
-
-            {profileSuccess && (
-              <div className="p-3 mb-4 text-sm text-white bg-green-500 rounded">
-                {profileSuccess}
-              </div>
-            )}
-
-            <div className="mb-4">
-              <label
-                htmlFor="name"
-                className="block mb-2 text-sm font-medium text-zinc-300"
-              >
-                {translations.nameLabel[locale]}
-              </label>
-              <input
-                id="name"
-                type="text"
-                className="block w-full px-3 py-2 text-white bg-zinc-700 border border-zinc-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-
-            <div className="mb-6">
-              <label
-                htmlFor="email"
-                className="block mb-2 text-sm font-medium text-zinc-300"
-              >
-                {translations.emailLabel[locale]}
-              </label>
-              <input
-                id="email"
-                type="email"
-                className="block w-full px-3 py-2 text-white bg-zinc-700 border border-zinc-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={profileLoading}
-              className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-            >
-              {profileLoading ? (
-                <span className="flex items-center justify-center">
-                  <svg
-                    className="w-5 h-5 mr-3 -ml-1 text-white animate-spin"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  {translations.saveChanges[locale]}
-                </span>
-              ) : (
-                translations.saveChanges[locale]
-              )}
-            </button>
-          </form>
+    <div className="relative min-h-screen w-full flex flex-col bg-gradient-to-br from-black via-zinc-900 to-black text-white">
+      <div className="flex-1 py-4 md:py-8 px-3 md:px-8 overflow-x-hidden overflow-y-auto">
+        {/* Background decoration */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
         </div>
 
-        {/* Security */}
-        <div className="p-6 bg-zinc-800 rounded-lg shadow-md">
-          <h2 className="mb-4 text-xl font-semibold text-white">
-            {translations.securitySection[locale]}
-          </h2>
+        <div className="relative z-10 w-full max-w-4xl mx-auto space-y-6 pt-6 sm:pt-8 pb-12 sm:pb-16">
+          <PageHeader
+            title={{
+              en: translations.title.en,
+              ar: translations.title.ar,
+            }}
+            description={{
+              en: translations.description.en,
+              ar: translations.description.ar,
+            }}
+          />
 
-          <form onSubmit={handlePasswordUpdate} className="mb-6">
-            {passwordError && (
-              <div className="p-3 mb-4 text-sm text-white bg-red-500 rounded">
-                {passwordError}
-              </div>
-            )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Profile Information */}
+            <Card title={translations.profileSection[locale]}>
+              <form onSubmit={handleProfileUpdate} className="space-y-6">
+                {profileError && (
+                  <div className="p-3 text-sm text-white bg-red-500/20 border border-red-500/50 rounded-lg">
+                    {profileError}
+                  </div>
+                )}
 
-            {passwordSuccess && (
-              <div className="p-3 mb-4 text-sm text-white bg-green-500 rounded">
-                {passwordSuccess}
-              </div>
-            )}
+                {profileSuccess && (
+                  <div className="p-3 text-sm text-white bg-emerald-500/20 border border-emerald-500/50 rounded-lg">
+                    {profileSuccess}
+                  </div>
+                )}
 
-            <div className="mb-4">
-              <label
-                htmlFor="newPassword"
-                className="block mb-2 text-sm font-medium text-zinc-300"
-              >
-                {translations.newPasswordLabel[locale]}
-              </label>
-              <input
-                id="newPassword"
-                type="password"
-                className="block w-full px-3 py-2 text-white bg-zinc-700 border border-zinc-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-            </div>
+                <Input
+                  label={translations.nameLabel[locale]}
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
 
-            <div className="mb-6">
-              <label
-                htmlFor="confirmNewPassword"
-                className="block mb-2 text-sm font-medium text-zinc-300"
-              >
-                {translations.confirmNewPasswordLabel[locale]}
-              </label>
-              <input
-                id="confirmNewPassword"
-                type="password"
-                className="block w-full px-3 py-2 text-white bg-zinc-700 border border-zinc-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={confirmNewPassword}
-                onChange={(e) => setConfirmNewPassword(e.target.value)}
-              />
-            </div>
+                <Input
+                  label={translations.emailLabel[locale]}
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
 
-            <button
-              type="submit"
-              disabled={passwordLoading}
-              className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-            >
-              {passwordLoading ? (
-                <span className="flex items-center justify-center">
-                  <svg
-                    className="w-5 h-5 mr-3 -ml-1 text-white animate-spin"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
+                <button
+                  type="submit"
+                  disabled={profileLoading}
+                  className="relative w-full px-4 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span
+                    className={profileLoading ? "opacity-0" : "opacity-100"}
                   >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  {translations.updatePassword[locale]}
-                </span>
-              ) : (
-                translations.updatePassword[locale]
-              )}
-            </button>
-          </form>
+                    {translations.saveChanges[locale]}
+                  </span>
+                  {profileLoading && (
+                    <span className="absolute inset-0 flex items-center justify-center">
+                      <svg
+                        className="w-5 h-5 text-white animate-spin"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    </span>
+                  )}
+                </button>
+              </form>
+            </Card>
 
-          <button
-            onClick={handleSignOut}
-            className="w-full px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-          >
-            {translations.signOut[locale]}
-          </button>
+            {/* Security */}
+            <Card title={translations.securitySection[locale]}>
+              <form onSubmit={handlePasswordUpdate} className="space-y-6">
+                {passwordError && (
+                  <div className="p-3 text-sm text-white bg-red-500/20 border border-red-500/50 rounded-lg">
+                    {passwordError}
+                  </div>
+                )}
+
+                {passwordSuccess && (
+                  <div className="p-3 text-sm text-white bg-emerald-500/20 border border-emerald-500/50 rounded-lg">
+                    {passwordSuccess}
+                  </div>
+                )}
+
+                <Input
+                  label={translations.newPasswordLabel[locale]}
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+
+                <Input
+                  label={translations.confirmNewPasswordLabel[locale]}
+                  type="password"
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                />
+
+                <button
+                  type="submit"
+                  disabled={passwordLoading}
+                  className="relative w-full px-4 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span
+                    className={passwordLoading ? "opacity-0" : "opacity-100"}
+                  >
+                    {translations.updatePassword[locale]}
+                  </span>
+                  {passwordLoading && (
+                    <span className="absolute inset-0 flex items-center justify-center">
+                      <svg
+                        className="w-5 h-5 text-white animate-spin"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    </span>
+                  )}
+                </button>
+
+                <div className="h-px bg-zinc-800"></div>
+
+                <button
+                  onClick={handleSignOut}
+                  type="button"
+                  className="w-full px-4 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-200"
+                >
+                  {translations.signOut[locale]}
+                </button>
+              </form>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
