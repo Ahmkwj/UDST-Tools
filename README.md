@@ -98,3 +98,27 @@ A language switcher component in the sidebar allows users to toggle between Engl
 ```
 
 When clicked, it changes the locale in the context and navigates to the equivalent page in the new locale.
+
+## Continuous Deployment
+
+This project is configured with automated CI/CD using GitHub Actions. When changes are pushed to the main branch, the project is automatically built and deployed to Firebase Hosting.
+
+### Setup
+
+For detailed setup instructions, see [CICD-SETUP.md](CICD-SETUP.md).
+
+### How it works
+
+1. Push changes to the main branch
+2. GitHub Actions workflow is triggered
+3. The project is built with `npm run build`
+4. The build is deployed to Firebase Hosting
+
+### Manual Deployment
+
+You can still deploy manually with:
+
+```bash
+npm run build
+firebase deploy
+```
