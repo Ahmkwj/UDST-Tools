@@ -214,12 +214,6 @@ export default function About() {
                     : "Track important academic dates"}
                 </p>
               </div>
-            </div>
-          </Card>
-
-          {/* Features Coming Soon */}
-          <Card title={locale === "ar" ? "قريبًا" : "Coming Soon"}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="group bg-zinc-800/30 hover:bg-zinc-800/50 rounded-lg p-4 border border-zinc-700/50 transition-all duration-300">
                 <div className="flex items-center mb-3">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center ltr:mr-3 rtl:ml-3 group-hover:scale-110 transition-transform duration-300">
@@ -249,7 +243,7 @@ export default function About() {
                 </p>
               </div>
             </div>
-          </Card>
+          </Card>    
 
           {/* Disclaimer section */}
           <Card title={locale === "ar" ? "ملاحظة مهمة" : "Important Note"}>
