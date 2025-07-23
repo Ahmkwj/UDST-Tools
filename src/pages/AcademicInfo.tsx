@@ -63,7 +63,7 @@ export default function AcademicInfo() {
     },
     currentSubjectsHelper: {
       en: "Number of subjects you are currently enrolled in",
-      ar: "عدد المواد المسجل بها حالياً",
+      ar: "عدد المواد المسجل بها حاليًا",
     },
     saveButton: {
       en: "Save Information",
