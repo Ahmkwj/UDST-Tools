@@ -78,7 +78,7 @@ export default function SignUp() {
       const { error } = await signUp(email, password, name);
 
       if (error) {
-        if (error.message.includes("email")) {
+        if (error.includes("email")) {
           setError(translations.emailExists[locale]);
         } else {
           setError(translations.genericError[locale]);
