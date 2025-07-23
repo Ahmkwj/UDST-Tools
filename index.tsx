@@ -69,8 +69,8 @@ const Home: React.FC = () => {
           </div>
           <p className="text-lg md:text-xl lg:text-2xl text-zinc-300 max-w-3xl mx-auto">
             {locale === "ar"
-              ? "مجموعة شاملة من الأدوات الأكاديمية المصممة خصيصًا لتحسين تجربتك التعليمية"
-              : "A comprehensive suite of academic tools designed to enhance your educational journey"}
+              ? "مجموعة شاملة من الأدوات الأكاديمية المصممة خصيصًا لطلاب جامعة الدوحة للعلوم والتكنولوجيا"
+              : "A comprehensive suite of academic tools designed specifically for University of Doha for Science and Technology students"}
           </p>
           <motion.div className="flex flex-wrap justify-center gap-4 mt-8">
             <a
@@ -216,8 +216,8 @@ const Home: React.FC = () => {
               </h3>
               <p className="text-zinc-400">
                 {locale === "ar"
-                  ? "تتبع حضورك وتجنب تجاوز الحد المسموح به"
-                  : "Track your attendance and avoid exceeding limits"}
+                  ? "تتبع نسبة غيابك وتجنب تجاوز الحد المسموح (15%) مع حسابات دقيقة بالدقائق"
+                  : "Track your absence percentage and avoid exceeding the allowed limit (15%) with precise minute-based calculations"}
               </p>
             </motion.div>
 
@@ -247,8 +247,8 @@ const Home: React.FC = () => {
               </h3>
               <p className="text-zinc-400">
                 {locale === "ar"
-                  ? "نظم جدولك الدراسي وتجنب تعارض المواعيد"
-                  : "Organize your academic schedule and avoid time conflicts"}
+                  ? "خطط جدولك الدراسي واكتشف تعارضات المواعيد فوريًا لحل مشاكل التسجيل في PeopleSoft"
+                  : "Plan your class schedule and detect time conflicts instantly to solve PeopleSoft registration issues"}
               </p>
             </motion.div>
 
@@ -321,12 +321,12 @@ const Home: React.FC = () => {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">
-                {locale === "ar" ? "موثوق به" : "Reliable"}
+                {locale === "ar" ? "مصمم لـ UDST" : "Built for UDST"}
               </h3>
               <p className="text-zinc-400">
                 {locale === "ar"
-                  ? "حسابات دقيقة وموثوقة لجميع احتياجاتك الأكاديمية"
-                  : "Accurate and reliable calculations for all your academic needs"}
+                  ? "مصمم خصيصًا لنظام الدرجات والتقويم الأكاديمي لجامعة الدوحة للعلوم والتكنولوجيا"
+                  : "Specifically designed for UDST's grading system and academic calendar"}
               </p>
             </motion.div>
 
@@ -348,12 +348,12 @@ const Home: React.FC = () => {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">
-                {locale === "ar" ? "سريع وسهل" : "Fast & Easy"}
+                {locale === "ar" ? "حسابات فورية" : "Instant Calculations"}
               </h3>
               <p className="text-zinc-400">
                 {locale === "ar"
-                  ? "واجهة سهلة الاستخدام مع نتائج فورية"
-                  : "User-friendly interface with instant results"}
+                  ? "نتائج فورية مع واجهة سهلة الاستخدام وحسابات دقيقة لجميع احتياجاتك الأكاديمية"
+                  : "Instant results with user-friendly interface and accurate calculations for all your academic needs"}
               </p>
             </motion.div>
 
@@ -379,8 +379,8 @@ const Home: React.FC = () => {
               </h3>
               <p className="text-zinc-400">
                 {locale === "ar"
-                  ? "جميع الأدوات مجانية للاستخدام وتحمي خصوصيتك"
-                  : "All tools are free to use and protect your privacy"}
+                  ? "جميع الأدوات مجانية تمامًا مع حماية كاملة لخصوصيتك وبياناتك الأكاديمية"
+                  : "All tools are completely free with full protection of your privacy and academic data"}
               </p>
             </motion.div>
           </div>
@@ -403,8 +403,8 @@ const Home: React.FC = () => {
           </h2>
           <p className="text-zinc-400 mb-8">
             {locale === "ar"
-              ? "انضم إلى زملائك الطلاب واستفد من أدواتنا المجانية اليوم"
-              : "Join your fellow students and take advantage of our free tools today"}
+              ? "انضم إلى زملائك الطلاب في UDST واستفد من أدواتنا المتخصصة اليوم"
+              : "Join your fellow UDST students and take advantage of our specialized tools today"}
           </p>
           <a
             onClick={handleGetStarted}
@@ -431,8 +431,8 @@ const Home: React.FC = () => {
       <div className="relative z-10 w-full py-8 text-center">
         <p className="text-sm text-zinc-500">
           {locale === "ar"
-            ? "مشروع طلابي مستقل، غير مرتبط بجامعة الدوحة للعلوم والتكنولوجيا"
-            : "An independent student project, not affiliated with UDST"}
+            ? "مشروع طلابي مستقل، غير مرتبط رسميًا بجامعة الدوحة للعلوم والتكنولوجيا"
+            : "An independent student project, not officially affiliated with University of Doha for Science and Technology"}
         </p>
       </div>
     </div>
