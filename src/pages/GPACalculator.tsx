@@ -19,7 +19,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { supabase } from "../utils/supabaseClient";
+import { useAcademicInfo } from "../hooks/useAcademicInfo";
 
 // Feature flags
 const SHOW_FUTURE_SCENARIOS = false;
@@ -55,7 +55,6 @@ export default function GPACalculator() {
   const [totalCredits, setTotalCredits] = useState<number | string>("");
   const [numberOfCourses, setNumberOfCourses] = useState<number>(0);
   const [courses, setCourses] = useState<Course[]>([]);
-  const [loadingAcademicInfo, setLoadingAcademicInfo] = useState<boolean>(true);
   const [scenarios, setScenarios] = useState<Scenario[]>([
     { numCourses: 4, grades: [], termGPA: 0, cumulativeGPA: 0 },
     { numCourses: 3, grades: [], termGPA: 0, cumulativeGPA: 0 },
@@ -67,38 +66,17 @@ export default function GPACalculator() {
   const [newTotalGradePoints, setNewTotalGradePoints] = useState<number>(0);
   const [newTotalCredits, setNewTotalCredits] = useState<number>(0);
 
-  // Add a new useEffect to load academic info
+  // Use the new academic info hook
+  const { academicInfo, loading: loadingAcademicInfo } = useAcademicInfo(user?.id || null);
+
+  // Load academic info when available
   useEffect(() => {
-    if (user) {
-      loadAcademicInfo();
+    if (academicInfo) {
+      setTotalGradePoints(academicInfo.total_grade_points);
+      setTotalCredits(academicInfo.total_credits);
+      setNumberOfCourses(academicInfo.current_subjects || 0);
     }
-  }, [user]);
-
-  // Add the loadAcademicInfo function
-  const loadAcademicInfo = async () => {
-    try {
-      setLoadingAcademicInfo(true);
-
-      const { data, error } = await supabase
-        .from("academic_info")
-        .select("*")
-        .eq("user_id", user?.id)
-        .single();
-
-      if (error && error.code !== "PGRST116") {
-        console.error("Error loading academic info:", error);
-      } else if (data) {
-        // Set the data from the database
-        setTotalGradePoints(data.total_grade_points);
-        setTotalCredits(data.total_credits);
-        setNumberOfCourses(data.current_subjects || 0);
-      }
-    } catch (err) {
-      console.error("Unexpected error loading academic info:", err);
-    } finally {
-      setLoadingAcademicInfo(false);
-    }
-  };
+  }, [academicInfo]);
 
   // Initialize courses when number of courses changes
   useEffect(() => {

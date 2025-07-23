@@ -5,22 +5,9 @@ import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import PageHeader from "../components/ui/PageHeader";
 import Footer from "../components/ui/Footer";
-import { supabase } from "../utils/supabaseClient";
+import { courseRequestService } from "../services/courseRequestService";
+import type { CourseRequestFormData, StudentEntry } from "../types/database";
 import { nanoid } from "nanoid";
-
-// Types for component
-type StudentEntry = {
-  id: string;
-  name: string;
-  studentId: string;
-};
-
-type CourseRequestFormData = {
-  creatorName: string;
-  creatorStudentId: string;
-  courseName: string;
-  students: StudentEntry[];
-};
 
 export default function CourseRequest() {
   const { user } = useAuth();
@@ -228,40 +215,23 @@ export default function CourseRequest() {
     setLoading(true);
 
     try {
-      // Generate a unique slug for the request
-      const slug = nanoid(8);
-
-      // Format student data for storage
-      const interestedStudents = formData.students
-        .filter((s) => s.name && s.studentId)
-        .map((s) => ({
-          name: s.name,
-          student_id: s.studentId,
-        }));
-
       // Create database entry
-      const { error } = await supabase.from("course_requests").insert([
-        {
-          creator_id: user.id,
-          creator_name: formData.creatorName,
-          creator_student_id: formData.creatorStudentId,
-          course_name: formData.courseName,
-          slug,
-          interested_students: interestedStudents,
-        },
-      ]);
+      const result = await courseRequestService.createCourseRequest(formData, user.id);
 
-      if (error) {
-        throw error;
+      if (result.error) {
+        throw new Error(result.error);
       }
 
       // Set the generated slug and build the link
-      setGeneratedSlug(slug);
+      const slug = result.data?.slug;
+      if (slug) {
+        setGeneratedSlug(slug);
 
-      // Build absolute URL based on current window location
-      const baseUrl = window.location.origin;
-      const requestUrl = `${baseUrl}/${locale}/view-request/${slug}`;
-      setGeneratedLink(requestUrl);
+        // Build absolute URL based on current window location
+        const baseUrl = window.location.origin;
+        const requestUrl = `${baseUrl}/${locale}/view-request/${slug}`;
+        setGeneratedLink(requestUrl);
+      }
 
       setSuccessMessage(translations.linkGeneratedSuccess[locale]);
     } catch (err) {

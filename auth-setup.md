@@ -4,11 +4,7 @@ This document provides instructions for setting up authentication for the UDST T
 
 ## Environment Configuration
 
-1. Create a `.env` file in the root directory with the following content:
 
-```
-VITE_SUPABASE_URL=https://fillnwizhzuqrdceneri.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpbGxud2l6aHp1cXJkY2VuZXJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY0NzAzMjgsImV4cCI6MjA2MjA0NjMyOH0.25JlTSgu474d3mS8ksdOFWp6wOTbA7AhJVeal2iHIM8
 ````
 
 ## Database Setup

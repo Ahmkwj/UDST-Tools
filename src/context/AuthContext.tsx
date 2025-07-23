@@ -1,12 +1,10 @@
 import {
   createContext,
-  useState,
   useContext,
   ReactNode,
-  useEffect,
 } from "react";
 import { User, Session } from "@supabase/supabase-js";
-import { supabase } from "../utils/supabaseClient";
+import { useAuth } from "../hooks/useAuth";
 
 interface AuthContextType {
   user: User | null;
@@ -17,134 +15,46 @@ interface AuthContextType {
     password: string,
     name: string
   ) => Promise<{
-    error: Error | null;
-    data: any;
+    error: string | null;
   }>;
   signIn: (
     email: string,
     password: string
   ) => Promise<{
-    error: Error | null;
-    data: any;
+    error: string | null;
   }>;
-  signOut: () => Promise<void>;
+  signOut: () => Promise<{ error: string | null }>;
   updateProfile: (data: { name?: string; email?: string }) => Promise<{
-    error: Error | null;
-    data: any;
+    error: string | null;
   }>;
   updatePassword: (password: string) => Promise<{
-    error: Error | null;
-    data: any;
+    error: string | null;
   }>;
+  resetPassword: (email: string) => Promise<{
+    error: string | null;
+  }>;
+  isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Check active sessions and sets the user
-    const getSession = async () => {
-      const { data, error } = await supabase.auth.getSession();
-
-      if (error) {
-        console.error(error);
-      }
-
-      setSession(data?.session || null);
-      setUser(data?.session?.user || null);
-      setLoading(false);
-    };
-
-    getSession();
-
-    // Listen for auth changes
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setSession(session);
-        setUser(session?.user || null);
-        setLoading(false);
-      }
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
-
-  // User signup
-  const signUp = async (email: string, password: string, name: string) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          name,
-        },
-      },
-    });
-
-    return { data, error };
-  };
-
-  // User signin
-  const signIn = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    return { data, error };
-  };
-
-  // User signout
-  const signOut = async () => {
-    await supabase.auth.signOut();
-  };
-
-  // Update user profile
-  const updateProfile = async (data: { name?: string; email?: string }) => {
-    const { name, email } = data;
-    const updates: any = {};
-
-    if (name) updates.data = { ...updates.data, name };
-    if (email) updates.email = email;
-
-    const result = await supabase.auth.updateUser(updates);
-    return result;
-  };
-
-  // Update user password
-  const updatePassword = async (password: string) => {
-    const result = await supabase.auth.updateUser({ password });
-    return result;
-  };
+  const auth = useAuth();
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        session,
-        loading,
-        signUp,
-        signIn,
-        signOut,
-        updateProfile,
-        updatePassword,
-      }}
-    >
+    <AuthContext.Provider value={auth}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export function useAuth() {
+export function useAuthContext(): AuthContextType {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error("useAuthContext must be used within an AuthProvider");
   }
   return context;
 }
+
+// Keep the old export for backward compatibility
+export { useAuthContext as useAuth };

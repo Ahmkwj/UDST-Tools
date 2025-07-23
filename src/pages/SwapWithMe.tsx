@@ -4,10 +4,10 @@ import { useLocale } from "../context/LanguageContext";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import PageHeader from "../components/ui/PageHeader";
-import { supabase } from "../utils/supabaseClient";
 import { formatDistanceToNow } from "date-fns";
 import { ar, enUS } from "date-fns/locale";
-import { SwapRequest, SwapRequestFormData } from "../types/swap-requests";
+import { swapRequestService } from "../services/swapRequestService";
+import type { SwapRequest, SwapRequestFormData } from "../types/database";
 
 export default function SwapWithMe() {
   const { user } = useAuth();
@@ -178,34 +178,16 @@ export default function SwapWithMe() {
       setLoadingRequests(true);
 
       // Fetch all open requests
-      const { data: allData, error: allError } = await supabase
-        .from("swap_requests")
-        .select("*")
-        .eq("status", "open")
-        .order("created_at", { ascending: false });
-
-      if (allError) {
-        console.error("Error loading all swap requests:", allError);
-      } else {
-        setAllRequests(allData as SwapRequest[]);
-      }
+      const allRequestsResult = await swapRequestService.getOpenSwapRequests();
+      setAllRequests(allRequestsResult.data);
 
       // If user is logged in, fetch their requests
       if (user) {
-        const { data: myData, error: myError } = await supabase
-          .from("swap_requests")
-          .select("*")
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false });
-
-        if (myError) {
-          console.error("Error loading my swap requests:", myError);
-        } else {
-          setMyRequests(myData as SwapRequest[]);
-        }
+        const myRequestsResult = await swapRequestService.getSwapRequestsByUser(user.id);
+        setMyRequests(myRequestsResult.data);
       }
     } catch (error) {
-      console.error("Unexpected error loading swap requests:", error);
+      console.error("Error loading swap requests:", error);
     } finally {
       setLoadingRequests(false);
     }
@@ -223,17 +205,11 @@ export default function SwapWithMe() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
-    if (
-      !formData.courseName ||
-      !formData.currentSection ||
-      !formData.targetSection ||
-      !formData.studentId
-    ) {
+    if (!user) {
       setErrorMessage(
         locale === "ar"
-          ? "يرجى ملء جميع الحقول المطلوبة"
-          : "Please fill all required fields"
+          ? "يرجى تسجيل الدخول أولاً"
+          : "Please sign in first"
       );
       return;
     }
@@ -243,25 +219,15 @@ export default function SwapWithMe() {
     setSuccessMessage(null);
 
     try {
-      const { error } = await supabase
-        .from("swap_requests")
-        .insert([
-          {
-            user_id: user?.id,
-            creator_name: user?.user_metadata?.name || "",
-            creator_email: user?.email || "",
-            creator_student_id: formData.studentId,
-            course_name: formData.courseName,
-            current_section: formData.currentSection,
-            target_section: formData.targetSection,
-            status: "open",
-          },
-        ])
-        .select();
+      const result = await swapRequestService.createSwapRequest(
+        formData,
+        user.id,
+        user.email || "",
+        user.user_metadata?.name || ""
+      );
 
-      if (error) {
-        console.error("Error posting swap request:", error);
-        setErrorMessage(translations.requestError[locale]);
+      if (result.error) {
+        setErrorMessage(result.error);
       } else {
         setSuccessMessage(translations.requestSuccess[locale]);
         // Reset form
@@ -275,7 +241,7 @@ export default function SwapWithMe() {
         loadSwapRequests();
       }
     } catch (error) {
-      console.error("Unexpected error posting swap request:", error);
+      console.error("Error creating swap request:", error);
       setErrorMessage(translations.requestError[locale]);
     } finally {
       setLoading(false);
@@ -284,19 +250,18 @@ export default function SwapWithMe() {
 
   // Handle request cancellation
   const handleCancelRequest = async (requestId: number) => {
-    if (!window.confirm(translations.cancelConfirmation[locale])) {
+    if (!window.confirm(translations.cancelConfirmation[locale]) || !user) {
       return;
     }
 
     try {
-      const { error } = await supabase
-        .from("swap_requests")
-        .update({ status: "closed" })
-        .eq("id", requestId)
-        .eq("user_id", user?.id);
+      const result = await swapRequestService.updateSwapRequestStatus(
+        requestId,
+        "closed",
+        user.id
+      );
 
-      if (error) {
-        console.error("Error cancelling swap request:", error);
+      if (result.error) {
         alert(translations.cancelError[locale]);
       } else {
         alert(translations.cancelSuccess[locale]);
@@ -304,7 +269,7 @@ export default function SwapWithMe() {
         loadSwapRequests();
       }
     } catch (error) {
-      console.error("Unexpected error cancelling swap request:", error);
+      console.error("Error cancelling swap request:", error);
       alert(translations.cancelError[locale]);
     }
   };

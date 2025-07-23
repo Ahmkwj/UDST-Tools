@@ -4,38 +4,24 @@ import { useLocale } from "../context/LanguageContext";
 import Card from "../components/ui/Card";
 import PageHeader from "../components/ui/PageHeader";
 import Footer from "../components/ui/Footer";
-import { supabase } from "../utils/supabaseClient";
-
-// Types
-type InterestedStudent = {
-  name: string;
-  student_id: string;
-};
-
-type CourseRequest = {
-  id: string;
-  creator_name: string;
-  creator_student_id: string;
-  course_name: string;
-  interested_students: InterestedStudent[];
-  created_at: string;
-  expiration_date: string;
-};
+import { courseRequestService } from "../services/courseRequestService";
+import type { CourseRequest, InterestedStudent } from "../types/database";
 
 export default function ViewCourseRequest() {
   const { slug } = useParams<{ slug: string }>();
   const locale = useLocale();
 
-  // State variables
   const [request, setRequest] = useState<CourseRequest | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [daysRemaining, setDaysRemaining] = useState<number>(0);
+
+  // Form for adding new students
   const [newStudentName, setNewStudentName] = useState<string>("");
   const [newStudentId, setNewStudentId] = useState<string>("");
   const [addingStudent, setAddingStudent] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [daysRemaining, setDaysRemaining] = useState<number>(0);
 
   // Translations
   const translations = {
@@ -182,23 +168,24 @@ export default function ViewCourseRequest() {
           return;
         }
 
-        const { data, error } = await supabase
-          .from("course_requests")
-          .select("*")
-          .eq("slug", slug)
-          .single();
+        const result = await courseRequestService.getCourseRequestBySlug(slug);
 
-        if (error) {
-          console.error("Error fetching course request:", error);
-          setError(error.message);
+        if (result.error) {
+          console.error("Error fetching course request:", result.error);
+          setError(result.error);
           return;
         }
 
-        setRequest(data as CourseRequest);
+        if (!result.data) {
+          setError("Course request not found");
+          return;
+        }
+
+        setRequest(result.data);
 
         // Calculate days remaining
-        if (data.expiration_date) {
-          setDaysRemaining(calculateDaysRemaining(data.expiration_date));
+        if (result.data.expiration_date) {
+          setDaysRemaining(calculateDaysRemaining(result.data.expiration_date));
         }
       } catch (err) {
         console.error("Unexpected error fetching course request:", err);
@@ -241,35 +228,25 @@ export default function ViewCourseRequest() {
     setAddingStudent(true);
 
     try {
-      // Get current interested students
-      const currentStudents = [...(request?.interested_students || [])];
+      if (!slug) {
+        throw new Error("Course request not found");
+      }
 
       // Add new student
-      const updatedStudents = [
-        ...currentStudents,
-        {
-          name: newStudentName.trim(),
-          student_id: newStudentId.trim(),
-        },
-      ];
+      const newStudent: InterestedStudent = {
+        name: newStudentName.trim(),
+        student_id: newStudentId.trim(),
+      };
 
       // Update the database
-      const { error } = await supabase
-        .from("course_requests")
-        .update({ interested_students: updatedStudents })
-        .eq("slug", slug);
+      const result = await courseRequestService.addStudentToCourseRequest(slug, newStudent);
 
-      if (error) throw error;
+      if (result.error) {
+        throw new Error(result.error);
+      }
 
       // Update local state
-      setRequest((prev) =>
-        prev
-          ? {
-              ...prev,
-              interested_students: updatedStudents,
-            }
-          : null
-      );
+      setRequest(result.data);
 
       // Show success message and clear form
       setSuccessMessage(translations.successAdded[locale]);
