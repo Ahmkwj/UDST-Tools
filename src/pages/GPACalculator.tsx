@@ -134,12 +134,17 @@ export default function GPACalculator() {
       updatedCourses[index].previousGrade = "F";
     }
 
-    // Only allow repeating for failing grades (D+, D, F)
+    // Only allow repeating for failing grades (D+, D, F) - withdrawals cannot be repeated
     if (
       field === "previousGrade" &&
       updatedCourses[index].isRepeat &&
       !["F", "D+", "D"].includes(value as string)
     ) {
+      updatedCourses[index].isRepeat = false;
+    }
+
+    // If current grade is W, disable repeat option
+    if (field === "grade" && value === "W") {
       updatedCourses[index].isRepeat = false;
     }
 
@@ -156,6 +161,7 @@ export default function GPACalculator() {
       "D+": 1.5,
       D: 1.0,
       F: 0.0,
+      W: 0.0, // Withdrawal - no grade points, no credits counted
     };
     return gradePoints[grade] || 0;
   };
@@ -173,12 +179,20 @@ export default function GPACalculator() {
       const courseCredits = Math.max(1, course.credits || 1);
       const gradePoints = calculateGradePoints(course.grade) * courseCredits;
 
+      // Handle withdrawal grades - they don't count towards GPA at all
+      if (course.grade === "W") {
+        // Withdrawal: no grade points added, no credits added
+        return; // Skip this course entirely
+      }
+
       if (course.isRepeat) {
         // Subtract old grade points if repeating
-        if (course.previousGrade) {
+        if (course.previousGrade && course.previousGrade !== "W") {
           newTGP -= calculateGradePoints(course.previousGrade) * courseCredits;
         }
+        // Only add new grade points and credits if not a withdrawal
         newTGP += gradePoints;
+        // For repeats, credits were already counted in the original attempt
       } else {
         newTGP += gradePoints;
         newTC += courseCredits;
@@ -319,6 +333,11 @@ export default function GPACalculator() {
     let totalCredits = 0;
 
     grades.forEach((grade) => {
+      // Skip withdrawal grades - they don't count towards GPA
+      if (grade === "W") {
+        return; // Don't add points or credits for withdrawals
+      }
+      
       totalPoints += calculateGradePoints(grade) * creditsPerCourse;
       totalCredits += creditsPerCourse;
     });
@@ -513,11 +532,19 @@ export default function GPACalculator() {
                             onChange={(e) =>
                               updateCourse(index, "grade", e.target.value)
                             }
+                            helperText={course.grade === "W" ? 
+                              (locale === "ar" ? 
+                                "الانسحاب - لا يؤثر على المعدل" : 
+                                "Withdrawal - does not affect GPA") : 
+                              undefined}
                           >
-                            {["A", "B+", "B", "C+", "C", "D+", "D", "F"].map(
+                            {["A", "B+", "B", "C+", "C", "D+", "D", "F", "W"].map(
                               (grade) => (
                                 <option key={grade} value={grade}>
                                   {grade}
+                                  {grade === "W" ? 
+                                    (locale === "ar" ? " (انسحاب)" : " (Withdrawal)") : 
+                                    ""}
                                 </option>
                               )
                             )}
@@ -540,18 +567,20 @@ export default function GPACalculator() {
                           />
                         </div>
 
-                        <Checkbox
-                          checked={course.isRepeat}
-                          onChange={(e) =>
-                            updateCourse(index, "isRepeat", e.target.checked)
-                          }
-                          label={
-                            locale === "ar"
-                              ? "أقوم بإعادة هذه المادة"
-                              : "Repeating this course"
-                          }
-                          className="max-w-full overflow-hidden text-ellipsis"
-                        />
+                        {course.grade !== "W" && (
+                          <Checkbox
+                            checked={course.isRepeat}
+                            onChange={(e) =>
+                              updateCourse(index, "isRepeat", e.target.checked)
+                            }
+                            label={
+                              locale === "ar"
+                                ? "أقوم بإعادة هذه المادة"
+                                : "Repeating this course"
+                            }
+                            className="max-w-full overflow-hidden text-ellipsis"
+                          />
+                        )}
 
                         {course.isRepeat && (
                           <Select
@@ -628,7 +657,7 @@ export default function GPACalculator() {
                   </div>
 
                   {/* GPA Graph */}
-                  <div className="mt-6 md:mt-8 pt-6 border-t border-zinc-800 overflow-x-hidden">
+                  <div className="mt-6 md:mt-8 pt-6 border-t border-zinc-800">
                     <h3 className="text-base font-semibold text-zinc-200 mb-2">
                       {locale === "ar" ? "اتجاه المعدل التراكمي" : "GPA Trend"}
                     </h3>
@@ -637,6 +666,36 @@ export default function GPACalculator() {
                         ? "يوضح التقدم من المعدل التراكمي السابق إلى المعدل التراكمي المتوقع بعد هذا الفصل"
                         : "Visualizes the progression from your previous cumulative GPA to your projected GPA after this semester"}
                     </p>
+                    
+                    {/* Check if any withdrawal grades are present */}
+                    {courses.some(course => course.grade === "W") && (
+                      <div className="mb-4 p-3 bg-zinc-800/50 border border-zinc-700/50 rounded-lg">
+                        <div className="flex items-center gap-2 mb-1">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 text-zinc-400"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                          <span className="text-sm font-medium text-zinc-300">
+                            {locale === "ar" ? "ملاحظة حول الانسحاب" : "Withdrawal Note"}
+                          </span>
+                        </div>
+                        <p className="text-xs text-zinc-400">
+                          {locale === "ar"
+                            ? "المواد المنسحب منها (W) لا تؤثر على المعدل التراكمي ولا تحتسب ضمن الساعات المعتمدة."
+                            : "Withdrawn courses (W) do not affect your GPA and are not counted toward credit hours."}
+                        </p>
+                      </div>
+                    )}
                     <div className="h-[180px] sm:h-[200px] w-full">
                       <Line
                         data={{
@@ -925,14 +984,15 @@ export default function GPACalculator() {
                                     "D+": "bg-red-500/20 text-red-400 border-red-500/30",
                                     D: "bg-red-500/20 text-red-400 border-red-500/30",
                                     F: "bg-red-500/20 text-red-400 border-red-500/30",
+                                    W: "bg-zinc-700/50 text-zinc-400 border-zinc-600/50",
                                   };
 
                                   // Add a tooltip for grade explanation
                                   const gradePoints =
                                     calculateGradePoints(grade);
-                                  const gradeTitle = `${grade} (${gradePoints.toFixed(
-                                    1
-                                  )} points)`;
+                                  const gradeTitle = grade === "W" 
+                                    ? `${grade} (Withdrawal - no effect on GPA)`
+                                    : `${grade} (${gradePoints.toFixed(1)} points)`;
 
                                   return (
                                     <span
