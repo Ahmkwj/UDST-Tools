@@ -225,12 +225,12 @@ export default function CourseRequest() {
       // Set the generated slug and build the link
       const slug = result.data?.slug;
       if (slug) {
-        setGeneratedSlug(slug);
+      setGeneratedSlug(slug);
 
-        // Build absolute URL based on current window location
-        const baseUrl = window.location.origin;
-        const requestUrl = `${baseUrl}/${locale}/view-request/${slug}`;
-        setGeneratedLink(requestUrl);
+      // Build absolute URL based on current window location
+      const baseUrl = window.location.origin;
+      const requestUrl = `${baseUrl}/${locale}/view-request/${slug}`;
+      setGeneratedLink(requestUrl);
       }
 
       setSuccessMessage(translations.linkGeneratedSuccess[locale]);

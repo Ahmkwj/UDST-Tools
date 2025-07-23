@@ -12,7 +12,7 @@ import type { AcademicInfo } from "../types/database";
 export default function AcademicInfo() {
   const { user } = useAuth();
   const locale = useLocale();
-  
+
   // Form state
   const [totalGradePoints, setTotalGradePoints] = useState<string>("");
   const [totalCredits, setTotalCredits] = useState<string>("");
@@ -101,7 +101,7 @@ export default function AcademicInfo() {
       setTotalGradePoints(academicInfo.total_grade_points.toString());
       setTotalCredits(academicInfo.total_credits.toString());
       setCurrentSubjects(academicInfo.current_subjects);
-    }
+      }
   }, [academicInfo]);
 
   // Handle service errors
@@ -122,9 +122,9 @@ export default function AcademicInfo() {
     setErrorMessage(null);
     clearError();
 
-    // Parse and validate values
-    const gradePoints = parseFloat(totalGradePoints) || 0;
-    const credits = parseFloat(totalCredits) || 0;
+      // Parse and validate values
+      const gradePoints = parseFloat(totalGradePoints) || 0;
+      const credits = parseFloat(totalCredits) || 0;
 
     // Basic validation
     if (gradePoints < 0) {
@@ -142,14 +142,14 @@ export default function AcademicInfo() {
       return;
     }
 
-    // Create data object
+      // Create data object
     const academicData: Omit<AcademicInfo, 'id' | 'created_at'> = {
-      user_id: user.id,
-      total_grade_points: gradePoints,
-      total_credits: credits,
-      current_subjects: currentSubjects,
-      updated_at: new Date().toISOString(),
-    };
+        user_id: user.id,
+        total_grade_points: gradePoints,
+        total_credits: credits,
+        current_subjects: currentSubjects,
+        updated_at: new Date().toISOString(),
+      };
 
     const result = await saveAcademicInfo(academicData);
 
@@ -168,7 +168,7 @@ export default function AcademicInfo() {
   const calculateGPA = () => {
     const gradePoints = parseFloat(totalGradePoints) || 0;
     const credits = parseFloat(totalCredits) || 0;
-    
+
     if (credits === 0) return 0;
     const gpa = gradePoints / credits;
     return Math.min(4.0, Math.max(0, gpa)); // Ensure GPA is between 0 and 4.0
@@ -210,73 +210,73 @@ export default function AcademicInfo() {
           <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
         </div>
 
-        <PageHeader 
-          title={{
-            en: translations.title.en,
-            ar: translations.title.ar,
-          }}
-          description={{
-            en: translations.description.en,
-            ar: translations.description.ar,
-          }}
-        />
+          <PageHeader
+            title={{
+              en: translations.title.en,
+              ar: translations.title.ar,
+            }}
+            description={{
+              en: translations.description.en,
+              ar: translations.description.ar,
+            }}
+          />
 
         <div className="w-full max-w-2xl mx-auto">
-          <Card>
-            {loading ? (
+            <Card>
+              {loading ? (
               <div className="text-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
                 <p className="text-zinc-400">{translations.loadingData[locale]}</p>
-              </div>
-            ) : (
+                </div>
+              ) : (
               <form onSubmit={handleSaveAcademicInfo} className="space-y-6">
-                {errorMessage && (
-                  <div className="p-3 text-sm text-white bg-red-500/20 border border-red-500/50 rounded-lg">
-                    {errorMessage}
-                  </div>
-                )}
+                  {errorMessage && (
+                    <div className="p-3 text-sm text-white bg-red-500/20 border border-red-500/50 rounded-lg">
+                      {errorMessage}
+                    </div>
+                  )}
 
-                {successMessage && (
-                  <div className="p-3 text-sm text-white bg-emerald-500/20 border border-emerald-500/50 rounded-lg">
-                    {successMessage}
-                  </div>
-                )}
+                  {successMessage && (
+                    <div className="p-3 text-sm text-white bg-emerald-500/20 border border-emerald-500/50 rounded-lg">
+                      {successMessage}
+                    </div>
+                  )}
 
-                <Input
+                    <Input
                   label={translations.totalGradePointsLabel[locale]}
-                  type="number"
+                      type="number"
                   step="0.01"
-                  min="0"
-                  value={totalGradePoints}
-                  onChange={(e) => setTotalGradePoints(e.target.value)}
+                      min="0"
+                      value={totalGradePoints}
+                      onChange={(e) => setTotalGradePoints(e.target.value)}
                   helperText={translations.totalGradePointsHelper[locale]}
                   required
-                />
+                    />
 
-                <Input
+                    <Input
                   label={translations.totalCreditsLabel[locale]}
-                  type="number"
+                      type="number"
                   step="0.01"
-                  min="0"
-                  value={totalCredits}
-                  onChange={(e) => setTotalCredits(e.target.value)}
+                      min="0"
+                      value={totalCredits}
+                      onChange={(e) => setTotalCredits(e.target.value)}
                   helperText={translations.totalCreditsHelper[locale]}
                   required
-                />
+                    />
 
-                <Select
-                  label={translations.currentSubjectsLabel[locale]}
+                  <Select
+                    label={translations.currentSubjectsLabel[locale]}
                   value={currentSubjects.toString()}
                   onChange={(e) => setCurrentSubjects(parseInt(e.target.value) || 0)}
-                  helperText={translations.currentSubjectsHelper[locale]}
+                    helperText={translations.currentSubjectsHelper[locale]}
                   required
-                >
+                  >
                   {Array.from({ length: 21 }, (_, i) => (
                     <option key={i} value={i}>
                       {i}
-                    </option>
-                  ))}
-                </Select>
+                      </option>
+                    ))}
+                  </Select>
 
                 {/* Display calculated GPA */}
                 <div className="bg-zinc-800/50 p-4 rounded-lg">
@@ -291,9 +291,9 @@ export default function AcademicInfo() {
                   </p>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={saving}
+                  <button
+                    type="submit"
+                    disabled={saving}
                   className={`
                     w-full px-4 py-2.5 rounded-lg font-medium transition-colors duration-200
                     ${saving
@@ -303,10 +303,10 @@ export default function AcademicInfo() {
                   `}
                 >
                   {saving ? translations.saving[locale] : translations.saveButton[locale]}
-                </button>
-              </form>
-            )}
-          </Card>
+                  </button>
+                </form>
+              )}
+            </Card>
         </div>
       </div>
       <Footer />

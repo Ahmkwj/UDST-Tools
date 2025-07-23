@@ -234,8 +234,8 @@ export default function ViewCourseRequest() {
 
       // Add new student
       const newStudent: InterestedStudent = {
-        name: newStudentName.trim(),
-        student_id: newStudentId.trim(),
+          name: newStudentName.trim(),
+          student_id: newStudentId.trim(),
       };
 
       // Update the database

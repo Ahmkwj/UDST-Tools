@@ -75,7 +75,7 @@ export default function GPACalculator() {
       setTotalGradePoints(academicInfo.total_grade_points);
       setTotalCredits(academicInfo.total_credits);
       setNumberOfCourses(academicInfo.current_subjects || 0);
-    }
+      }
   }, [academicInfo]);
 
   // Initialize courses when number of courses changes
