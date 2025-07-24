@@ -505,8 +505,8 @@ export default function AttendanceCalculator() {
                             </h4>
                             <p className="text-sm text-zinc-300">
                               {locale === "ar"
-                                ? "يرجى عدم الاعتماد بشكل كامل على هذه النتائج، خصوصًا في الحالات الحرجة مثل اقتراب نسبة حضورك من الحد الأدنى (14%). قد لا يكون نظام الحضور دقيقًا في جميع الأوقات، لذلك يُنصح بعدم الاعتماد على هذه الأداة في الحالات الحساسة."
-                                : "Please don't rely solely on these results, especially if your attendance is at a critical level (close to 14%). The attendance system may not always be accurate, so it's recommended to not rely on this tool in critical situations."}
+                                ? "يرجى عدم الاعتماد بشكل كامل على هذه النتائج، خصوصًا في الحالات الحرجة مثل اقتراب نسبة حضورك من الحد الأدنى (15%). قد لا يكون نظام الحضور دقيقًا في جميع الأوقات، لذلك يُنصح بعدم الاعتماد على هذه الأداة في الحالات الحساسة."
+                                : "Please don't rely solely on these results, especially if your attendance is at a critical level (close to 15%). The attendance system may not always be accurate, so it's recommended to not rely on this tool in critical situations."}
                             </p>
                           </div>
                         </div>
