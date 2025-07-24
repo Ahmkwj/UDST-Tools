@@ -11,11 +11,6 @@ permissions:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    # Define environment variables at job level
-    env:
-      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-      VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-    
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -28,23 +23,6 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-
-      - name: Verify Secrets
-        run: |
-          echo "Checking if secrets are available..."
-          if [ -z "$VITE_SUPABASE_URL" ]; then
-            echo "❌ VITE_SUPABASE_URL is empty or not set"
-            exit 1
-          else
-            echo "✅ VITE_SUPABASE_URL is set (length: ${#VITE_SUPABASE_URL})"
-          fi
-          
-          if [ -z "$VITE_SUPABASE_ANON_KEY" ]; then
-            echo "❌ VITE_SUPABASE_ANON_KEY is empty or not set"
-            exit 1
-          else
-            echo "✅ VITE_SUPABASE_ANON_KEY is set (length: ${#VITE_SUPABASE_ANON_KEY})"
-          fi
 
       - name: Auto-increment version
         run: |
@@ -78,78 +56,29 @@ jobs:
           git commit -m "Auto-increment version to $new_version [skip ci]"
           git push
 
-      - name: Create .env file (Primary Method)
+      - name: Create .env file
         run: |
-          echo "Creating .env file..."
-          echo "VITE_SUPABASE_URL=$VITE_SUPABASE_URL" > .env
-          echo "VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY" >> .env
-          
-          # Verify .env file was created correctly
-          echo "✅ .env file created successfully"
-          echo "File size: $(wc -c < .env) bytes"
-          echo "Line count: $(wc -l < .env) lines"
-          
-          # Show first few characters of each line for verification (without exposing secrets)
-          echo "First line starts with: $(head -1 .env | cut -c1-20)..."
-          echo "Second line starts with: $(tail -1 .env | cut -c1-25)..."
+          echo "VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}" > .env
+          echo "VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}" >> .env
+
+      - name: Debug Environment Variables
+        run: |
+          echo "Checking if .env file was created:"
+          ls -la .env
+          echo "Contents of .env file (first line only for security):"
+          head -1 .env
+          echo "Environment variables available to build:"
+          echo "VITE_SUPABASE_URL is set: ${{ secrets.VITE_SUPABASE_URL != '' }}"
+          echo "VITE_SUPABASE_ANON_KEY is set: ${{ secrets.VITE_SUPABASE_ANON_KEY != '' }}"
 
       - name: Install Dependencies
         run: npm ci
 
-      - name: Pre-build Environment Check
-        run: |
-          echo "=== Environment Variables Available to Build ==="
-          echo "VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:0:20}..." 
-          echo "VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY:0:25}..."
-          echo ""
-          echo "=== .env file contents ==="
-          if [ -f .env ]; then
-            echo ".env file exists"
-            echo "VITE_SUPABASE_URL line: $(grep VITE_SUPABASE_URL .env | cut -c1-30)..."
-            echo "VITE_SUPABASE_ANON_KEY line: $(grep VITE_SUPABASE_ANON_KEY .env | cut -c1-35)..."
-          else
-            echo "❌ .env file not found"
-          fi
-
-      - name: Build Application
-        run: |
-          echo "Starting build process..."
-          npm run build
-          echo "✅ Build completed successfully"
+      - name: Build
+        run: npm run build
         env:
-          # Explicitly set environment variables for build step
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-
-      - name: Post-build Verification
-        run: |
-          echo "=== Build Output Verification ==="
-          if [ -d "dist" ]; then
-            echo "✅ dist folder created"
-            echo "Dist folder size: $(du -sh dist | cut -f1)"
-            echo "Files in dist: $(find dist -type f | wc -l)"
-            
-            # Check if environment variables were embedded in the build
-            echo ""
-            echo "=== Checking if environment variables were embedded ==="
-            if find dist -name "*.js" -exec grep -l "supabase" {} \; | head -1 > /dev/null; then
-              echo "✅ Found supabase references in built files"
-            else
-              echo "❌ No supabase references found in built files"
-            fi
-            
-            # Look for any obvious errors in the build output
-            if find dist -name "*.js" -exec grep -l "Missing Supabase environment variables" {} \; | head -1 > /dev/null; then
-              echo "❌ ERROR: Build contains error message about missing environment variables!"
-              echo "This indicates the environment variables were not properly embedded during build."
-              exit 1
-            else
-              echo "✅ No error messages about missing environment variables found in build"
-            fi
-          else
-            echo "❌ dist folder not found"
-            exit 1
-          fi
 
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
