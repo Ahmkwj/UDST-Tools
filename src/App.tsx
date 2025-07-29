@@ -35,6 +35,7 @@ import StudyTimeCalculator from "./pages/StudyTimeCalculator";
 import CourseRequest from "./pages/CourseRequest";
 import ViewCourseRequest from "./pages/ViewCourseRequest";
 import SwapWithMe from "./pages/SwapWithMe";
+import FeesManager from "./pages/FeesManager";
 
 // Redirect component to handle locale in routes
 function LocaleRedirect() {
@@ -307,6 +308,22 @@ const LocalizedApp = () => {
               element={
                 <ProtectedRoute>
                   <SwapWithMe />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/en/fees-manager"
+              element={
+                <ProtectedRoute>
+                  <FeesManager />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ar/fees-manager"
+              element={
+                <ProtectedRoute>
+                  <FeesManager />
                 </ProtectedRoute>
               }
             />
