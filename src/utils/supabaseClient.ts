@@ -7,7 +7,7 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error(
-    "Missing Supabase environment variables. Please check your .env file."
+    "Missing environment variables. Please check your .env file."
   );
 }
 
@@ -42,10 +42,10 @@ export const supabase: SupabaseClient<Database> = createClient<Database>(
 // Error handling utility
 export const handleSupabaseError = (error: unknown): string => {
   if (!error) return "An unknown error occurred";
-  
+
   if (typeof error === "object" && error !== null) {
     const err = error as any;
-    
+
     // Handle Supabase-specific errors
     if (err.code) {
       switch (err.code) {
@@ -61,13 +61,13 @@ export const handleSupabaseError = (error: unknown): string => {
           return err.message || "Database error occurred";
       }
     }
-    
+
     // Handle general errors
     if (err.message) {
       return err.message;
     }
   }
-  
+
   return "An unexpected error occurred";
 };
 
@@ -93,18 +93,20 @@ export const withRetry = async <T>(
   delay: number = 1000
 ): Promise<T> => {
   let lastError: unknown;
-  
+
   for (let i = 0; i < maxRetries; i++) {
     try {
       return await operation();
     } catch (error) {
       lastError = error;
       if (i === maxRetries - 1) break;
-      
+
       // Exponential backoff
-      await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)));
+      await new Promise((resolve) =>
+        setTimeout(resolve, delay * Math.pow(2, i))
+      );
     }
   }
-  
+
   throw lastError;
 };
