@@ -22,6 +22,11 @@ export interface Database {
         Insert: Omit<SwapRequest, 'id' | 'created_at' | 'updated_at' | 'expires_at'>;
         Update: Partial<Omit<SwapRequest, 'id' | 'user_id' | 'created_at'>>;
       };
+      practicum_groups: {
+        Row: PracticumGroup;
+        Insert: Omit<PracticumGroup, 'id' | 'created_at' | 'updated_at' | 'expires_at'>;
+        Update: Partial<Omit<PracticumGroup, 'id' | 'user_id' | 'created_at'>>;
+      };
     };
   };
 }
@@ -100,6 +105,33 @@ export interface SwapRequestFormData {
   currentSection: string;
   targetSection: string;
   studentId: string;
+}
+
+// Practicum Group
+export interface PracticumGroup {
+  id: number;
+  user_id: string;
+  creator_name: string;
+  creator_email: string;
+  publisher_student_id: string;
+  title: string;
+  description: string;
+  tags: string[]; // majors
+  notes: string | null;
+  semester: string; // e.g., "Fall 2025"
+  status: 'open' | 'closed';
+  created_at: string;
+  updated_at: string;
+  expires_at: string;
+}
+
+export interface PracticumGroupFormData {
+  title: string;
+  description: string;
+  tags: string[];
+  notes?: string;
+  semester: string;
+  publisherStudentId: string;
 }
 
 // API Response Types

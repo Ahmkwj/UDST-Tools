@@ -36,6 +36,7 @@ import CourseRequest from "./pages/CourseRequest";
 import ViewCourseRequest from "./pages/ViewCourseRequest";
 import SwapWithMe from "./pages/SwapWithMe";
 import FeesManager from "./pages/FeesManager";
+import PracticumGroups from "./pages/PracticumGroups";
 
 // Redirect component to handle locale in routes
 function LocaleRedirect() {
@@ -143,6 +144,23 @@ const LocalizedApp = () => {
             <Route path="/ar/privacy" element={<Privacy />} />
 
             {/* Protected routes - require authentication */}
+            <Route
+              path="/en/practicum-groups"
+              element={
+                <ProtectedRoute>
+                  <PracticumGroups />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ar/practicum-groups"
+              element={
+                <ProtectedRoute>
+                  <PracticumGroups />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path="/en/profile"
               element={
