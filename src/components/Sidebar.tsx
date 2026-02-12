@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocale } from "../context/LanguageContext";
-import { useAuth } from "../context/AuthContext";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { version } from "../../version.json";
 
@@ -17,7 +16,6 @@ interface NavItem {
   icon: React.ReactNode;
   nameAr?: string; // Arabic name for menu items
   comingSoon?: boolean;
-  hideIfAuthenticated?: boolean; // New property to conditionally hide items when authenticated
 }
 
 interface NavCategory {
@@ -26,16 +24,6 @@ interface NavCategory {
   items: NavItem[];
 }
 
-// Define which pages should be accessible without authentication
-const UNRESTRICTED_PATHS = [
-  "/",
-  "/calendar",
-  "/links",
-  "/about",
-  "/guide",
-  "/privacy",
-];
-
 export default function Sidebar({
   children,
   currentPath,
@@ -43,26 +31,8 @@ export default function Sidebar({
 }: SidebarProps) {
   const locale = useLocale();
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
   const [isOpen, setIsOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const profileDropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        profileDropdownRef.current &&
-        !profileDropdownRef.current.contains(event.target as Node)
-      ) {
-        setProfileDropdownOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   // Navigation categories
   const navCategories: NavCategory[] = [
@@ -156,69 +126,6 @@ export default function Sidebar({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z"
-              />
-            </svg>
-          ),
-        },
-        {
-          name: "Course Request",
-          nameAr: "طلب فتح مقرر",
-          path: "/course-request",
-          icon: (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"
-              />
-            </svg>
-          ),
-        },
-        {
-          name: "Swap With Me",
-          nameAr: "تبادل المادة معي",
-          path: "/swap-with-me",
-          icon: (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
-              />
-            </svg>
-          ),
-        },
-        {
-          name: "Practicum Groups",
-          nameAr: "مجموعات التدريب العملي",
-          path: "/practicum-groups",
-          icon: (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0z"
               />
             </svg>
           ),
@@ -330,56 +237,6 @@ export default function Sidebar({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25M3 18.75h18M12 15.75h.008v.008H12v-.008Z"
-              />
-            </svg>
-          ),
-        },
-      ],
-    },
-    {
-      name: "Account",
-      nameAr: "الحساب",
-      items: [
-        {
-          name: "Log In",
-          nameAr: "تسجيل الدخول",
-          path: "/login",
-          hideIfAuthenticated: true,
-          icon: (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
-              />
-            </svg>
-          ),
-        },
-        {
-          name: "Sign Up",
-          nameAr: "إنشاء حساب",
-          path: "/signup",
-          hideIfAuthenticated: true,
-          icon: (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM4 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 10.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
               />
             </svg>
           ),
@@ -510,15 +367,6 @@ export default function Sidebar({
     navigate(localizedPath);
   };
 
-  // Function to check if a menu item should be shown based on auth state
-  const shouldShowMenuItem = (path: string) => {
-    // If user is logged in, show all items
-    if (user) return true;
-
-    // If user is not logged in, only show unrestricted paths
-    return UNRESTRICTED_PATHS.includes(path);
-  };
-
   return (
     <div
       className={`flex h-screen w-screen overflow-hidden bg-black text-white ${
@@ -591,8 +439,8 @@ export default function Sidebar({
                 isOpen
                   ? "translate-x-0"
                   : locale === "ar"
-                  ? "translate-x-full"
-                  : "-translate-x-full"
+                    ? "translate-x-full"
+                    : "-translate-x-full"
               }`
             : "relative w-64"
         } bg-zinc-900 border-r border-zinc-800/50 transition-all duration-300 ease-in-out flex flex-col shrink-0 shadow-lg ${
@@ -610,223 +458,8 @@ export default function Sidebar({
           </div>
         )}
 
-        {/* User Profile Box - Only show if logged in */}
-        {user && (
-          <div className="px-4 py-4 border-b border-zinc-800/50">
-            <div className="relative" ref={profileDropdownRef}>
-              <button
-                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-gradient-to-br from-zinc-800/50 to-zinc-800/30 hover:from-zinc-800 hover:to-zinc-800/50 border border-zinc-700/50 text-white transition-all duration-200 group"
-              >
-                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-lg font-semibold shadow-lg shadow-blue-500/20">
-                  {user.user_metadata?.name
-                    ? user.user_metadata.name.charAt(0).toUpperCase()
-                    : user.email?.charAt(0).toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0 text-left">
-                  <div className="truncate font-medium text-sm text-white group-hover:text-white transition-colors">
-                    {user.user_metadata?.name || user.email}
-                  </div>
-                  <div className="text-xs text-zinc-400 truncate group-hover:text-zinc-300 transition-colors">
-                    {user.email}
-                  </div>
-                </div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  className={`w-5 h-5 text-zinc-400 group-hover:text-zinc-300 transition-all duration-200 ${
-                    profileDropdownOpen ? "transform rotate-180" : ""
-                  }`}
-                  strokeWidth="1.5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                  />
-                </svg>
-              </button>
-
-              {/* Dropdown Menu */}
-              {profileDropdownOpen && (
-                <div className="absolute z-10 mt-2 w-full rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 shadow-xl shadow-black/20 border border-zinc-700/50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleNavigation("/profile");
-                      setProfileDropdownOpen(false);
-                    }}
-                    className={`block w-full px-4 py-2.5 text-sm text-zinc-300 hover:text-white hover:bg-zinc-700/50 transition-colors ${locale === "ar" ? "text-right" : ""}`}
-                  >
-                    <div className="flex items-center gap-3">
-                      {locale === "ar" ? (
-                        <>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            className="w-4 h-4 flex-shrink-0"
-                            strokeWidth="1.5"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                            />
-                          </svg>
-                          <span>الملف الشخصي</span>
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            className="w-4 h-4 flex-shrink-0"
-                            strokeWidth="1.5"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                            />
-                          </svg>
-                          <span>Profile</span>
-                        </>
-                      )}
-                    </div>
-                  </a>
-
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleNavigation("/academic-info");
-                      setProfileDropdownOpen(false);
-                    }}
-                    className={`block w-full px-4 py-2.5 text-sm text-zinc-300 hover:text-white hover:bg-zinc-700/50 transition-colors ${locale === "ar" ? "text-right" : ""}`}
-                  >
-                    <div className="flex items-center gap-3">
-                      {locale === "ar" ? (
-                        <>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            className="w-4 h-4 flex-shrink-0"
-                            strokeWidth="1.5"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"
-                            />
-                          </svg>
-                          <span>المعلومات الأكاديمية</span>
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            className="w-4 h-4 flex-shrink-0"
-                            strokeWidth="1.5"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"
-                            />
-                          </svg>
-                          <span>Academic Info</span>
-                        </>
-                      )}
-                    </div>
-                  </a>
-
-                  <div className="h-px bg-zinc-700/50 my-1"></div>
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      signOut();
-                      setProfileDropdownOpen(false);
-                    }}
-                    className={`block w-full px-4 py-2.5 text-sm text-zinc-300 hover:text-white hover:bg-zinc-700/50 transition-colors ${locale === "ar" ? "text-right" : ""}`}
-                  >
-                    <div className="flex items-center gap-3">
-                      {locale === "ar" ? (
-                        <>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            className="w-4 h-4 flex-shrink-0"
-                            strokeWidth="1.5"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
-                            />
-                          </svg>
-                          <span>تسجيل الخروج</span>
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            className="w-4 h-4 flex-shrink-0"
-                            strokeWidth="1.5"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
-                            />
-                          </svg>
-                          <span>Sign Out</span>
-                        </>
-                      )}
-                    </div>
-                  </a>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
         <nav className={`flex-1 overflow-y-auto py-5 px-3`}>
           {navCategories.map((category, index) => {
-            // Check if category has any visible items
-            const visibleItems = category.items.filter((item) => {
-              // Skip items that should be hidden based on auth state
-              if (
-                (item.hideIfAuthenticated && user) ||
-                (item.path === "/profile" && !user)
-              ) {
-                return false;
-              }
-
-              // Check if the item should be shown based on authentication status
-              return shouldShowMenuItem(item.path);
-            });
-
-            // Skip the category if it has no visible items
-            if (visibleItems.length === 0) return null;
-
             return (
               <div key={category.name} className={index !== 0 ? "mt-6" : ""}>
                 {isOpen && (
@@ -835,7 +468,7 @@ export default function Sidebar({
                   </h4>
                 )}
                 <ul className="space-y-1">
-                  {visibleItems.map((item) => (
+                  {category.items.map((item) => (
                     <li key={item.path}>
                       <a
                         href="#"
@@ -856,13 +489,18 @@ export default function Sidebar({
                             <div className="w-5 h-5 flex-shrink-0">
                               {item.icon}
                             </div>
-                            <span className={`${locale === "ar" ? "mr-3 px-1" : "ml-3"}`}>
+                            <span
+                              className={`${locale === "ar" ? "mr-3 px-1" : "ml-3"}`}
+                            >
                               {locale === "ar" && item.nameAr
                                 ? item.nameAr
                                 : item.name}
                             </span>
-                            {(item.path === "/fees-manager" || item.path === "/course-request" || item.path === "/schedule-planner") && (
-                              <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/20 ${locale === "ar" ? "mr-2" : "ml-2"}`}>
+                            {(item.path === "/fees-manager" ||
+                              item.path === "/schedule-planner") && (
+                              <span
+                                className={`text-[10px] font-medium px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/20 ${locale === "ar" ? "mr-2" : "ml-2"}`}
+                              >
                                 {locale === "ar" ? "جديد" : "NEW"}
                               </span>
                             )}
@@ -892,54 +530,6 @@ export default function Sidebar({
             </div>
           )}
         </nav>
-
-        {/* Login/Signup buttons for non-authenticated users */}
-        {!user && isOpen && (
-          <div className="p-4 border-t border-zinc-800/50">
-            <div className="space-y-2.5">
-              <button
-                onClick={() => handleNavigation("/login")}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-lg shadow-blue-500/20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:ring-offset-2 focus:ring-offset-zinc-900"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
-                  />
-                </svg>
-                {locale === "ar" ? "تسجيل الدخول" : "Log In"}
-              </button>
-              <button
-                onClick={() => handleNavigation("/signup")}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-br from-zinc-800/50 to-zinc-800/30 hover:from-zinc-800 hover:to-zinc-800/50 text-zinc-300 hover:text-white font-medium border border-zinc-700/50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-zinc-500/30 focus:ring-offset-2 focus:ring-offset-zinc-900"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
-                  />
-                </svg>
-                {locale === "ar" ? "إنشاء حساب" : "Sign Up"}
-              </button>
-            </div>
-          </div>
-        )}
 
         <div
           className={`${

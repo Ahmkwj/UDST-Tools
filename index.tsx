@@ -1,13 +1,11 @@
 import * as React from "react";
 import { useLocale } from "./src/context/LanguageContext";
 import { motion } from "framer-motion";
-import { useAuth } from "./src/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
   const locale = useLocale();
   const isRTL = locale === "ar";
-  const { user } = useAuth();
   const navigate = useNavigate();
 
   // Animation variants
@@ -27,11 +25,7 @@ const Home: React.FC = () => {
   };
 
   const handleGetStarted = () => {
-    if (user) {
-      navigate(`/${locale}/guide`);
-    } else {
-      navigate(`/${locale}/login`);
-    }
+    navigate(`/${locale}/guide`);
   };
 
   return (

@@ -7,7 +7,6 @@ import Checkbox from "../components/ui/Checkbox";
 import Footer from "../components/ui/Footer";
 import PageHeader from "../components/ui/PageHeader";
 import { useLocale } from "../context/LanguageContext";
-import { useAuth } from "../context/AuthContext";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -19,7 +18,6 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { useAcademicInfo } from "../hooks/useAcademicInfo";
 
 // Feature flags
 const SHOW_FUTURE_SCENARIOS = false;
@@ -31,7 +29,7 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 type Course = {
@@ -50,7 +48,6 @@ type Scenario = {
 
 export default function GPACalculator() {
   const locale = useLocale();
-  const { user } = useAuth();
   const [totalGradePoints, setTotalGradePoints] = useState<number | string>("");
   const [totalCredits, setTotalCredits] = useState<number | string>("");
   const [numberOfCourses, setNumberOfCourses] = useState<number>(0);
@@ -65,18 +62,6 @@ export default function GPACalculator() {
   const [previousCumulativeGPA, setPreviousCumulativeGPA] = useState<number>(0);
   const [newTotalGradePoints, setNewTotalGradePoints] = useState<number>(0);
   const [newTotalCredits, setNewTotalCredits] = useState<number>(0);
-
-  // Use the new academic info hook
-  const { academicInfo, loading: loadingAcademicInfo } = useAcademicInfo(user?.id || null);
-
-  // Load academic info when available
-  useEffect(() => {
-    if (academicInfo) {
-      setTotalGradePoints(academicInfo.total_grade_points);
-      setTotalCredits(academicInfo.total_credits);
-      setNumberOfCourses(academicInfo.current_subjects || 0);
-      }
-  }, [academicInfo]);
 
   // Initialize courses when number of courses changes
   useEffect(() => {
@@ -116,7 +101,7 @@ export default function GPACalculator() {
   const updateCourse = (
     index: number,
     field: keyof Course,
-    value: string | number | boolean
+    value: string | number | boolean,
   ) => {
     const updatedCourses = [...courses];
 
@@ -244,7 +229,7 @@ export default function GPACalculator() {
         currentGPA,
         currentCredits,
         termGPA,
-        scenarioCredits
+        scenarioCredits,
       );
 
       return {
@@ -275,7 +260,7 @@ export default function GPACalculator() {
       currentGPA,
       currentCredits,
       termGPA,
-      scenarioCredits
+      scenarioCredits,
     );
 
     const updatedScenarios = [...scenarios];
@@ -337,7 +322,7 @@ export default function GPACalculator() {
       if (grade === "W") {
         return; // Don't add points or credits for withdrawals
       }
-      
+
       totalPoints += calculateGradePoints(grade) * creditsPerCourse;
       totalCredits += creditsPerCourse;
     });
@@ -350,7 +335,7 @@ export default function GPACalculator() {
     oldGPA: number,
     oldCredits: number,
     termGPA: number,
-    termCredits: number
+    termCredits: number,
   ): number => {
     // Validate inputs to prevent calculation errors
     const validOldGPA = isNaN(oldGPA) ? 0 : Math.max(0, Math.min(4.0, oldGPA));
@@ -393,160 +378,124 @@ export default function GPACalculator() {
           />
 
           {/* Main content */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
-            {/* Left Column - Input Sections */}
-            <div className="space-y-6 md:space-y-8 h-full flex flex-col">
-              {/* Current GPA */}
-              <Card
-                title={
-                  locale === "ar" ? "المعدل التراكمي الحالي" : "Current GPA"
-                }
-              >
-                {loadingAcademicInfo ? (
-                  <div className="flex items-center justify-center py-6">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="space-y-6 md:space-y-8">
+            {/* Step 1: Current GPA Information */}
+            <Card
+              title={
+                locale === "ar" ? "الخطوة 1: معلومات المعدل الحالي" : "Step 1: Current GPA Information"
+              }
+            >
+              <div className="space-y-6">
+                <p className="text-zinc-400 text-sm">
+                  {locale === "ar"
+                    ? "أدخل معدلك التراكمي الحالي ومجموع نقاط الدرجات والساعات المعتمدة"
+                    : "Enter your current cumulative GPA information including total grade points and credits"}
+                </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-zinc-800/30 border border-zinc-700/50 rounded-lg p-4">
+                    <Input
+                      label={locale === "ar" ? "نقاط الدرجات الكلية" : "Total Grade Points"}
+                      type="number"
+                      min="0"
+                      step="0.1"
+                      value={totalGradePoints}
+                      onChange={(e) => setTotalGradePoints(e.target.value)}
+                      placeholder="0.0"
+                      helperText={locale === "ar" ? "مجموع نقاط جميع المواد السابقة" : "Sum of all previous course grade points"}
+                    />
                   </div>
-                ) : (
-                  <div className="space-y-6">
-                    <div className="text-center">
-                      <div className="text-4xl md:text-5xl font-bold text-white mb-2">
-                        {previousCumulativeGPA.toFixed(2)}
-                      </div>
-                      <p className="text-zinc-400 text-sm md:text-base">
-                        {locale === "ar"
-                          ? "معدلك التراكمي الحالي"
-                          : "Your Current Cumulative GPA"}
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
-                      <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-4 text-center">
-                        <span className="block text-xl font-semibold text-white">
-                          {typeof totalGradePoints === "string"
-                            ? parseFloat(totalGradePoints).toFixed(1)
-                            : totalGradePoints.toFixed(1)}
-                        </span>
-                        <span className="block text-sm text-zinc-400 mt-1">
-                          {locale === "ar" ? "نقاط الدرجات" : "Grade Points"}
-                        </span>
-                      </div>
-                      <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-4 text-center">
-                        <span className="block text-xl font-semibold text-white">
-                          {typeof totalCredits === "string"
-                            ? parseFloat(totalCredits)
-                            : totalCredits}
-                        </span>
-                        <span className="block text-sm text-zinc-400 mt-1">
-                          {locale === "ar" ? "الساعات المعتمدة" : "Credits"}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="text-center pt-2">
-                      <a
-                        href={`/${locale}/academic-info`}
-                        className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors"
-                      >
-                        {locale === "ar"
-                          ? "تعديل المعلومات الأكاديمية"
-                          : "Edit Academic Information"}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className={`h-4 w-4 ${
-                            locale === "ar" ? "mr-1" : "ml-1"
-                          }`}
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                          />
-                        </svg>
-                      </a>
-                    </div>
+                  <div className="bg-zinc-800/30 border border-zinc-700/50 rounded-lg p-4">
+                    <Input
+                      label={locale === "ar" ? "الساعات المعتمدة الكلية" : "Total Credits"}
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={totalCredits}
+                      onChange={(e) => setTotalCredits(e.target.value)}
+                      placeholder="0"
+                      helperText={locale === "ar" ? "مجموع ساعات جميع المواد السابقة" : "Sum of all previous course credits"}
+                    />
                   </div>
-                )}
-              </Card>
-
-              {/* Course Information Card */}
-              <Card
-                title={
-                  locale === "ar" ? "معلومات المواد" : "Course Information"
-                }
-                className="bg-zinc-900/70 backdrop-blur-sm ring-1 ring-zinc-800/50 flex-1 relative min-h-[250px] sm:min-h-[300px] md:min-h-[350px]"
-              >
-                {numberOfCourses === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-8 px-3 text-center w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-zinc-600 mb-3"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                      />
-                    </svg>
-                    <p className="text-zinc-400 text-sm sm:text-base md:text-lg mb-1 sm:mb-2">
-                      {locale === "ar"
-                        ? "لم يتم اختيار أي مادة"
-                        : "No Courses Selected"}
+                  <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border border-blue-500/30 rounded-lg p-4 flex flex-col items-center justify-center">
+                    <p className="text-xs text-zinc-400 mb-2">
+                      {locale === "ar" ? "المعدل الحالي" : "Current GPA"}
                     </p>
-                    <p className="text-zinc-500 text-xs sm:text-sm max-w-[180px] sm:max-w-[250px]">
-                      {locale === "ar"
-                        ? "اختر عدد المواد التي تدرسها هذا الفصل"
-                        : "Choose the number of courses you're taking this semester"}
-                    </p>
+                    <div className="text-3xl md:text-4xl font-bold text-blue-400">
+                      {previousCumulativeGPA.toFixed(2)}
+                    </div>
                   </div>
-                ) : (
-                  <div className="space-y-4 sm:space-y-6 h-full overflow-y-auto px-1 sm:px-0">
+                </div>
+              </div>
+            </Card>
+
+            {/* Step 2: This Semester's Courses */}
+            <Card
+              title={
+                locale === "ar" ? "الخطوة 2: مواد هذا الفصل" : "Step 2: This Semester's Courses"
+              }
+            >
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <p className="text-zinc-400 text-sm">
+                    {locale === "ar"
+                      ? "اختر عدد المواد التي تدرسها هذا الفصل"
+                      : "Select the number of courses you're taking this semester"}
+                  </p>
+                </div>
+                
+                <div className="max-w-xs">
+                  <Select
+                    label={locale === "ar" ? "عدد المواد" : "Number of Courses"}
+                    value={numberOfCourses.toString()}
+                    onChange={(e) => setNumberOfCourses(parseInt(e.target.value))}
+                  >
+                    <option value="0">{locale === "ar" ? "اختر عدد المواد" : "Select number of courses"}</option>
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+                      <option key={num} value={num}>
+                        {num} {locale === "ar" ? (num === 1 ? "مادة" : num === 2 ? "مادتان" : "مواد") : (num === 1 ? "Course" : "Courses")}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+                
+                {numberOfCourses > 0 && (
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                     {courses.map((course, index) => (
                       <div
                         key={index}
-                        className="p-4 sm:p-6 bg-zinc-800/50 border border-zinc-700/50 rounded-lg space-y-4 sm:space-y-6"
+                        className="p-5 bg-gradient-to-br from-zinc-800/50 to-zinc-800/30 border border-zinc-700/50 rounded-xl space-y-4 hover:border-zinc-600/50 transition-colors"
                       >
-                        <div className="flex items-center justify-between mb-1 sm:mb-2">
-                          <h3 className="text-sm font-semibold text-blue-400">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-base font-semibold text-blue-400">
                             {locale === "ar"
                               ? `المادة ${index + 1}`
                               : `Course ${index + 1}`}
                           </h3>
-                          <div className="text-xs font-medium text-zinc-400 bg-zinc-800/80 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full">
-                            {course.credits}{" "}
-                            {locale === "ar" ? "ساعات" : "Credits"}
+                          <div className="text-xs font-medium text-zinc-400 bg-zinc-900/50 px-3 py-1 rounded-full border border-zinc-700/50">
+                            {course.credits} {locale === "ar" ? "ساعات" : "credits"}
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
+                        <div className="grid grid-cols-2 gap-3">
                           <Select
                             label={locale === "ar" ? "الدرجة" : "Grade"}
                             value={course.grade}
                             onChange={(e) =>
                               updateCourse(index, "grade", e.target.value)
                             }
-                            helperText={course.grade === "W" ? 
-                              (locale === "ar" ? 
-                                "الانسحاب - لا يؤثر على المعدل" : 
-                                "Withdrawal - does not affect GPA") : 
-                              undefined}
                           >
                             {["A", "B+", "B", "C+", "C", "D+", "D", "F", "W"].map(
                               (grade) => (
                                 <option key={grade} value={grade}>
                                   {grade}
-                                  {grade === "W" ? 
-                                    (locale === "ar" ? " (انسحاب)" : " (Withdrawal)") : 
-                                    ""}
+                                  {grade === "W"
+                                    ? locale === "ar"
+                                      ? " (انسحاب)"
+                                      : " (Withdrawal)"
+                                    : ""}
                                 </option>
-                              )
+                              ),
                             )}
                           </Select>
 
@@ -554,6 +503,7 @@ export default function GPACalculator() {
                             label={locale === "ar" ? "الساعات" : "Credits"}
                             type="number"
                             min="1"
+                            max="6"
                             step="1"
                             value={course.credits}
                             onChange={(e) => {
@@ -561,11 +511,19 @@ export default function GPACalculator() {
                               updateCourse(
                                 index,
                                 "credits",
-                                isNaN(value) ? 1 : Math.max(1, value)
+                                isNaN(value) ? 1 : Math.max(1, Math.min(6, value)),
                               );
                             }}
                           />
                         </div>
+
+                        {course.grade === "W" && (
+                          <div className="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-lg px-3 py-2">
+                            {locale === "ar"
+                              ? "الانسحاب - لا يؤثر على المعدل"
+                              : "Withdrawal - does not affect GPA"}
+                          </div>
+                        )}
 
                         {course.grade !== "W" && (
                           <Checkbox
@@ -578,7 +536,6 @@ export default function GPACalculator() {
                                 ? "أقوم بإعادة هذه المادة"
                                 : "Repeating this course"
                             }
-                            className="max-w-full overflow-hidden text-ellipsis"
                           />
                         )}
 
@@ -594,9 +551,10 @@ export default function GPACalculator() {
                               updateCourse(
                                 index,
                                 "previousGrade",
-                                e.target.value
+                                e.target.value,
                               )
                             }
+                            helperText={locale === "ar" ? "الدرجة التي حصلت عليها سابقاً" : "The grade you received previously"}
                           >
                             {["F", "D+", "D"].map((grade) => (
                               <option key={grade} value={grade}>
@@ -609,18 +567,17 @@ export default function GPACalculator() {
                     ))}
                   </div>
                 )}
-              </Card>
-            </div>
+              </div>
+            </Card>
 
-            {/* Right Column - Results Section */}
-            <div className="space-y-8">
-              <Card
-                title={
-                  locale === "ar"
-                    ? "نتيجة حساب المعدل"
-                    : "GPA Calculation Result"
-                }
-              >
+            {/* Step 3: Results */}
+            <Card
+              title={
+                locale === "ar"
+                  ? "الخطوة 3: النتيجة"
+                  : "Step 3: Results"
+              }
+            >
                 <div className="text-center mb-6 md:mb-8">
                   <div className="inline-flex items-baseline">
                     <span className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
@@ -666,9 +623,9 @@ export default function GPACalculator() {
                         ? "يوضح التقدم من المعدل التراكمي السابق إلى المعدل التراكمي المتوقع بعد هذا الفصل"
                         : "Visualizes the progression from your previous cumulative GPA to your projected GPA after this semester"}
                     </p>
-                    
+
                     {/* Check if any withdrawal grades are present */}
-                    {courses.some(course => course.grade === "W") && (
+                    {courses.some((course) => course.grade === "W") && (
                       <div className="mb-4 p-3 bg-zinc-800/50 border border-zinc-700/50 rounded-lg">
                         <div className="flex items-center gap-2 mb-1">
                           <svg
@@ -686,7 +643,9 @@ export default function GPACalculator() {
                             />
                           </svg>
                           <span className="text-sm font-medium text-zinc-300">
-                            {locale === "ar" ? "ملاحظة حول الانسحاب" : "Withdrawal Note"}
+                            {locale === "ar"
+                              ? "ملاحظة حول الانسحاب"
+                              : "Withdrawal Note"}
                           </span>
                         </div>
                         <p className="text-xs text-zinc-400">
@@ -729,15 +688,15 @@ export default function GPACalculator() {
                                 Math.floor(
                                   Math.min(
                                     previousCumulativeGPA,
-                                    newCumulativeGPA
-                                  ) * 2
+                                    newCumulativeGPA,
+                                  ) * 2,
                                 ) / 2,
                               max:
                                 Math.ceil(
                                   Math.max(
                                     previousCumulativeGPA,
-                                    newCumulativeGPA
-                                  ) * 2
+                                    newCumulativeGPA,
+                                  ) * 2,
                                 ) / 2,
                               grid: {
                                 color: "rgba(255, 255, 255, 0.1)",
@@ -746,7 +705,7 @@ export default function GPACalculator() {
                                 color: "rgba(255, 255, 255, 0.7)",
                                 stepSize: 1,
                                 callback: function (
-                                  tickValue: number | string
+                                  tickValue: number | string,
                                 ) {
                                   return typeof tickValue === "number"
                                     ? tickValue.toFixed(1)
@@ -803,8 +762,8 @@ export default function GPACalculator() {
                           newCumulativeGPA > previousCumulativeGPA
                             ? "text-emerald-400"
                             : newCumulativeGPA < previousCumulativeGPA
-                            ? "text-red-400"
-                            : "text-zinc-400"
+                              ? "text-red-400"
+                              : "text-zinc-400"
                         }`}
                       >
                         {newCumulativeGPA > previousCumulativeGPA ? (
@@ -849,7 +808,7 @@ export default function GPACalculator() {
                         )}
                         <span>
                           {Math.abs(
-                            newCumulativeGPA - previousCumulativeGPA
+                            newCumulativeGPA - previousCumulativeGPA,
                           ).toFixed(3)}{" "}
                           {locale === "ar" ? "نقطة" : "points"}
                         </span>
@@ -857,8 +816,7 @@ export default function GPACalculator() {
                     </div>
                   </div>
                 </div>
-              </Card>
-            </div>
+            </Card>
           </div>
 
           {/* Future Scenarios Section - Full Width */}
@@ -883,7 +841,7 @@ export default function GPACalculator() {
                     const isGPAHigher =
                       scenario.cumulativeGPA > newCumulativeGPA;
                     const gpaDifference = Math.abs(
-                      scenario.cumulativeGPA - newCumulativeGPA
+                      scenario.cumulativeGPA - newCumulativeGPA,
                     );
 
                     return (
@@ -990,9 +948,10 @@ export default function GPACalculator() {
                                   // Add a tooltip for grade explanation
                                   const gradePoints =
                                     calculateGradePoints(grade);
-                                  const gradeTitle = grade === "W" 
-                                    ? `${grade} (Withdrawal - no effect on GPA)`
-                                    : `${grade} (${gradePoints.toFixed(1)} points)`;
+                                  const gradeTitle =
+                                    grade === "W"
+                                      ? `${grade} (Withdrawal - no effect on GPA)`
+                                      : `${grade} (${gradePoints.toFixed(1)} points)`;
 
                                   return (
                                     <span
