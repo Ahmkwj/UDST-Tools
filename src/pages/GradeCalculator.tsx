@@ -6,6 +6,16 @@ import Footer from "../components/ui/Footer";
 import PageHeader from "../components/ui/PageHeader";
 import { useLocale } from "../context/LanguageContext";
 
+/* Theme: match Attendance / GPA */
+const CARD = {
+  base: "!bg-zinc-800/50 !rounded-2xl !border !border-zinc-600/40 backdrop-blur-xl",
+  padding: "!px-6 !pt-6 !pb-7 sm:!px-8 sm:!pt-7 sm:!pb-8",
+};
+const cardClass = `${CARD.base} ${CARD.padding}`;
+const inputSelectClass =
+  "!bg-zinc-800/50 !border-zinc-500/40 !rounded-xl focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/20 placeholder-zinc-500 [&_input]:py-2.5";
+const sectionGap = "space-y-12";
+
 type Assignment = {
   id: string;
   name: string;
@@ -219,287 +229,115 @@ export default function GradeCalculator() {
   const hasCompletedAssignments = assignments.some((a) => a.score !== null);
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col bg-gradient-to-br from-black via-zinc-900 to-black text-white">
-      <div className="flex-1 py-4 md:py-8 px-3 md:px-8 overflow-x-hidden overflow-y-auto">
-        {/* Background decoration */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-        </div>
-
-        <div className="relative z-10 w-full max-w-6xl mx-auto space-y-4 sm:space-y-6 pt-6 sm:pt-8 pb-12 sm:pb-16">
+    <div className="min-h-screen w-full flex flex-col text-white">
+      <div className="flex-1 py-14 sm:py-20 px-5 sm:px-8 overflow-x-hidden overflow-y-auto">
+        <div className="w-full max-w-4xl mx-auto">
           <PageHeader
             title={{
               en: "Grade Calculator",
               ar: "حاسبة الدرجات",
             }}
             description={{
-              en: "Calculate your course grades, track assignment scores, and estimate your final grade based on weighted assignments.",
-              ar: "احسب درجات مقرراتك، تتبع درجات التكليفات، وقدّر درجتك النهائية بناءً على أوزان التكليفات.",
+              en: "Add assignments with weights and scores to see your current and projected final grade.",
+              ar: "أضف التكليفات وأوزانها ودرجاتها لمعرفة وضعك الحالي والتوقع النهائي.",
             }}
           />
 
-          {/* Main content */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            {/* Left Column - Course and Assignment Management */}
-            <div className="space-y-4 md:space-y-6">
-              {/* Assignments Card */}
+          <div className={sectionGap}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            {/* Left: Assignments */}
               <Card
                 title={locale === "ar" ? "التكليفات" : "Assignments"}
-                className="relative"
+                className={cardClass}
               >
-                <div className="flex flex-wrap items-center justify-between gap-2 mb-4 md:mb-6">
-                  <div className="flex flex-wrap gap-2">
-                    <div
-                      className={`text-xs sm:text-sm px-2 py-1 rounded-lg ${
-                        isWeightExceeded
-                          ? "bg-red-500/20 text-red-400 border border-red-500/20"
-                          : "bg-blue-500/20 text-blue-400 border border-blue-500/20"
-                      }`}
-                    >
-                      {locale === "ar" ? "النسبة الكلية" : "Total Weight"}:{" "}
-                      {totalWeight.toFixed(0)}%
-                    </div>
-                    {isWeightExceeded && (
-                      <div className="bg-red-500/20 text-red-400 border border-red-500/20 text-xs sm:text-sm px-2 py-1 rounded-lg">
-                        {locale === "ar" ? "يتجاوز 100%" : "Exceeds 100%"}
-                      </div>
-                    )}
-                  </div>
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+                  <span
+                    className={`text-xs font-medium px-2.5 py-1 rounded-lg ${
+                      isWeightExceeded
+                        ? "bg-red-500/15 text-red-400 border border-red-500/30"
+                        : "bg-blue-500/15 text-blue-400 border border-blue-500/30"
+                    }`}
+                  >
+                    {locale === "ar" ? "مجموع الأوزان" : "Total weight"}: {totalWeight}%
+                    {isWeightExceeded && (locale === "ar" ? " (تجاوز 100%)" : " (over 100%)")}
+                  </span>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={addAssignment}
-                    className="!p-2"
-                    aria-label={
-                      locale === "ar" ? "إضافة تكليف" : "Add assignment"
-                    }
+                    className="!p-2 rounded-xl border-zinc-500/40 text-zinc-400 hover:text-white hover:bg-zinc-700/40"
+                    aria-label={locale === "ar" ? "إضافة تكليف" : "Add assignment"}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="w-4 h-4"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                       <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                     </svg>
                   </Button>
                 </div>
 
                 {assignments.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-8 px-3 text-center min-h-[200px] sm:min-h-[250px] bg-zinc-800/30 rounded-xl border border-zinc-700/50">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-8 w-8 sm:h-10 sm:w-10 text-zinc-600 mb-3"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                      />
-                    </svg>
-                    <p className="text-zinc-400 text-sm sm:text-base mb-1">
-                      {locale === "ar"
-                        ? "لا توجد تكليفات بعد"
-                        : "No Assignments Yet"}
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <p className="text-zinc-400 text-sm mb-1">
+                      {locale === "ar" ? "لا توجد تكليفات" : "No assignments yet"}
                     </p>
-                    <p className="text-zinc-500 text-xs sm:text-sm max-w-[180px] sm:max-w-[250px]">
-                      {locale === "ar"
-                        ? "أضف تكليفك الأول لبدء حساب درجتك"
-                        : "Add your first assignment to start calculating your grade"}
+                    <p className="text-zinc-500 text-xs max-w-[200px]">
+                      {locale === "ar" ? "اضغط + لإضافة تكليف وبدء الحساب." : "Click + to add an assignment and start."}
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-3 md:space-y-4">
+                  <div className="space-y-0">
                     {assignments.map((assignment) => (
                       <div
                         key={assignment.id}
-                        className={`p-3 md:p-4 rounded-lg bg-zinc-800/30 border border-zinc-700/50 ${
-                          assignment.score !== null ? "bg-opacity-70" : ""
-                        }`}
+                        className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 py-4 ${assignments.indexOf(assignment) > 0 ? "border-t border-zinc-600/25" : ""}`}
                       >
-                        {/* Mobile view - Stacked layout */}
-                        <div className="block lg:hidden space-y-3">
+                        <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                           <Input
-                            label={
-                              locale === "ar"
-                                ? "اسم التكليف"
-                                : "Assignment Name"
-                            }
+                            label={locale === "ar" ? "الاسم" : "Name"}
                             value={assignment.name}
+                            onChange={(e) => updateAssignment(assignment.id, "name", e.target.value)}
+                            className={`${inputSelectClass} !mb-0`}
+                          />
+                          <Input
+                            label={locale === "ar" ? "الوزن %" : "Weight %"}
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={assignment.weight}
+                            onChange={(e) => updateAssignment(assignment.id, "weight", Number(e.target.value))}
+                            className={`${inputSelectClass} !mb-0 [&_input]:py-2`}
+                          />
+                          <Input
+                            label={locale === "ar" ? "الدرجة %" : "Score %"}
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={assignment.score ?? ""}
                             onChange={(e) =>
                               updateAssignment(
                                 assignment.id,
-                                "name",
-                                e.target.value
+                                "score",
+                                e.target.value === "" ? null : Math.min(100, Math.max(0, Number(e.target.value)))
                               )
                             }
+                            placeholder={locale === "ar" ? "—" : "—"}
+                            className={`${inputSelectClass} !mb-0 [&_input]:py-2`}
                           />
-                          <div className="grid grid-cols-2 gap-3">
-                            <Input
-                              label={
-                                locale === "ar" ? "الوزن (%)" : "Weight (%)"
-                              }
-                              type="number"
-                              min="0"
-                              max="100"
-                              value={assignment.weight}
-                              onChange={(e) =>
-                                updateAssignment(
-                                  assignment.id,
-                                  "weight",
-                                  Number(e.target.value)
-                                )
-                              }
-                            />
-                            <Input
-                              label={
-                                locale === "ar" ? "الدرجة (%)" : "Score (%)"
-                              }
-                              type="number"
-                              min="0"
-                              max="100"
-                              value={assignment.score || ""}
-                              onChange={(e) =>
-                                updateAssignment(
-                                  assignment.id,
-                                  "score",
-                                  e.target.value === ""
-                                    ? null
-                                    : Math.min(
-                                        100,
-                                        Math.max(0, Number(e.target.value))
-                                      )
-                                )
-                              }
-                              placeholder={
-                                locale === "ar"
-                                  ? "لم يتم التصحيح"
-                                  : "Not graded"
-                              }
-                            />
-                          </div>
                         </div>
-
-                        {/* Desktop view - Row layout */}
-                        <div className="hidden lg:grid grid-cols-5 gap-4">
-                          <div className="col-span-2">
-                            <Input
-                              label={
-                                locale === "ar"
-                                  ? "اسم التكليف"
-                                  : "Assignment Name"
-                              }
-                              value={assignment.name}
-                              onChange={(e) =>
-                                updateAssignment(
-                                  assignment.id,
-                                  "name",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                          <div className="col-span-3 grid grid-cols-2 gap-4">
-                            <Input
-                              label={
-                                locale === "ar" ? "الوزن (%)" : "Weight (%)"
-                              }
-                              type="number"
-                              min="0"
-                              max="100"
-                              value={assignment.weight}
-                              onChange={(e) =>
-                                updateAssignment(
-                                  assignment.id,
-                                  "weight",
-                                  Number(e.target.value)
-                                )
-                              }
-                            />
-                            <Input
-                              label={
-                                locale === "ar" ? "الدرجة (%)" : "Score (%)"
-                              }
-                              type="number"
-                              min="0"
-                              max="100"
-                              value={assignment.score || ""}
-                              onChange={(e) =>
-                                updateAssignment(
-                                  assignment.id,
-                                  "score",
-                                  e.target.value === ""
-                                    ? null
-                                    : Math.min(
-                                        100,
-                                        Math.max(0, Number(e.target.value))
-                                      )
-                                )
-                              }
-                              placeholder={
-                                locale === "ar"
-                                  ? "لم يتم التصحيح"
-                                  : "Not graded"
-                              }
-                            />
-                          </div>
-                        </div>
-
-                        {/* Footer with score ratio and delete button */}
-                        <div className="flex items-center justify-between mt-3 pt-3 md:mt-4 md:pt-4 border-t border-zinc-700/30">
-                          <div className="text-xs sm:text-sm font-medium bg-zinc-800/80 rounded-lg px-2 sm:px-3 py-1 border border-zinc-700/50">
-                            {assignment.score !== null ? (
-                              <>
-                                <span className="text-blue-400">
-                                  {(
-                                    (assignment.score * assignment.weight) /
-                                    100
-                                  ).toFixed(1)}
-                                </span>
-                                <span className="text-zinc-600">/</span>
-                                <span className="text-zinc-400">
-                                  {assignment.weight.toFixed(1)}
-                                </span>
-                              </>
-                            ) : (
-                              <>
-                                <span className="text-zinc-600">--</span>
-                                <span className="text-zinc-600">/</span>
-                                <span className="text-zinc-500">
-                                  {assignment.weight.toFixed(1)}
-                                </span>
-                              </>
-                            )}
-                          </div>
+                        <div className="flex items-center gap-2 sm:ms-auto">
+                          <span className="text-xs text-zinc-500 tabular-nums">
+                            {assignment.score !== null
+                              ? `${((assignment.score * assignment.weight) / 100).toFixed(1)} / ${assignment.weight}`
+                              : `— / ${assignment.weight}`}
+                          </span>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => removeAssignment(assignment.id)}
-                            className="!p-2"
-                            aria-label={
-                              locale === "ar"
-                                ? "حذف التكليف"
-                                : "Remove assignment"
-                            }
+                            className="!p-2 rounded-xl border-zinc-500/40 text-zinc-400 hover:text-red-400 hover:border-red-500/40"
+                            aria-label={locale === "ar" ? "حذف" : "Remove"}
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={1.5}
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                              />
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                           </Button>
                         </div>
@@ -508,217 +346,101 @@ export default function GradeCalculator() {
                   </div>
                 )}
               </Card>
-            </div>
 
-            {/* Right Column - Grade Results */}
-            <div className="space-y-4 md:space-y-6">
-              <Card
-                title={
-                  locale === "ar"
-                    ? "نتائج حساب الدرجات"
-                    : "Grade Calculation Results"
-                }
-              >
-                {!hasCompletedAssignments ? (
-                  <div className="flex flex-col items-center justify-center py-6 sm:py-8 text-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-8 w-8 sm:h-10 sm:w-10 text-zinc-600 mb-3"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-                      />
-                    </svg>
-                    <p className="text-zinc-400 text-sm sm:text-base mb-1">
-                      {locale === "ar" ? "لا توجد درجات بعد" : "No Grades Yet"}
-                    </p>
-                    <p className="text-zinc-500 text-xs sm:text-sm max-w-[180px] sm:max-w-[250px]">
-                      {locale === "ar"
-                        ? "أضف التكليفات ودرجاتها لرؤية حساب درجتك"
-                        : "Add assignments and their scores to see your grade calculation"}
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    {/* Main Grade Display */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
-                      {/* Current Standing */}
-                      <div className="bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 rounded-xl border border-zinc-700/50 p-4 md:p-6 flex flex-col items-center justify-center">
-                        <h3 className="text-xs md:text-sm font-medium text-zinc-400 uppercase tracking-wider mb-2 md:mb-4">
-                          {locale === "ar"
-                            ? "الوضع الحالي"
-                            : "Current Standing"}
-                        </h3>
-                        <div className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent mb-1 md:mb-2">
-                          {currentGrade.toFixed(1)}%
-                        </div>
-                        <div
-                          className={`text-xl md:text-2xl font-semibold ${currentLetterGrade.color} mb-1`}
-                        >
-                          {currentLetterGrade.letter}
-                        </div>
-                        <div className="text-xs md:text-sm text-zinc-400">
-                          {currentLetterGrade.points.toFixed(2)}{" "}
-                          {locale === "ar" ? "نقاط المعدل" : "GPA Points"}
-                        </div>
-                        <div className="mt-3 pt-3 md:mt-4 md:pt-4 border-t border-zinc-700/50 text-center w-full">
-                          <div className="text-xs md:text-sm text-zinc-500">
-                            {locale === "ar"
-                              ? `بناءً على ${
-                                  assignments.filter((a) => a.score !== null)
-                                    .length
-                                } تكليفات مكتملة`
-                              : `Based on ${
-                                  assignments.filter((a) => a.score !== null)
-                                    .length
-                                } completed assignments`}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Projected Final */}
-                      <div className="bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 rounded-xl border border-zinc-700/50 p-4 md:p-6 flex flex-col items-center justify-center">
-                        <h3 className="text-xs md:text-sm font-medium text-zinc-400 uppercase tracking-wider mb-2 md:mb-4">
-                          {locale === "ar"
-                            ? "التوقع النهائي"
-                            : "Projected Final"}
-                        </h3>
-                        <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-1 md:mb-2">
-                          {finalGrade.toFixed(1)}%
-                        </div>
-                        <div
-                          className={`text-xl md:text-2xl font-semibold ${finalLetterGrade.color} mb-1`}
-                        >
-                          {finalLetterGrade.letter}
-                        </div>
-                        <div className="text-xs md:text-sm text-zinc-400">
-                          {finalLetterGrade.points.toFixed(2)}{" "}
-                          {locale === "ar" ? "نقاط المعدل" : "GPA Points"}
-                        </div>
-                        <div className="mt-3 pt-3 md:mt-4 md:pt-4 border-t border-zinc-700/50 text-center w-full">
-                          <div className="text-xs md:text-sm text-zinc-500">
-                            {locale === "ar"
-                              ? "إذا حصلت على 0% في العمل المتبقي"
-                              : "If remaining work receives 0%"}
-                          </div>
-                        </div>
-                      </div>
+            {/* Right: Results + Grade Scale */}
+              <div className={sectionGap}>
+                <Card
+                  title={locale === "ar" ? "النتيجة" : "Results"}
+                  className={cardClass}
+                >
+                  {!hasCompletedAssignments ? (
+                    <div className="flex flex-col items-center justify-center py-12 text-center">
+                      <p className="text-zinc-400 text-sm mb-1">
+                        {locale === "ar" ? "لا توجد درجات مُدخلة" : "No scores entered yet"}
+                      </p>
+                      <p className="text-zinc-500 text-xs max-w-[200px]">
+                        {locale === "ar" ? "أدخل درجات التكليفات أقصى اليسار لرؤية النتيجة." : "Enter assignment scores on the left to see results."}
+                      </p>
                     </div>
-
-                    {/* Additional Details */}
-                    <div className="bg-zinc-800/30 rounded-xl border border-zinc-700/50 p-4 md:p-6">
-                      <h3 className="text-xs md:text-sm font-medium text-zinc-400 uppercase tracking-wider mb-3 md:mb-4">
-                        {locale === "ar" ? "تفصيل الدرجات" : "Grade Breakdown"}
-                      </h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
-                        <div>
-                          <div className="text-xs text-zinc-500 mb-1">
-                            {locale === "ar"
-                              ? "العمل المكتمل"
-                              : "Completed Work"}
-                          </div>
-                          <div className="text-base md:text-lg font-medium text-zinc-200">
-                            {assignments
-                              .filter((a) => a.score !== null)
-                              .reduce((sum, a) => sum + a.weight, 0)}
-                            % {locale === "ar" ? "من المجموع" : "of total"}
-                          </div>
+                  ) : (
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pb-6 border-b border-zinc-600/40">
+                        <div className="text-center sm:text-center">
+                          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">
+                            {locale === "ar" ? "الوضع الحالي" : "Current"}
+                          </p>
+                          <p className="text-4xl sm:text-5xl font-bold tabular-nums text-blue-400">
+                            {currentGrade.toFixed(1)}%
+                          </p>
+                          <p className={`text-lg font-semibold ${currentLetterGrade.color}`}>
+                            {currentLetterGrade.letter}
+                          </p>
+                          <p className="text-xs text-zinc-500 mt-1">
+                            {assignments.filter((a) => a.score !== null).length} {locale === "ar" ? "تكليف مكتمل" : "completed"}
+                          </p>
                         </div>
-                        <div>
-                          <div className="text-xs text-zinc-500 mb-1">
-                            {locale === "ar"
-                              ? "العمل المتبقي"
-                              : "Remaining Work"}
-                          </div>
-                          <div className="text-base md:text-lg font-medium text-zinc-200">
-                            {assignments
-                              .filter((a) => a.score === null)
-                              .reduce((sum, a) => sum + a.weight, 0)}
-                            % {locale === "ar" ? "من المجموع" : "of total"}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-xs text-zinc-500 mb-1">
-                            {locale === "ar"
-                              ? "تقدم المادة"
-                              : "Course Progress"}
-                          </div>
-                          <div className="text-base md:text-lg font-medium text-zinc-200">
-                            {(
-                              (assignments.filter((a) => a.score !== null)
-                                .length /
-                                assignments.length) *
-                              100
-                            ).toFixed(0)}
-                            % {locale === "ar" ? "مكتمل" : "complete"}
-                          </div>
+                        <div className="text-center sm:text-center">
+                          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">
+                            {locale === "ar" ? "التوقع النهائي" : "Projected final"}
+                          </p>
+                          <p className="text-4xl sm:text-5xl font-bold tabular-nums text-white">
+                            {finalGrade.toFixed(1)}%
+                          </p>
+                          <p className={`text-lg font-semibold ${finalLetterGrade.color}`}>
+                            {finalLetterGrade.letter}
+                          </p>
+                          <p className="text-xs text-zinc-500 mt-1">
+                            {locale === "ar" ? "بافتراض 0% للمتبقي" : "If rest is 0%"}
+                          </p>
                         </div>
                       </div>
-                    </div>
-                  </>
-                )}
-              </Card>
+                      <div className="flex flex-wrap gap-x-8 gap-y-2 pt-4">
+                        <span className="text-sm text-zinc-400">
+                          {locale === "ar" ? "مكتمل:" : "Completed:"}{" "}
+                          <span className="font-medium text-white">
+                            {assignments.filter((a) => a.score !== null).reduce((s, a) => s + a.weight, 0)}%
+                          </span>
+                        </span>
+                        <span className="text-sm text-zinc-400">
+                          {locale === "ar" ? "متبقي:" : "Remaining:"}{" "}
+                          <span className="font-medium text-white">
+                            {assignments.filter((a) => a.score === null).reduce((s, a) => s + a.weight, 0)}%
+                          </span>
+                        </span>
+                        <span className="text-sm text-zinc-400">
+                          {locale === "ar" ? "التقدم:" : "Progress:"}{" "}
+                          <span className="font-medium text-white">
+                            {assignments.length ? Math.round((assignments.filter((a) => a.score !== null).length / assignments.length) * 100) : 0}%
+                          </span>
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </Card>
 
-              {/* Grade Scale Reference */}
-              <Card
-                title={
-                  locale === "ar" ? "مرجع سلم الدرجات" : "Grade Scale Reference"
-                }
-              >
-                <div className="bg-zinc-800/30 rounded-xl border border-zinc-700/50 overflow-hidden">
-                  <div className="overflow-x-auto -mx-4 px-4">
-                    <table className="w-full min-w-[500px]">
-                      <thead className="bg-zinc-800/50">
-                        <tr>
-                          <th className="px-3 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">
-                            {locale === "ar" ? "الدرجة" : "Grade"}
-                          </th>
-                          <th className="px-3 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">
-                            {locale === "ar" ? "النطاق" : "Range"}
-                          </th>
-                          <th className="px-3 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">
-                            {locale === "ar" ? "النقاط" : "Points"}
-                          </th>
-                          <th className="px-3 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">
-                            {locale === "ar" ? "الوصف" : "Description"}
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-zinc-800/50">
-                        {Object.entries(gradeScale).map(([grade, info]) => (
-                          <tr
-                            key={grade}
-                            className={`${info.color} hover:bg-zinc-800/30 transition-colors`}
-                          >
-                            <td className="px-3 md:px-4 py-2 whitespace-nowrap text-xs md:text-sm font-medium">
-                              {grade}
-                            </td>
-                            <td className="px-3 md:px-4 py-2 whitespace-nowrap text-xs md:text-sm">
-                              {locale === "ar"
-                                ? `${info.min} - ${info.max}`
-                                : `${info.min} - ${info.max}`}
-                            </td>
-                            <td className="px-3 md:px-4 py-2 whitespace-nowrap text-xs md:text-sm font-medium">
-                              {info.points.toFixed(2)}
-                            </td>
-                            <td className="px-3 md:px-4 py-2 whitespace-nowrap text-xs md:text-sm">
-                              {locale === "ar"
-                                ? info.descriptionAr
-                                : info.description}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                <Card
+                  title={locale === "ar" ? "سلم الدرجات" : "Grade Scale"}
+                  className={cardClass}
+                >
+                  <div className="space-y-0">
+                    {Object.entries(gradeScale).map(([grade, info]) => (
+                      <div
+                        key={grade}
+                        className={`flex flex-wrap items-center gap-x-4 gap-y-1 py-3 ${grade !== "A" ? "border-t border-zinc-600/25" : ""}`}
+                      >
+                        <span className={`w-8 font-semibold ${info.color}`}>{grade}</span>
+                        <span className="text-sm text-zinc-400 tabular-nums">
+                          {info.min} – {info.max}%
+                        </span>
+                        <span className="text-sm text-zinc-500">{info.points.toFixed(1)} pts</span>
+                        <span className="text-sm text-zinc-500 ms-auto">
+                          {locale === "ar" ? info.descriptionAr : info.description}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                </div>
-              </Card>
+                </Card>
+              </div>
             </div>
           </div>
         </div>

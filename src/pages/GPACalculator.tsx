@@ -22,6 +22,17 @@ import { Line } from "react-chartjs-2";
 // Feature flags
 const SHOW_FUTURE_SCENARIOS = false;
 
+/* Theme: match Attendance page exactly */
+const CARD = {
+  base: "!bg-zinc-800/50 !rounded-2xl !border !border-zinc-600/40 backdrop-blur-xl",
+  padding: "!px-6 !pt-6 !pb-7 sm:!px-8 sm:!pt-7 sm:!pb-8",
+};
+const cardClass = `${CARD.base} ${CARD.padding}`;
+const gpaDisplayCardClass = `${CARD.base} !px-6 !pt-6 !pb-6 sm:!px-8 sm:!pt-7 sm:!pb-7 flex flex-col`;
+const inputSelectClass =
+  "!bg-zinc-800/50 !border-zinc-500/40 !rounded-xl focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/20 placeholder-zinc-500 [&_input]:py-2.5 [&_select]:py-2.5";
+const sectionGap = "space-y-12";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -357,212 +368,167 @@ export default function GPACalculator() {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col bg-gradient-to-br from-black via-zinc-900 to-black text-white">
-      <div className="flex-1 py-4 md:py-8 px-3 md:px-8 overflow-x-hidden overflow-y-auto">
-        {/* Background decoration */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-        </div>
-
-        <div className="relative z-10 w-full max-w-6xl mx-auto space-y-4 sm:space-y-6 md:space-y-8 pt-6 sm:pt-8 pb-12 sm:pb-16">
+    <div className="min-h-screen w-full flex flex-col text-white">
+      <div className="flex-1 py-14 sm:py-20 px-5 sm:px-8 overflow-x-hidden overflow-y-auto">
+        <div className="w-full max-w-4xl mx-auto">
           <PageHeader
             title={{
               en: "GPA Calculator",
               ar: "حاسبة المعدل التراكمي",
             }}
             description={{
-              en: "Calculate your cumulative GPA, track your academic progress, and plan your grades for better academic performance.",
-              ar: "احسب معدلك التراكمي، تتبع تقدمك الأكاديمي، وخطط لدرجاتك لتحقيق أداء أكاديمي أفضل.",
+              en: "Enter your transcript totals and this semester's courses to see your new cumulative GPA.",
+              ar: "أدخل إجماليات سجلك ومواد الفصل الحالي لمعرفة معدلك التراكمي الجديد.",
             }}
           />
 
-          {/* Main content */}
-          <div className="space-y-6 md:space-y-8">
-            {/* Step 1: Current GPA Information */}
-            <Card
-              title={
-                locale === "ar" ? "الخطوة 1: معلومات المعدل الحالي" : "Step 1: Current GPA Information"
-              }
-            >
-              <div className="space-y-6">
-                <p className="text-zinc-400 text-sm">
-                  {locale === "ar"
-                    ? "أدخل معدلك التراكمي الحالي ومجموع نقاط الدرجات والساعات المعتمدة"
-                    : "Enter your current cumulative GPA information including total grade points and credits"}
-                </p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-zinc-800/30 border border-zinc-700/50 rounded-lg p-4">
-                    <Input
-                      label={locale === "ar" ? "نقاط الدرجات الكلية" : "Total Grade Points"}
-                      type="number"
-                      min="0"
-                      step="0.1"
-                      value={totalGradePoints}
-                      onChange={(e) => setTotalGradePoints(e.target.value)}
-                      placeholder="0.0"
-                      helperText={locale === "ar" ? "مجموع نقاط جميع المواد السابقة" : "Sum of all previous course grade points"}
-                    />
-                  </div>
-                  <div className="bg-zinc-800/30 border border-zinc-700/50 rounded-lg p-4">
-                    <Input
-                      label={locale === "ar" ? "الساعات المعتمدة الكلية" : "Total Credits"}
-                      type="number"
-                      min="0"
-                      step="1"
-                      value={totalCredits}
-                      onChange={(e) => setTotalCredits(e.target.value)}
-                      placeholder="0"
-                      helperText={locale === "ar" ? "مجموع ساعات جميع المواد السابقة" : "Sum of all previous course credits"}
-                    />
-                  </div>
-                  <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border border-blue-500/30 rounded-lg p-4 flex flex-col items-center justify-center">
-                    <p className="text-xs text-zinc-400 mb-2">
-                      {locale === "ar" ? "المعدل الحالي" : "Current GPA"}
-                    </p>
-                    <div className="text-3xl md:text-4xl font-bold text-blue-400">
+          <div className={sectionGap}>
+            {/* Row 1: Current GPA display + Inputs side by side (like Absenteeism | Semester Setup) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+              <Card
+                title={locale === "ar" ? "المعدل الحالي" : "Current GPA"}
+                className={gpaDisplayCardClass}
+              >
+                <div className="flex flex-1 flex-col min-h-[160px] w-full">
+                  <div className="flex-1 flex items-center justify-center">
+                    <p className="text-6xl sm:text-7xl font-bold tabular-nums tracking-tight text-blue-400 text-center">
                       {previousCumulativeGPA.toFixed(2)}
-                    </div>
+                    </p>
                   </div>
+                  <p className="text-[10px] text-zinc-500 uppercase tracking-wider text-center">/ 4.00</p>
                 </div>
-              </div>
-            </Card>
+              </Card>
 
-            {/* Step 2: This Semester's Courses */}
+              <Card
+                title={locale === "ar" ? "من السجل الأكاديمي" : "From Transcript"}
+                className={cardClass}
+              >
+                <div className="grid grid-cols-1 gap-6">
+                  <Input
+                    label={locale === "ar" ? "نقاط الدرجات" : "Grade Points"}
+                    type="number"
+                    min="0"
+                    step="0.1"
+                    value={totalGradePoints}
+                    onChange={(e) => setTotalGradePoints(e.target.value)}
+                    placeholder="0"
+                    helperText={locale === "ar" ? "مجموع (الدرجة × الساعات) لجميع المواد السابقة" : "Sum of (grade × credits) for all past courses"}
+                    className={inputSelectClass}
+                  />
+                  <Input
+                    label={locale === "ar" ? "الساعات المعتمدة" : "Credits"}
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={totalCredits}
+                    onChange={(e) => setTotalCredits(e.target.value)}
+                    placeholder="0"
+                    helperText={locale === "ar" ? "مجموع ساعات المواد المنجزة" : "Total completed credit hours"}
+                    className={inputSelectClass}
+                  />
+                </div>
+              </Card>
+            </div>
+
+            {/* Row 2: This Semester - courses as simple rows, no inner cards */}
             <Card
-              title={
-                locale === "ar" ? "الخطوة 2: مواد هذا الفصل" : "Step 2: This Semester's Courses"
-              }
+              title={locale === "ar" ? "مواد الفصل الحالي" : "This Semester"}
+              className={cardClass}
             >
               <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <p className="text-zinc-400 text-sm">
-                    {locale === "ar"
-                      ? "اختر عدد المواد التي تدرسها هذا الفصل"
-                      : "Select the number of courses you're taking this semester"}
-                  </p>
-                </div>
-                
                 <div className="max-w-xs">
                   <Select
-                    label={locale === "ar" ? "عدد المواد" : "Number of Courses"}
+                    label={locale === "ar" ? "عدد المواد" : "Number of courses"}
                     value={numberOfCourses.toString()}
                     onChange={(e) => setNumberOfCourses(parseInt(e.target.value))}
+                    className={inputSelectClass}
                   >
-                    <option value="0">{locale === "ar" ? "اختر عدد المواد" : "Select number of courses"}</option>
+                    <option value="0">{locale === "ar" ? "اختر" : "Select"}</option>
                     {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                       <option key={num} value={num}>
-                        {num} {locale === "ar" ? (num === 1 ? "مادة" : num === 2 ? "مادتان" : "مواد") : (num === 1 ? "Course" : "Courses")}
+                        {num} {locale === "ar" ? (num === 1 ? "مادة" : "مواد") : (num === 1 ? "course" : "courses")}
                       </option>
                     ))}
                   </Select>
                 </div>
-                
                 {numberOfCourses > 0 && (
-                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-0">
                     {courses.map((course, index) => (
                       <div
                         key={index}
-                        className="p-5 bg-gradient-to-br from-zinc-800/50 to-zinc-800/30 border border-zinc-700/50 rounded-xl space-y-4 hover:border-zinc-600/50 transition-colors"
+                        className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-4 ${index > 0 ? "border-t border-zinc-600/25" : ""}`}
                       >
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-base font-semibold text-blue-400">
-                            {locale === "ar"
-                              ? `المادة ${index + 1}`
-                              : `Course ${index + 1}`}
-                          </h3>
-                          <div className="text-xs font-medium text-zinc-400 bg-zinc-900/50 px-3 py-1 rounded-full border border-zinc-700/50">
-                            {course.credits} {locale === "ar" ? "ساعات" : "credits"}
-                          </div>
+                        <div className="flex items-center gap-3 min-w-0">
+                          <span className="flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/15 text-blue-400 text-xs font-semibold">
+                            {index + 1}
+                          </span>
+                          <span className="text-sm font-medium text-white truncate">
+                            {locale === "ar" ? `المادة ${index + 1}` : `Course ${index + 1}`}
+                          </span>
                         </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                          <Select
-                            label={locale === "ar" ? "الدرجة" : "Grade"}
-                            value={course.grade}
-                            onChange={(e) =>
-                              updateCourse(index, "grade", e.target.value)
-                            }
-                          >
-                            {["A", "B+", "B", "C+", "C", "D+", "D", "F", "W"].map(
-                              (grade) => (
-                                <option key={grade} value={grade}>
-                                  {grade}
-                                  {grade === "W"
-                                    ? locale === "ar"
-                                      ? " (انسحاب)"
-                                      : " (Withdrawal)"
-                                    : ""}
+                        <div className="flex flex-wrap items-center gap-3 sm:gap-5 sm:ms-auto">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-medium text-zinc-500 whitespace-nowrap">
+                              {locale === "ar" ? "الدرجة" : "Grade"}
+                            </span>
+                            <Select
+                              value={course.grade}
+                              onChange={(e) => updateCourse(index, "grade", e.target.value)}
+                              className={`${inputSelectClass} !mb-0 min-w-[88px] [&_select]:py-2 [&_select]:text-sm`}
+                            >
+                              {["A", "B+", "B", "C+", "C", "D+", "D", "F", "W"].map((g) => (
+                                <option key={g} value={g}>
+                                  {g}{g === "W" ? (locale === "ar" ? " (انسحاب)" : " (W)") : ""}
                                 </option>
-                              ),
-                            )}
-                          </Select>
-
-                          <Input
-                            label={locale === "ar" ? "الساعات" : "Credits"}
-                            type="number"
-                            min="1"
-                            max="6"
-                            step="1"
-                            value={course.credits}
-                            onChange={(e) => {
-                              const value = parseFloat(e.target.value);
-                              updateCourse(
-                                index,
-                                "credits",
-                                isNaN(value) ? 1 : Math.max(1, Math.min(6, value)),
-                              );
-                            }}
-                          />
-                        </div>
-
-                        {course.grade === "W" && (
-                          <div className="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-lg px-3 py-2">
-                            {locale === "ar"
-                              ? "الانسحاب - لا يؤثر على المعدل"
-                              : "Withdrawal - does not affect GPA"}
+                              ))}
+                            </Select>
                           </div>
-                        )}
-
-                        {course.grade !== "W" && (
-                          <Checkbox
-                            checked={course.isRepeat}
-                            onChange={(e) =>
-                              updateCourse(index, "isRepeat", e.target.checked)
-                            }
-                            label={
-                              locale === "ar"
-                                ? "أقوم بإعادة هذه المادة"
-                                : "Repeating this course"
-                            }
-                          />
-                        )}
-
-                        {course.isRepeat && (
-                          <Select
-                            label={
-                              locale === "ar"
-                                ? "الدرجة السابقة"
-                                : "Previous Grade"
-                            }
-                            value={course.previousGrade}
-                            onChange={(e) =>
-                              updateCourse(
-                                index,
-                                "previousGrade",
-                                e.target.value,
-                              )
-                            }
-                            helperText={locale === "ar" ? "الدرجة التي حصلت عليها سابقاً" : "The grade you received previously"}
-                          >
-                            {["F", "D+", "D"].map((grade) => (
-                              <option key={grade} value={grade}>
-                                {grade}
-                              </option>
-                            ))}
-                          </Select>
-                        )}
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-medium text-zinc-500 whitespace-nowrap">
+                              {locale === "ar" ? "الساعات" : "Credits"}
+                            </span>
+                            <Input
+                              type="number"
+                              min="1"
+                              max="6"
+                              step="1"
+                              value={course.credits}
+                              onChange={(e) => {
+                                const v = parseFloat(e.target.value);
+                                updateCourse(index, "credits", isNaN(v) ? 1 : Math.max(1, Math.min(6, v)));
+                              }}
+                              className={`${inputSelectClass} !mb-0 w-20 [&_input]:py-2`}
+                            />
+                          </div>
+                          {course.grade === "W" && (
+                            <span className="text-xs text-amber-400">
+                              {locale === "ar" ? "لا تدخل في المعدل" : "Not counted in GPA"}
+                            </span>
+                          )}
+                          {course.grade !== "W" && (
+                            <>
+                              <Checkbox
+                                checked={course.isRepeat}
+                                onChange={(e) => updateCourse(index, "isRepeat", e.target.checked)}
+                                label={locale === "ar" ? "إعادة" : "Repeat"}
+                              />
+                              {course.isRepeat && (
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs text-zinc-500">{locale === "ar" ? "السابق:" : "Previous:"}</span>
+                                  <Select
+                                    value={course.previousGrade}
+                                    onChange={(e) => updateCourse(index, "previousGrade", e.target.value)}
+                                    className={`${inputSelectClass} !mb-0 min-w-[72px] [&_select]:py-2 [&_select]:text-sm`}
+                                  >
+                                    {["F", "D+", "D"].map((g) => (
+                                      <option key={g} value={g}>{g}</option>
+                                    ))}
+                                  </Select>
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -570,91 +536,44 @@ export default function GPACalculator() {
               </div>
             </Card>
 
-            {/* Step 3: Results */}
+            {/* Row 3: Results - no inner cards */}
             <Card
-              title={
-                locale === "ar"
-                  ? "الخطوة 3: النتيجة"
-                  : "Step 3: Results"
-              }
+              title={locale === "ar" ? "المعدل الجديد" : "New GPA"}
+              className={cardClass}
             >
-                <div className="text-center mb-6 md:mb-8">
-                  <div className="inline-flex items-baseline">
-                    <span className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
-                      {newCumulativeGPA.toFixed(3)}
-                    </span>
-                    <span className="text-xl md:text-2xl text-zinc-400 mr-2">
-                      /4.00
-                    </span>
-                  </div>
-                  <p className="text-zinc-400 text-sm md:text-base mt-3">
-                    {locale === "ar" ? "المعدل التراكمي" : "Cumulative GPA"}
+                <div className="flex items-center justify-center gap-2">
+                  <p className="text-5xl sm:text-6xl font-bold tabular-nums tracking-tight text-blue-400">
+                    {newCumulativeGPA.toFixed(2)}
                   </p>
+                  <span className="text-xl text-zinc-500">/ 4.00</span>
                 </div>
 
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
-                    <div className="flex justify-between items-center p-4 sm:p-6 rounded-2xl bg-zinc-800/50 border border-zinc-700/50">
-                      <span className="text-sm font-medium text-zinc-300">
-                        {locale === "ar" ? "نقاط الدرجات" : "Grade Points"}
-                      </span>
-                      <span className="text-base font-semibold text-white">
-                        {newTotalGradePoints.toFixed(3)}
-                      </span>
-                    </div>
+                <div className="flex flex-wrap items-center gap-x-8 gap-y-2 py-4 border-t border-zinc-600/40">
+                  <span className="text-sm text-zinc-400">
+                    {locale === "ar" ? "نقاط الدرجات:" : "Grade points:"}{" "}
+                    <span className="font-semibold text-white tabular-nums">{newTotalGradePoints.toFixed(2)}</span>
+                  </span>
+                  <span className="text-sm text-zinc-400">
+                    {locale === "ar" ? "الساعات:" : "Credits:"}{" "}
+                    <span className="font-semibold text-white tabular-nums">{newTotalCredits.toFixed(0)}</span>
+                  </span>
+                </div>
 
-                    <div className="flex justify-between items-center p-4 sm:p-6 rounded-2xl bg-zinc-800/50 border border-zinc-700/50">
-                      <span className="text-sm font-medium text-zinc-300">
-                        {locale === "ar" ? "إجمالي الساعات" : "Total Credits"}
-                      </span>
-                      <span className="text-base font-semibold text-white">
-                        {newTotalCredits.toFixed(0)}
-                      </span>
-                    </div>
-                  </div>
+                <div className="pt-6 border-t border-zinc-600/40">
+                  <h3 className="text-sm font-semibold text-white mb-1">
+                    {locale === "ar" ? "من السابق إلى الحالي" : "Previous to current"}
+                  </h3>
+                  <p className="text-xs text-zinc-500 mb-4">
+                    {locale === "ar" ? "مقارنة المعدل قبل وبعد إضافة هذا الفصل." : "Compare GPA before and after this semester."}
+                  </p>
 
-                  {/* GPA Graph */}
-                  <div className="mt-6 md:mt-8 pt-6 border-t border-zinc-800">
-                    <h3 className="text-base font-semibold text-zinc-200 mb-2">
-                      {locale === "ar" ? "اتجاه المعدل التراكمي" : "GPA Trend"}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-zinc-400 mb-4 md:mb-6">
+                  {courses.some((course) => course.grade === "W") && (
+                    <p className="mb-4 text-xs text-amber-400/90">
                       {locale === "ar"
-                        ? "يوضح التقدم من المعدل التراكمي السابق إلى المعدل التراكمي المتوقع بعد هذا الفصل"
-                        : "Visualizes the progression from your previous cumulative GPA to your projected GPA after this semester"}
+                        ? "الانسحاب (W) لا يدخل في المعدل ولا في الساعات."
+                        : "Withdrawals (W) are not included in GPA or credits."}
                     </p>
-
-                    {/* Check if any withdrawal grades are present */}
-                    {courses.some((course) => course.grade === "W") && (
-                      <div className="mb-4 p-3 bg-zinc-800/50 border border-zinc-700/50 rounded-lg">
-                        <div className="flex items-center gap-2 mb-1">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4 text-zinc-400"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                          <span className="text-sm font-medium text-zinc-300">
-                            {locale === "ar"
-                              ? "ملاحظة حول الانسحاب"
-                              : "Withdrawal Note"}
-                          </span>
-                        </div>
-                        <p className="text-xs text-zinc-400">
-                          {locale === "ar"
-                            ? "المواد المنسحب منها (W) لا تؤثر على المعدل التراكمي ولا تحتسب ضمن الساعات المعتمدة."
-                            : "Withdrawn courses (W) do not affect your GPA and are not counted toward credit hours."}
-                        </p>
-                      </div>
-                    )}
+                  )}
                     <div className="h-[180px] sm:h-[200px] w-full">
                       <Line
                         data={{
@@ -699,10 +618,10 @@ export default function GPACalculator() {
                                   ) * 2,
                                 ) / 2,
                               grid: {
-                                color: "rgba(255, 255, 255, 0.1)",
+                                color: "rgba(161, 161, 170, 0.25)",
                               },
                               ticks: {
-                                color: "rgba(255, 255, 255, 0.7)",
+                                color: "rgba(161, 161, 170, 0.8)",
                                 stepSize: 1,
                                 callback: function (
                                   tickValue: number | string,
@@ -716,7 +635,7 @@ export default function GPACalculator() {
                                 display: true,
                                 text:
                                   locale === "ar" ? "المعدل التراكمي" : "GPA",
-                                color: "rgba(255, 255, 255, 0.7)",
+                                color: "rgba(161, 161, 170, 0.8)",
                                 font: {
                                   size: 12,
                                 },
@@ -724,10 +643,10 @@ export default function GPACalculator() {
                             },
                             x: {
                               grid: {
-                                color: "rgba(255, 255, 255, 0.1)",
+                                color: "rgba(161, 161, 170, 0.25)",
                               },
                               ticks: {
-                                color: "rgba(255, 255, 255, 0.7)",
+                                color: "rgba(161, 161, 170, 0.8)",
                               },
                             },
                           },
@@ -736,11 +655,11 @@ export default function GPACalculator() {
                               display: false,
                             },
                             tooltip: {
-                              backgroundColor: "rgba(17, 24, 39, 0.8)",
+                              backgroundColor: "rgba(39, 39, 42, 0.95)",
                               titleColor: "rgb(255, 255, 255)",
                               bodyColor: "rgb(255, 255, 255)",
                               padding: 12,
-                              borderColor: "rgba(255, 255, 255, 0.1)",
+                              borderColor: "rgba(161, 161, 170, 0.4)",
                               borderWidth: 1,
                               displayColors: false,
                               callbacks: {
@@ -809,20 +728,19 @@ export default function GPACalculator() {
                         <span>
                           {Math.abs(
                             newCumulativeGPA - previousCumulativeGPA,
-                          ).toFixed(3)}{" "}
-                          {locale === "ar" ? "نقطة" : "points"}
+                          ).toFixed(2)}{" "}
+                          {locale === "ar" ? "فرق" : "change"}
                         </span>
                       </div>
                     </div>
                   </div>
-                </div>
             </Card>
           </div>
 
           {/* Future Scenarios Section - Full Width */}
           {SHOW_FUTURE_SCENARIOS && (
             <div className="mt-6 md:mt-8">
-              <Card title="Future Scenarios">
+              <Card title="Future Scenarios" className={cardClass}>
                 <div className="mb-6 md:mb-8">
                   <p className="text-base text-zinc-300">
                     Explore possible outcomes based on different course loads
