@@ -15,7 +15,14 @@ html,
 body,
 #root {
   font-family: "IBM Plex Sans Arabic", sans-serif;
-  @apply bg-zinc-900 text-white;
+  @apply text-white;
+}
+
+/* Global page background: dark gray */
+.page-bg-gradient,
+body {
+  background: #141414;
+  background-attachment: fixed;
 }
 
 /* RTL Support */

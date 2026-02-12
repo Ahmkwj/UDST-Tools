@@ -6,6 +6,12 @@ export default {
       fontFamily: {
         sans: ['"IBM Plex Sans Arabic"', "sans-serif"],
       },
+      colors: {
+        attendance: {
+          page: "#000000",
+          border: "#2d2d2d",
+        },
+      },
     },
     // Override the default font-family to ensure it applies everywhere
     fontFamily: {

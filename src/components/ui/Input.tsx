@@ -20,10 +20,10 @@ export default function Input({
   const isRTL = locale === "ar";
 
   return (
-    <div className={`space-y-1 ${fullWidth ? "w-full" : ""}`}>
+    <div className={`space-y-2 ${fullWidth ? "w-full" : ""}`}>
       {label && (
         <label
-          className={`block text-sm font-medium text-zinc-300 ${
+          className={`block text-xs font-medium text-zinc-400 ${
             isRTL ? "text-right" : "text-left"
           }`}
         >
@@ -33,12 +33,14 @@ export default function Input({
       <input
         className={`
           w-full bg-zinc-800/50 border ${
-            error ? "border-red-500" : "border-zinc-700"
+            error ? "border-red-500/50 focus:border-red-500" : "border-zinc-500/40 focus:border-blue-500"
           }
-          rounded-lg px-3 py-2.5 text-white placeholder-zinc-500
-          focus:outline-none focus:border-zinc-700
-          hover:border-zinc-600
-          transition-colors duration-200
+          rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-zinc-500
+          focus:outline-none focus:ring-2 ${
+            error ? "focus:ring-red-500/20" : "focus:ring-blue-500/20"
+          }
+          hover:border-zinc-400/40
+          transition-all duration-200
           ${isRTL ? "text-right" : "text-left"}
           ${className}
         `}
@@ -47,7 +49,7 @@ export default function Input({
       />
       {helperText && (
         <p
-          className={`text-xs ${error ? "text-red-400" : "text-zinc-400"} ${
+          className={`text-xs ${error ? "text-red-400" : "text-zinc-300"} ${
             isRTL ? "text-right" : "text-left"
           }`}
         >

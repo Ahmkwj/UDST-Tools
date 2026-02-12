@@ -11,6 +11,18 @@ type ClassInfo = {
   missedTimes: number | string;
 };
 
+/* No shadows; consistent spacing between sections */
+const CARD = {
+  base: "!bg-zinc-800/50 !rounded-2xl !border !border-zinc-600/40 backdrop-blur-xl",
+  padding: "!px-6 !pt-6 !pb-7 sm:!px-8 sm:!pt-7 sm:!pb-8",
+};
+const cardClass = `${CARD.base} ${CARD.padding}`;
+const absenteeismCardClass = `${CARD.base} !px-6 !pt-6 !pb-6 sm:!px-8 sm:!pt-7 sm:!pb-7 flex flex-col`;
+const sectionInnerClass = "bg-zinc-700/25 border border-zinc-600/30 rounded-xl";
+const inputSelectClass =
+  "!bg-zinc-800/50 !border-zinc-500/40 !rounded-xl focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/20 placeholder-zinc-500 [&_input]:py-2.5 [&_select]:py-2.5";
+const sectionGap = "space-y-12";
+
 export default function AttendanceCalculator() {
   const locale = useLocale();
   const [absenteeismPercentage, setAbsenteeismPercentage] =
@@ -23,11 +35,8 @@ export default function AttendanceCalculator() {
   const [showWarning, setShowWarning] = useState<boolean>(true);
 
   useEffect(() => {
-    // Check if the warning has been dismissed before
     const warningDismissed = localStorage.getItem("attendanceWarningDismissed");
-    if (warningDismissed) {
-      setShowWarning(false);
-    }
+    if (warningDismissed) setShowWarning(false);
   }, []);
 
   const dismissWarning = () => {
@@ -35,30 +44,21 @@ export default function AttendanceCalculator() {
     localStorage.setItem("attendanceWarningDismissed", "true");
   };
 
-  // Initialize class infos when number of classes changes
   useEffect(() => {
     let newClassInfos: ClassInfo[] = [];
-
     if (classesPerWeek > classInfos.length) {
-      // Adding new classes
       newClassInfos = [
         ...classInfos,
         ...Array(classesPerWeek - classInfos.length)
           .fill(null)
-          .map(() => ({
-            duration: 60,
-            missedTimes: 0,
-          })),
+          .map(() => ({ duration: 60, missedTimes: 0 })),
       ];
     } else {
-      // Removing classes or keeping the same number
       newClassInfos = classInfos.slice(0, classesPerWeek);
     }
-
     setClassInfos(newClassInfos);
   }, [classesPerWeek]);
 
-  // Calculate attendance whenever inputs change
   useEffect(() => {
     calculateAttendance();
   }, [absenteeismPercentage, weeksInSemester, classInfos]);
@@ -69,51 +69,34 @@ export default function AttendanceCalculator() {
     value: number | string
   ) => {
     const updatedClassInfos = [...classInfos];
-
-    // Ensure valid values
-    if (field === "duration" && typeof value === "number") {
+    if (field === "duration" && typeof value === "number")
       value = Math.max(0, value);
-    }
-
-    if (field === "missedTimes" && typeof value === "number") {
+    if (field === "missedTimes" && typeof value === "number")
       value = Math.max(0, value);
-    }
-
-    updatedClassInfos[index] = {
-      ...updatedClassInfos[index],
-      [field]: value,
-    };
-
+    updatedClassInfos[index] = { ...updatedClassInfos[index], [field]: value };
     setClassInfos(updatedClassInfos);
   };
 
   const calculateAttendance = () => {
     const currentAbsenteeismPercentage = parseFloat(absenteeismPercentage) || 0;
     const weeks = parseInt(weeksInSemester) || 0;
-
     let totalClassMinutes = 0;
     let totalMissedMinutes = 0;
-
     classInfos.forEach((classInfo) => {
       const classDurationMinutes = classInfo.duration || 0;
       totalClassMinutes += classDurationMinutes * weeks;
-
       let missedMinutes = 0;
       if (typeof classInfo.missedTimes === "number") {
         missedMinutes = classInfo.missedTimes * classDurationMinutes;
       } else if (typeof classInfo.missedTimes === "string") {
         missedMinutes = parseInt(classInfo.missedTimes) || 0;
       }
-
       totalMissedMinutes += missedMinutes;
     });
-
-    // Calculate new absenteeism percentage
     let calculatedPercentage = currentAbsenteeismPercentage;
     if (totalClassMinutes > 0) {
       calculatedPercentage += (totalMissedMinutes / totalClassMinutes) * 100;
     }
-
     setNewAbsenteeismPercentage(calculatedPercentage);
   };
 
@@ -123,16 +106,58 @@ export default function AttendanceCalculator() {
     setClassInfos(updatedClassInfos);
   };
 
-  return (
-    <div className="relative min-h-screen w-full flex flex-col bg-gradient-to-br from-black via-zinc-900 to-black text-white">
-      <div className="flex-1 py-4 md:py-8 px-3 md:px-8 overflow-x-hidden overflow-y-auto">
-        {/* Background decoration */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-        </div>
+  const limitPercent = 15;
+  const barFillPercent = Math.min(
+    100,
+    (newAbsenteeismPercentage / limitPercent) * 100
+  );
 
-        <div className="relative z-10 w-full max-w-6xl mx-auto space-y-4 sm:space-y-6 md:space-y-8 pt-6 sm:pt-8 pb-12 sm:pb-16">
+  // Total classes left across all (for summary)
+  let totalRemainingClasses = 0;
+  if (classesPerWeek > 0) {
+    classInfos.forEach((classInfo) => {
+      const totalMinutesInSemester =
+        (classInfo.duration || 0) * parseInt(weeksInSemester || "0");
+      const maxMissedMinutes = totalMinutesInSemester * 0.15;
+      let currentMissedMinutes = 0;
+      if (typeof classInfo.missedTimes === "number") {
+        currentMissedMinutes =
+          classInfo.missedTimes * (classInfo.duration || 0);
+      } else {
+        currentMissedMinutes = parseInt(classInfo.missedTimes || "0");
+      }
+      const remainingMinutes = Math.max(
+        0,
+        maxMissedMinutes - currentMissedMinutes
+      );
+      totalRemainingClasses +=
+        classInfo.duration > 0
+          ? Math.floor(remainingMinutes / classInfo.duration)
+          : 0;
+    });
+  }
+
+  const statusText =
+    newAbsenteeismPercentage <= 5
+      ? locale === "ar"
+        ? "حضور ممتاز"
+        : "Excellent attendance"
+      : newAbsenteeismPercentage <= 10
+        ? locale === "ar"
+          ? "كن حذراً مع الغياب"
+          : "Be cautious with absences"
+        : newAbsenteeismPercentage >= 15
+          ? locale === "ar"
+            ? "تم تجاوز الحد"
+            : "Limit exceeded"
+          : locale === "ar"
+            ? "قريب من الحد"
+            : "Near limit";
+
+  return (
+    <div className="min-h-screen w-full flex flex-col text-white">
+      <div className="flex-1 py-14 sm:py-20 px-5 sm:px-8 overflow-x-hidden overflow-y-auto">
+        <div className="w-full max-w-4xl mx-auto">
           <PageHeader
             title={{
               en: "Attendance Calculator",
@@ -144,544 +169,340 @@ export default function AttendanceCalculator() {
             }}
           />
 
-          {/* Main content */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
-            {/* Left Column - Input Sections */}
-            <div className="space-y-6 md:space-y-8 h-full flex flex-col">
-              {/* Basic Information Card */}
+          <div className={sectionGap}>
+            {/* Row 1: Absenteeism + Semester Setup side by side */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
               <Card
-                title={
-                  locale === "ar" ? "معلومات الحضور" : "Attendance Information"
-                }
-                className="relative"
+                title={locale === "ar" ? "نسبة الغياب" : "Absenteeism"}
+                className={absenteeismCardClass}
               >
-                <form className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
-                    <Input
-                      label={
-                        locale === "ar"
-                          ? "نسبة الغياب"
-                          : "Absenteeism Percentage"
-                      }
-                      type="number"
-                      min="0"
-                      max="100"
-                      step="0.1"
-                      placeholder={locale === "ar" ? "مثال: 3.5" : "e.g. 3.5"}
-                      value={absenteeismPercentage}
-                      onChange={(e) => {
-                        const value = parseFloat(e.target.value);
-                        if (e.target.value === "" || isNaN(value)) {
-                          setAbsenteeismPercentage("");
-                        } else {
-                          setAbsenteeismPercentage(
-                            Math.max(0, Math.min(100, value)).toString()
-                          );
-                        }
-                      }}
-                      helperText={
-                        locale === "ar"
-                          ? "0 إذا لم تتغيب عن أي محاضرة من قبل"
-                          : "0 if you haven't missed any class before"
-                      }
-                    />
-
-                    <Input
-                      label={
-                        locale === "ar"
-                          ? "عدد الأسابيع في الفصل"
-                          : "Total Weeks in Semester"
-                      }
-                      type="number"
-                      min="1"
-                      step="1"
-                      placeholder={locale === "ar" ? "مثال: 14" : "e.g. 14"}
-                      value={weeksInSemester}
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value);
-                        if (e.target.value === "" || isNaN(value)) {
-                          setWeeksInSemester("");
-                        } else {
-                          setWeeksInSemester(Math.max(1, value).toString());
-                        }
-                      }}
-                      helperText={
-                        locale === "ar"
-                          ? "14 أسبوع للفصل الخريفي/الشتوي، 6 أسابيع للفصل الصيفي"
-                          : "14 weeks for Fall/Winter semesters, 6 weeks for Spring semester"
-                      }
-                    />
+                <div className="flex flex-1 flex-col min-h-[180px] w-full">
+                  <div className="flex-1 flex items-center justify-center">
+                    <p className="text-6xl sm:text-7xl font-bold tabular-nums tracking-tight text-blue-400 text-center">
+                      {newAbsenteeismPercentage.toFixed(1)}%
+                    </p>
                   </div>
+                  <div className="w-full pt-4 mt-auto space-y-2">
+                    <div className="h-3 w-full rounded-full bg-zinc-700/60 overflow-hidden">
+                      <div
+                        style={{ width: `${Math.max(barFillPercent, 0.5)}%` }}
+                        className="h-full rounded-full bg-blue-500 transition-all duration-500 ease-out min-w-[6px]"
+                      />
+                    </div>
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-medium text-white">{statusText}</p>
+                      <span className="text-[10px] text-zinc-500 tabular-nums">0% — 15%</span>
+                    </div>
+                  </div>
+                </div>
+              </Card>
 
+              <Card
+                title={locale === "ar" ? "إعداد الفصل" : "Semester Setup"}
+                className={cardClass}
+              >
+                <div className="grid grid-cols-1 gap-6">
+                  <Input
+                    label={
+                      locale === "ar"
+                        ? "نسبة الغياب الحالية"
+                        : "Current Absenteeism %"
+                    }
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="0.1"
+                    placeholder={locale === "ar" ? "مثال: 3.5" : "e.g. 3.5"}
+                    value={absenteeismPercentage}
+                    onChange={(e) => {
+                      const value = parseFloat(e.target.value);
+                      if (e.target.value === "" || isNaN(value)) {
+                        setAbsenteeismPercentage("");
+                      } else {
+                        setAbsenteeismPercentage(
+                          Math.max(0, Math.min(100, value)).toString()
+                        );
+                      }
+                    }}
+                    helperText={
+                      locale === "ar" ? "0 إن لم تتغيب من قبل" : "0 if none yet"
+                    }
+                    className={inputSelectClass}
+                  />
+                  <Input
+                    label={
+                      locale === "ar" ? "أسابيع الفصل" : "Weeks in Semester"
+                    }
+                    type="number"
+                    min="1"
+                    step="1"
+                    placeholder="14"
+                    value={weeksInSemester}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value);
+                      if (e.target.value === "" || isNaN(value)) {
+                        setWeeksInSemester("");
+                      } else {
+                        setWeeksInSemester(Math.max(1, value).toString());
+                      }
+                    }}
+                    helperText={
+                      locale === "ar"
+                        ? "14 خريفي/شتوي، 6 صيفي"
+                        : "14 Fall/Winter, 6 Spring"
+                    }
+                    className={inputSelectClass}
+                  />
                   <Select
                     label={
                       locale === "ar"
-                        ? "المحاضرات في الأسبوع"
+                        ? "محاضرات/أسبوع"
                         : "Classes per Week"
                     }
                     value={classesPerWeek}
                     onChange={(e) =>
-                      setClassesPerWeek(parseInt(e.target.value))
+                      setClassesPerWeek(parseInt(e.target.value, 10))
                     }
-                    helperText={
-                      locale === "ar"
-                        ? "عدد المحاضرات التي تأخذها كل أسبوع"
-                        : "The number of classes you take each week"
-                    }
+                    className={inputSelectClass}
                   >
                     {[0, 1, 2, 3, 4, 5, 6].map((num) => (
                       <option key={num} value={num}>
-                        {num === 0
-                          ? locale === "ar"
-                            ? "اختر عددًا"
-                            : "Choose a number"
-                          : locale === "ar"
-                          ? `${num} ${num === 1 ? "محاضرة" : "محاضرات"}`
-                          : `${num} ${num === 1 ? "Class" : "Classes"}`}
+                        {num}
                       </option>
                     ))}
                   </Select>
-                </form>
+                </div>
               </Card>
+            </div>
 
-              {/* Classes Information Card */}
-              <Card
-                title={
-                  locale === "ar" ? "معلومات المحاضرات" : "Classes Information"
-                }
-                className="bg-zinc-900/70 backdrop-blur-sm ring-1 ring-zinc-800/50 flex-1 relative min-h-[250px] sm:min-h-[300px] md:min-h-[350px]"
-              >
+            {/* Row 2: Classes & Remaining full width */}
+            <Card
+              title={
+                locale === "ar" ? "المحاضرات والمتبقي" : "Classes & Remaining"
+              }
+              className={cardClass}
+            >
                 {classesPerWeek === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-8 px-3 text-center w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-zinc-600 mb-3"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                      />
-                    </svg>
-                    <p className="text-zinc-400 text-sm sm:text-base md:text-lg mb-1 sm:mb-2">
+                  <div className="flex flex-col items-center justify-center py-24 sm:py-28 text-center">
+                    <div className={`w-20 h-20 rounded-2xl ${sectionInnerClass} flex items-center justify-center mb-5`}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-10 w-10 text-zinc-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                        />
+                      </svg>
+                    </div>
+                    <p className="text-xl font-semibold text-white">
                       {locale === "ar"
                         ? "لم يتم اختيار محاضرات"
                         : "No Classes Selected"}
                     </p>
-                    <p className="text-zinc-500 text-xs sm:text-sm max-w-[180px] sm:max-w-[250px]">
+                    <p className="text-sm text-zinc-400 mt-2 leading-relaxed max-w-[280px]">
                       {locale === "ar"
-                        ? "اختر عدد المحاضرات التي تأخذها كل أسبوع"
-                        : "Choose the number of classes you take each week"}
+                        ? "اختر عدد المحاضرات في الأسبوع أعلاه"
+                        : "Select classes per week above"}
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-4 sm:space-y-6 h-full overflow-y-auto px-1 sm:px-0">
-                    <p className="text-sm text-zinc-400">
-                      {locale === "ar"
-                        ? "مدة المحاضرات / عدد مرات الغياب المخطط لها"
-                        : "Classes Duration / Number of times you plan to miss it"}
-                    </p>
-                    {classInfos.map((classInfo, index) => (
-                      <div
-                        key={index}
-                        className="p-4 sm:p-6 bg-zinc-800/50 border border-zinc-700/50 rounded-lg space-y-4 sm:space-y-6"
-                      >
-                        <div className="flex items-center justify-between mb-1 sm:mb-2">
-                          <h3 className="text-sm font-semibold text-blue-400">
-                            {locale === "ar"
-                              ? `المحاضرة ${index + 1}`
-                              : `Class ${index + 1}`}
-                          </h3>
-                        </div>
+                  <div className="space-y-0">
+                    {classInfos.map((classInfo, index) => {
+                      const totalMinutesInSemester =
+                        (classInfo.duration || 0) *
+                        parseInt(weeksInSemester || "0");
+                      const maxMissedMinutes =
+                        totalMinutesInSemester * 0.15;
+                      let currentMissedMinutes = 0;
+                      if (typeof classInfo.missedTimes === "number") {
+                        currentMissedMinutes =
+                          classInfo.missedTimes * (classInfo.duration || 0);
+                      } else {
+                        currentMissedMinutes = parseInt(
+                          classInfo.missedTimes || "0"
+                        );
+                      }
+                      const remainingMinutes = Math.max(
+                        0,
+                        maxMissedMinutes - currentMissedMinutes
+                      );
+                      const remainingClasses =
+                        classInfo.duration > 0
+                          ? Math.floor(remainingMinutes / classInfo.duration)
+                          : 0;
+                      const classAbsenteeismPercentage =
+                        totalMinutesInSemester > 0
+                          ? (currentMissedMinutes / totalMinutesInSemester) *
+                            100
+                          : 0;
+                      const isOver =
+                        newAbsenteeismPercentage >= 15 ||
+                        classAbsenteeismPercentage >= 15;
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                          <Select
-                            label={locale === "ar" ? "المدة" : "Duration"}
-                            value={classInfo.duration}
-                            onChange={(e) =>
-                              updateClassInfo(
-                                index,
-                                "duration",
-                                parseInt(e.target.value)
-                              )
-                            }
-                          >
-                            <option value={30}>
-                              {locale === "ar" ? "30 دقيقة" : "30 minutes"}
-                            </option>
-                            <option value={60}>
-                              {locale === "ar" ? "ساعة واحدة" : "1 hour"}
-                            </option>
-                            <option value={90}>
-                              {locale === "ar" ? "ساعة ونصف" : "1.5 hours"}
-                            </option>
-                            <option value={120}>
-                              {locale === "ar" ? "ساعتان" : "2 hours"}
-                            </option>
-                            <option value={150}>
-                              {locale === "ar" ? "ساعتان ونصف" : "2.5 hours"}
-                            </option>
-                            <option value={180}>
-                              {locale === "ar" ? "3 ساعات" : "3 hours"}
-                            </option>
-                          </Select>
-
-                          {typeof classInfo.missedTimes === "number" ? (
-                            <Select
-                              label={
-                                locale === "ar"
-                                  ? "مرات الغياب"
-                                  : "Missed Classes"
-                              }
-                              value={classInfo.missedTimes}
-                              onChange={(e) => {
-                                if (e.target.value === "custom") {
-                                  handleCustomInput(index);
-                                } else {
+                      return (
+                        <div
+                          key={index}
+                          className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-4 ${
+                            index > 0 ? "border-t border-zinc-600/25" : ""
+                          }`}
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <span className="flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/15 text-blue-400 text-xs font-semibold">
+                              {index + 1}
+                            </span>
+                            <span className="text-sm font-medium text-white truncate">
+                              {locale === "ar"
+                                ? `المحاضرة ${index + 1}`
+                                : `Class ${index + 1}`}
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-3 sm:gap-5 sm:ms-auto">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-medium text-zinc-500 whitespace-nowrap">
+                                {locale === "ar" ? "المدة" : "Duration"}
+                              </span>
+                              <Select
+                                value={classInfo.duration}
+                                onChange={(e) =>
                                   updateClassInfo(
                                     index,
-                                    "missedTimes",
+                                    "duration",
                                     parseInt(e.target.value)
-                                  );
+                                  )
                                 }
-                              }}
-                            >
-                              {[0, 1, 2, 3, 4, 5, 6].map((num) => (
-                                <option key={num} value={num}>
-                                  {locale === "ar"
-                                    ? `${num} ${
-                                        num === 0
-                                          ? "مرة"
-                                          : num === 1
-                                          ? "مرة"
-                                          : "مرات"
-                                      }`
-                                    : `${num} ${num === 1 ? "time" : "times"}`}
+                                className={`${inputSelectClass} !mb-0 min-w-[100px] [&_select]:py-2 [&_select]:text-sm`}
+                              >
+                                <option value={30}>
+                                  {locale === "ar" ? "30 د" : "30 min"}
                                 </option>
-                              ))}
-                              <option value="custom">
-                                {locale === "ar" ? "تخصيص" : "Custom"}
-                              </option>
-                            </Select>
-                          ) : (
-                            <Input
-                              label={
-                                locale === "ar"
-                                  ? "دقائق الغياب المخصصة"
-                                  : "Custom Missed Minutes"
-                              }
-                              type="number"
-                              min="0"
-                              placeholder={
-                                locale === "ar"
-                                  ? "أدخل الدقائق"
-                                  : "Enter minutes"
-                              }
-                              value={classInfo.missedTimes}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                updateClassInfo(index, "missedTimes", value);
-                              }}
-                              helperText={
-                                locale === "ar"
-                                  ? "أدخل إجمالي الدقائق التي تغيبت عنها"
-                                  : "Enter total minutes missed"
-                              }
-                            />
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </Card>
-            </div>
-
-            {/* Right Column - Results Section */}
-            <div className="space-y-8">
-              <Card
-                title={locale === "ar" ? "نتائج الحساب" : "Calculation Results"}
-                className="h-full"
-              >
-                <div className="text-center mb-6 md:mb-8">
-                  <div className="inline-flex items-baseline">
-                    <span className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
-                      {newAbsenteeismPercentage.toFixed(2)}%
-                    </span>
-                  </div>
-                  <p className="text-zinc-400 text-sm md:text-base mt-3">
-                    {locale === "ar"
-                      ? "نسبة الغياب الجديدة"
-                      : "New Absenteeism Percentage"}
-                  </p>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="relative pt-1">
-                    <div className="flex mb-2 items-center justify-between">
-                      <div>
-                        <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-white bg-zinc-800">
-                          {locale === "ar" ? "مستوى الغياب" : "Absence Level"}
-                        </span>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-white bg-zinc-800">
-                          15%
-                        </span>
-                      </div>
-                    </div>
-                    <div className="overflow-hidden h-3 mb-4 text-xs flex rounded-full bg-zinc-800">
-                      <div
-                        style={{
-                          width: `${Math.min(
-                            100,
-                            (newAbsenteeismPercentage / 15) * 100
-                          )}%`,
-                        }}
-                        className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-300 ease-in-out ${
-                          newAbsenteeismPercentage <= 5
-                            ? "bg-blue-500"
-                            : newAbsenteeismPercentage <= 10
-                            ? "bg-yellow-500"
-                            : "bg-red-500"
-                        }`}
-                      ></div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div
-                        className={`text-sm font-medium transition-colors duration-300 ease-in-out ${
-                          newAbsenteeismPercentage <= 5
-                            ? "text-blue-500"
-                            : newAbsenteeismPercentage <= 10
-                            ? "text-yellow-500"
-                            : "text-red-500"
-                        }`}
-                      >
-                        {newAbsenteeismPercentage <= 5
-                          ? locale === "ar"
-                            ? "حضور ممتاز!"
-                            : "Excellent attendance!"
-                          : newAbsenteeismPercentage <= 10
-                          ? locale === "ar"
-                            ? "كن حذراً مع الغياب"
-                            : "Be cautious with absences"
-                          : newAbsenteeismPercentage >= 15
-                          ? locale === "ar"
-                            ? "تحذير: تم تجاوز الحد"
-                            : "Critical: Limit exceeded"
-                          : locale === "ar"
-                          ? "تحذير: قريب من الحد"
-                          : "Warning: Near limit"}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Warning Note */}
-                  {showWarning && (
-                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 my-6">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5 text-yellow-500 mt-0.5 ltr:mr-3 rtl:ml-3 flex-shrink-0"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          <div>
-                            <h4 className="text-sm font-medium text-yellow-500 mb-1">
-                              {locale === "ar"
-                                ? "تنبيه مهم"
-                                : "Important Notice"}
-                            </h4>
-                            <p className="text-sm text-zinc-300">
-                              {locale === "ar"
-                                ? "يرجى عدم الاعتماد بشكل كامل على هذه النتائج، خصوصًا في الحالات الحرجة مثل اقتراب نسبة حضورك من الحد الأدنى (15%). قد لا يكون نظام الحضور دقيقًا في جميع الأوقات، لذلك يُنصح بعدم الاعتماد على هذه الأداة في الحالات الحساسة."
-                                : "Please don't rely solely on these results, especially if your attendance is at a critical level (close to 15%). The attendance system may not always be accurate, so it's recommended to not rely on this tool in critical situations."}
-                            </p>
+                                <option value={60}>
+                                  {locale === "ar" ? "1 ساعة" : "1 hr"}
+                                </option>
+                                <option value={90}>
+                                  {locale === "ar" ? "1.5 ساعة" : "1.5 hr"}
+                                </option>
+                                <option value={120}>
+                                  {locale === "ar" ? "2 ساعة" : "2 hr"}
+                                </option>
+                                <option value={150}>
+                                  {locale === "ar" ? "2.5 ساعة" : "2.5 hr"}
+                                </option>
+                                <option value={180}>
+                                  {locale === "ar" ? "3 ساعات" : "3 hr"}
+                                </option>
+                              </Select>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-medium text-zinc-500 whitespace-nowrap">
+                                {locale === "ar" ? "الغياب" : "Missed"}
+                              </span>
+                              {typeof classInfo.missedTimes === "number" ? (
+                                <Select
+                                  value={classInfo.missedTimes}
+                                  onChange={(e) => {
+                                    if (e.target.value === "custom") {
+                                      handleCustomInput(index);
+                                    } else {
+                                      updateClassInfo(
+                                        index,
+                                        "missedTimes",
+                                        parseInt(e.target.value)
+                                      );
+                                    }
+                                  }}
+                                  className={`${inputSelectClass} !mb-0 min-w-[72px] [&_select]:py-2 [&_select]:text-sm`}
+                                >
+                                  {[0, 1, 2, 3, 4, 5, 6].map((num) => (
+                                    <option key={num} value={num}>
+                                      {num}
+                                    </option>
+                                  ))}
+                                  <option value="custom">
+                                    {locale === "ar" ? "تخصيص" : "Custom"}
+                                  </option>
+                                </Select>
+                              ) : (
+                                <Input
+                                  type="number"
+                                  min="0"
+                                  placeholder="0"
+                                  value={classInfo.missedTimes}
+                                  onChange={(e) =>
+                                    updateClassInfo(
+                                      index,
+                                      "missedTimes",
+                                      e.target.value
+                                    )
+                                  }
+                                  className={`${inputSelectClass} !mb-0 w-20 [&_input]:py-2`}
+                                />
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2 sm:border-l sm:border-zinc-600/40 sm:pl-5">
+                              <span className="text-xs font-medium text-zinc-500 whitespace-nowrap">
+                                {locale === "ar" ? "المتبقي" : "Left"}
+                              </span>
+                              <span
+                                className={`inline-flex items-center justify-center min-w-[3rem] px-3 py-1.5 rounded-lg text-sm font-semibold tabular-nums ${
+                                  isOver
+                                    ? "bg-red-500/15 text-red-400"
+                                    : "bg-blue-500/15 text-blue-400"
+                                }`}
+                              >
+                                {isOver
+                                  ? locale === "ar"
+                                    ? "تجاوز"
+                                    : "Over"
+                                  : remainingClasses}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <button
-                          onClick={dismissWarning}
-                          className="text-yellow-500/70 hover:text-yellow-500 transition-colors p-1 -mt-1 -mr-1"
-                          title={
-                            locale === "ar" ? "إغلاق التنبيه" : "Close warning"
-                          }
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  )}
+                      );
+                    })}
+                  </div>
+                )}
+            </Card>
 
-                  {/* Classes Left Section */}
-                  <>
-                    <div className="h-px bg-zinc-800/50 my-6"></div>
-
-                    <div>
-                      <h3 className="text-base font-semibold text-white mb-2">
-                        {locale === "ar"
-                          ? "كم محاضرة متبقية؟"
-                          : "How Many Classes Left?"}
-                      </h3>
-                      <p className="text-sm text-zinc-400 mb-4">
-                        {locale === "ar"
-                          ? "يوضح هذا عدد المحاضرات المتبقية التي يمكنك التغيب عنها قبل الوصول إلى حد الغياب 15%. فكر في الاحتفاظ ببعضها للطوارئ."
-                          : "This shows the remaining classes you can miss before reaching the 15% absence limit. Consider saving some for emergencies."}
-                      </p>
-
-                      {classesPerWeek === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-8 text-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-zinc-600 mb-3"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={1.5}
-                              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-                            />
-                          </svg>
-                          <p className="text-zinc-400 text-sm sm:text-base md:text-lg mb-1 sm:mb-2">
-                            {locale === "ar"
-                              ? "لم تتم إضافة محاضرات"
-                              : "No Classes Added"}
-                          </p>
-                          <p className="text-zinc-500 text-xs sm:text-sm max-w-[180px] sm:max-w-[250px]">
-                            {locale === "ar"
-                              ? "أضف المحاضرات أعلاه لمعرفة عدد المرات التي يمكنك التغيب فيها"
-                              : "Add classes above to see how many you can still miss"}
-                          </p>
-                        </div>
-                      ) : (
-                        <div className="space-y-3 divide-y divide-zinc-800/50">
-                          {classInfos.map((classInfo, index) => {
-                            // Calculate how many more classes can be missed
-                            const totalMinutesInSemester =
-                              (classInfo.duration || 0) *
-                              parseInt(weeksInSemester || "0");
-                            const maxMissedMinutes =
-                              totalMinutesInSemester * 0.15;
-
-                            // Current missed minutes
-                            let currentMissedMinutes = 0;
-                            if (typeof classInfo.missedTimes === "number") {
-                              currentMissedMinutes =
-                                classInfo.missedTimes *
-                                (classInfo.duration || 0);
-                            } else {
-                              currentMissedMinutes = parseInt(
-                                classInfo.missedTimes || "0"
-                              );
-                            }
-
-                            // Current absenteeism percentage for this class
-                            const classAbsenteeismPercentage =
-                              totalMinutesInSemester > 0
-                                ? (currentMissedMinutes /
-                                    totalMinutesInSemester) *
-                                  100
-                                : 0;
-
-                            // Calculate remaining minutes and classes
-                            const remainingMinutes = Math.max(
-                              0,
-                              maxMissedMinutes - currentMissedMinutes
-                            );
-                            const remainingClasses =
-                              classInfo.duration > 0
-                                ? Math.floor(
-                                    remainingMinutes / classInfo.duration
-                                  )
-                                : 0;
-
-                            return (
-                              <div
-                                key={index}
-                                className="p-3 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
-                              >
-                                <div className="flex items-center gap-3">
-                                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-800 text-white">
-                                    <span className="text-sm font-medium">
-                                      {index + 1}
-                                    </span>
-                                  </div>
-                                  <div>
-                                    <span className="text-sm font-medium text-zinc-200">
-                                      {locale === "ar"
-                                        ? `المحاضرة ${index + 1}`
-                                        : `Class ${index + 1}`}
-                                    </span>
-                                    <div className="text-xs text-zinc-500">
-                                      {locale === "ar"
-                                        ? `${classInfo.duration} دقيقة لكل محاضرة`
-                                        : `${classInfo.duration} minutes per session`}
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <div
-                                    className={`px-3 py-1 rounded-full text-sm font-medium ${
-                                      newAbsenteeismPercentage >= 15 ||
-                                      classAbsenteeismPercentage >= 15
-                                        ? "bg-red-500/10 text-red-400"
-                                        : classAbsenteeismPercentage >= 10
-                                        ? "bg-yellow-500/10 text-yellow-400"
-                                        : "bg-blue-500/10 text-blue-400"
-                                    }`}
-                                  >
-                                    {newAbsenteeismPercentage >= 15 ||
-                                    classAbsenteeismPercentage >= 15
-                                      ? locale === "ar"
-                                        ? "تم تجاوز الحد"
-                                        : "Limit exceeded"
-                                      : locale === "ar"
-                                      ? `${remainingClasses} ${
-                                          remainingClasses === 1
-                                            ? "محاضرة"
-                                            : "محاضرات"
-                                        } متبقية`
-                                      : `${remainingClasses} ${
-                                          remainingClasses === 1
-                                            ? "class"
-                                            : "classes"
-                                        } left`}
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  </>
+            {/* Notice */}
+            {showWarning && (
+              <Card
+                title={locale === "ar" ? "تنبيه" : "Notice"}
+                className={`${cardClass} !py-5 sm:!py-6 border-s-4 border-s-amber-400/30`}
+              >
+                <div className="flex gap-4 items-start">
+                  <p className="flex-1 min-w-0 text-sm text-zinc-400 leading-relaxed">
+                      {locale === "ar"
+                        ? "يرجى عدم الاعتماد بشكل كامل على هذه النتائج، خصوصًا عند اقتراب نسبة الغياب من 15%. نظام الحضور قد لا يكون دقيقًا دائمًا."
+                        : "Please don't rely solely on these results, especially when attendance is close to 15%. The attendance system may not always be accurate."}
+                  </p>
+                  <button
+                    onClick={dismissWarning}
+                    className="flex-shrink-0 p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-700/40 transition-colors"
+                    title={locale === "ar" ? "إغلاق" : "Close"}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </Card>
-            </div>
+            )}
           </div>
         </div>
       </div>

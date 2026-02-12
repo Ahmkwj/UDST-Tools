@@ -24,7 +24,7 @@ export default function Select({
     <div className={`space-y-2 ${fullWidth ? "w-full" : ""}`}>
       {label && (
         <label
-          className={`block text-sm font-medium text-zinc-300 mb-1.5 ${
+          className={`block text-xs font-medium text-zinc-400 ${
             isRTL ? "text-right" : "text-left"
           }`}
         >
@@ -35,14 +35,16 @@ export default function Select({
         <select
           className={`
             w-full bg-zinc-800/50 border ${
-              error ? "border-red-500" : "border-zinc-700"
+              error ? "border-red-500/50 focus:border-red-500" : "border-zinc-500/40 focus:border-blue-500"
             }
-            rounded-lg px-3 py-2.5 text-white
-            focus:outline-none focus:border-zinc-700
-            hover:border-zinc-600
-            transition-colors duration-200
-            appearance-none
-            ${isRTL ? "text-right pr-4" : "text-left"}
+            rounded-xl px-3.5 py-2.5 text-sm text-white
+            focus:outline-none focus:ring-2 ${
+              error ? "focus:ring-red-500/20" : "focus:ring-blue-500/20"
+            }
+            hover:border-zinc-400/40
+            transition-all duration-200
+            appearance-none cursor-pointer
+            ${isRTL ? "text-right pr-4 pl-10" : "text-left pr-10"}
             ${className}
           `}
           dir={isRTL ? "rtl" : "ltr"}
@@ -52,8 +54,8 @@ export default function Select({
         </select>
         <div
           className={`pointer-events-none absolute inset-y-0 ${
-            isRTL ? "left-0" : "right-0"
-          } flex items-center px-2 text-zinc-400`}
+            isRTL ? "left-0 pl-3.5" : "right-0 pr-3.5"
+          } flex items-center text-zinc-500`}
         >
           <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
             <path
@@ -66,7 +68,7 @@ export default function Select({
       </div>
       {helperText && (
         <p
-          className={`text-xs ${error ? "text-red-400" : "text-zinc-400"} mt-2 ${
+          className={`text-xs ${error ? "text-red-400" : "text-zinc-300"} ${
             isRTL ? "text-right" : "text-left"
           }`}
         >

@@ -37,8 +37,8 @@ export default function Sidebar({
   // Navigation categories
   const navCategories: NavCategory[] = [
     {
-      name: "Overview",
-      nameAr: "نظرة عامة",
+      name: "Home",
+      nameAr: "الرئيسية",
       items: [
         {
           name: "Dashboard",
@@ -61,6 +61,12 @@ export default function Sidebar({
             </svg>
           ),
         },
+      ],
+    },
+    {
+      name: "Academic",
+      nameAr: "الأكاديمية",
+      items: [
         {
           name: "Academic Calendar",
           nameAr: "التقويم الأكاديمي",
@@ -83,9 +89,9 @@ export default function Sidebar({
           ),
         },
         {
-          name: "UDST Links",
-          nameAr: "روابط UDST",
-          path: "/links",
+          name: "Schedule Planner",
+          nameAr: "مخطط الجدول",
+          path: "/schedule-planner",
           icon: (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -98,7 +104,28 @@ export default function Sidebar({
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25M3 18.75h18M12 15.75h.008v.008H12v-.008Z"
+              />
+            </svg>
+          ),
+        },
+        {
+          name: "Attendance Tracker",
+          nameAr: "متابعة الحضور",
+          path: "/attendance-calculator",
+          icon: (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0z"
               />
             </svg>
           ),
@@ -106,8 +133,8 @@ export default function Sidebar({
       ],
     },
     {
-      name: "Academic Tools",
-      nameAr: "الأدوات الأكاديمية",
+      name: "Calculators",
+      nameAr: "الحاسبات",
       items: [
         {
           name: "GPA Calculator",
@@ -172,27 +199,12 @@ export default function Sidebar({
             </svg>
           ),
         },
-        {
-          name: "Attendance Tracker",
-          nameAr: "متابعة الحضور",
-          path: "/attendance-calculator",
-          icon: (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0z"
-              />
-            </svg>
-          ),
-        },
+      ],
+    },
+    {
+      name: "Financial",
+      nameAr: "المالية",
+      items: [
         {
           name: "Fees Manager",
           nameAr: "إدارة الرسوم",
@@ -217,13 +229,13 @@ export default function Sidebar({
       ],
     },
     {
-      name: "Schedule",
-      nameAr: "الجدول الدراسي",
+      name: "Resources",
+      nameAr: "الموارد",
       items: [
         {
-          name: "Schedule Planner",
-          nameAr: "مخطط الجدول",
-          path: "/schedule-planner",
+          name: "UDST Links",
+          nameAr: "روابط UDST",
+          path: "/links",
           icon: (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -236,17 +248,11 @@ export default function Sidebar({
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25M3 18.75h18M12 15.75h.008v.008H12v-.008Z"
+                d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
               />
             </svg>
           ),
         },
-      ],
-    },
-    {
-      name: "Help & Support",
-      nameAr: "المساعدة والدعم",
-      items: [
         {
           name: "User Guide",
           nameAr: "دليل المستخدم",
@@ -268,6 +274,12 @@ export default function Sidebar({
             </svg>
           ),
         },
+      ],
+    },
+    {
+      name: "About",
+      nameAr: "حول",
+      items: [
         {
           name: "Feedback",
           nameAr: "الملاحظات",
@@ -291,7 +303,7 @@ export default function Sidebar({
         },
         {
           name: "About",
-          nameAr: "حول",
+          nameAr: "حول التطبيق",
           path: "/about",
           icon: (
             <svg
@@ -367,192 +379,154 @@ export default function Sidebar({
     navigate(localizedPath);
   };
 
+  const sidebarWidth = "w-[232px]";
+
   return (
     <div
-      className={`flex h-screen w-screen overflow-hidden bg-black text-white ${
+      className={`flex h-screen w-screen overflow-hidden page-bg-gradient text-white ${
         locale === "ar" ? "rtl" : "ltr"
       }`}
     >
-      {/* Mobile header */}
+      {/* Mobile header - RTL: logo on the right */}
       {isMobile && (
-        <div className="fixed top-0 left-0 right-0 h-16 bg-zinc-900/95 backdrop-blur-sm border-b border-zinc-800/50 z-20 flex items-center px-4">
+        <div
+          className={`fixed top-0 left-0 right-0 z-20 flex items-center h-12 gap-2 px-3 bg-zinc-900/90 backdrop-blur-xl border-b border-white/[0.06] ${locale === "ar" ? "flex-row-reverse" : ""}`}
+        >
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2 rounded-lg text-white"
+            className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors duration-150"
             aria-label={isOpen ? "Close menu" : "Open menu"}
           >
             {isOpen ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
               </svg>
             )}
           </button>
-          <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mx-4">
+          <span className="text-sm font-medium text-white">
             {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
-          </h3>
+          </span>
         </div>
       )}
 
       {/* Mobile overlay */}
       {isMobile && (
         <div
-          className={`fixed inset-0 bg-black/50 z-20 transition-opacity duration-300 ${
-            isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          className={`fixed inset-0 z-20 transition-opacity duration-200 ${
+            isOpen ? "opacity-100 bg-black/50 backdrop-blur-[2px]" : "opacity-0 pointer-events-none"
           }`}
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <div
+      <aside
         className={`${
           isMobile
-            ? `fixed inset-y-0 ${
-                locale === "ar" ? "right-0" : "left-0"
-              } z-30 w-[280px] ${
-                isOpen
-                  ? "translate-x-0"
-                  : locale === "ar"
-                    ? "translate-x-full"
-                    : "-translate-x-full"
+            ? `fixed inset-y-0 ${locale === "ar" ? "right-0" : "left-0"} z-30 ${sidebarWidth} ${
+                isOpen ? "translate-x-0" : locale === "ar" ? "translate-x-full" : "-translate-x-full"
               }`
-            : "relative w-64"
-        } bg-zinc-900 border-r border-zinc-800/50 transition-all duration-300 ease-in-out flex flex-col shrink-0 shadow-lg ${
-          isMobile ? "mt-16" : ""
+            : `relative ${sidebarWidth}`
+        } flex flex-col shrink-0 transition-[transform] duration-300 ease-out ${
+          isMobile ? "mt-12" : ""
+        } flex flex-col bg-zinc-900/90 border-white/[0.06] ${
+          locale === "ar" ? "border-l" : "border-r"
         }`}
+        style={{ boxShadow: locale === "ar" ? "-4px 0 24px rgba(0,0,0,0.25)" : "4px 0 24px rgba(0,0,0,0.25)" }}
       >
-        {/* Desktop header */}
+        {/* Header - text only; start = left in LTR, right in RTL */}
         {!isMobile && (
-          <div
-            className={`flex items-center justify-between px-4 py-3 border-b border-zinc-800/50`}
-          >
-            <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+          <div className="w-full px-4 pt-4 pb-3 text-start">
+            <h2 className="text-sm font-semibold tracking-tight text-white">
               {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
-            </h3>
+            </h2>
           </div>
         )}
 
-        <nav className={`flex-1 overflow-y-auto py-5 px-3`}>
-          {navCategories.map((category, index) => {
-            return (
-              <div key={category.name} className={index !== 0 ? "mt-6" : ""}>
+        <nav className="flex-1 overflow-y-auto overscroll-contain min-h-0 px-2 py-2">
+          <div className="space-y-5">
+            {navCategories.map((category) => (
+              <div key={category.name}>
                 {isOpen && (
-                  <h4 className="px-2 mb-2 text-xs font-medium text-zinc-500 uppercase tracking-wider">
-                    {locale === "ar" ? category.nameAr : category.name}
-                  </h4>
+                  <div className="mb-2 text-start">
+                    <span className="text-[10px] font-medium uppercase tracking-widest text-zinc-500 px-2">
+                      {locale === "ar" ? category.nameAr : category.name}
+                    </span>
+                  </div>
                 )}
-                <ul className="space-y-1">
-                  {category.items.map((item) => (
-                    <li key={item.path}>
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleNavigation(item.path);
-                        }}
-                        className={`flex items-center p-2 rounded-lg ${
-                          currentPath === `/${locale}${item.path}` ||
-                          (item.path === "/" && currentPath === `/${locale}`)
-                            ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium shadow-md"
-                            : "text-zinc-400 hover:text-white hover:bg-zinc-800"
-                        } transition-colors group relative`}
-                        title={locale === "ar" ? item.nameAr : item.name}
-                      >
-                        <div className="flex items-center justify-between w-full">
-                          <div className="flex items-center">
-                            <div className="w-5 h-5 flex-shrink-0">
-                              {item.icon}
-                            </div>
-                            <span
-                              className={`${locale === "ar" ? "mr-3 px-1" : "ml-3"}`}
-                            >
-                              {locale === "ar" && item.nameAr
-                                ? item.nameAr
-                                : item.name}
+                <ul className="space-y-0.5">
+                  {category.items.map((item) => {
+                    const isActive =
+                      currentPath === `/${locale}${item.path}` ||
+                      (item.path === "/" && currentPath === `/${locale}`);
+                    return (
+                      <li key={item.path}>
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleNavigation(item.path);
+                          }}
+                          className={`group flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-all duration-150 ${
+                            isActive
+                              ? "bg-blue-500/15 text-blue-300"
+                              : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"
+                          }`}
+                          title={locale === "ar" ? item.nameAr : item.name}
+                        >
+                          <span
+                            className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md transition-colors duration-150 [&>svg]:w-3.5 [&>svg]:h-3.5 ${
+                              isActive ? "bg-blue-500/20 text-blue-400" : "bg-white/[0.04] text-zinc-500 group-hover:bg-white/[0.08] group-hover:text-zinc-300"
+                            }`}
+                          >
+                            {item.icon}
+                          </span>
+                          <span className="flex-1 truncate text-xs font-medium">
+                            {locale === "ar" && item.nameAr ? item.nameAr : item.name}
+                          </span>
+                          {(item.path === "/fees-manager" || item.path === "/schedule-planner") && (
+                            <span className="shrink-0 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-md bg-blue-500/20 text-blue-300">
+                              {locale === "ar" ? "جديد" : "NEW"}
                             </span>
-                            {(item.path === "/fees-manager" ||
-                              item.path === "/schedule-planner") && (
-                              <span
-                                className={`text-[10px] font-medium px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/20 ${locale === "ar" ? "mr-2" : "ml-2"}`}
-                              >
-                                {locale === "ar" ? "جديد" : "NEW"}
-                              </span>
-                            )}
-                          </div>
+                          )}
                           {item.comingSoon && (
-                            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-700/50 text-zinc-300 border border-zinc-600/50">
+                            <span className="shrink-0 text-[9px] font-medium px-1.5 py-0.5 rounded-md bg-white/[0.06] text-zinc-500">
                               {locale === "ar" ? "قريبًا" : "Soon"}
                             </span>
                           )}
-                        </div>
-                      </a>
-                    </li>
-                  ))}
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
-            );
-          })}
+            ))}
 
-          {/* Language Switcher */}
-          {isOpen && (
-            <div className="mt-6 px-2">
-              <div className="h-px bg-zinc-800/50 mb-4"></div>
-              <h4 className="px-2 mb-2 text-xs font-medium text-zinc-500 uppercase tracking-wider">
-                {locale === "ar" ? "اللغة" : "Language"}
-              </h4>
-              <LanguageSwitcher />
-            </div>
-          )}
+            {/* Language + Version footer block */}
+            {isOpen && (
+              <div className="pt-4 mt-2 space-y-3">
+                <div className="mb-2 text-start">
+                  <span className="text-[10px] font-medium uppercase tracking-widest text-zinc-500 px-2">
+                    {locale === "ar" ? "اللغة" : "Language"}
+                  </span>
+                </div>
+                <LanguageSwitcher />
+                <p className="text-[10px] text-zinc-600 text-center">v{version}</p>
+              </div>
+            )}
+          </div>
         </nav>
-
-        <div
-          className={`${
-            isOpen ? "p-4" : "p-2"
-          } text-center text-xs text-zinc-500 border-t border-zinc-800/50`}
-        >
-          {isOpen ? (
-            <p>
-              {locale === "ar"
-                ? `أدوات UDST الإصدار ${version}`
-                : `UDST Tools v${version}`}
-            </p>
-          ) : (
-            <p className="text-[10px]">v{version}</p>
-          )}
-        </div>
-      </div>
+      </aside>
 
       {/* Main content */}
       <div
-        className={`flex-1 h-full overflow-auto ${
+        className={`flex-1 h-full overflow-auto page-bg-gradient ${
           locale === "ar" ? "text-right" : "text-left"
-        } ${isMobile ? "pt-16" : ""}`}
+        } ${isMobile ? "pt-12" : ""}`}
       >
         {children}
       </div>
