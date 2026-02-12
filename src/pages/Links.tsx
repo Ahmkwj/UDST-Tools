@@ -1,6 +1,15 @@
 import PageHeader from "../components/ui/PageHeader";
+import Card from "../components/ui/Card";
 import { useLocale } from "../context/LanguageContext";
 import Footer from "../components/ui/Footer";
+
+/* Theme: match Attendance / GPA / Calendar */
+const CARD = {
+  base: "!bg-zinc-800/50 !rounded-2xl !border !border-zinc-600/40 backdrop-blur-xl",
+  padding: "!px-6 !pt-6 !pb-7 sm:!px-8 sm:!pt-7 sm:!pb-8",
+};
+const cardClass = `${CARD.base} ${CARD.padding}`;
+const sectionGap = "space-y-12";
 
 interface LinkCategory {
   title: {
@@ -338,95 +347,79 @@ export default function Links() {
   ];
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col bg-gradient-to-br from-black via-zinc-900 to-black text-white">
-      <div className="flex-1 py-4 md:py-8 px-3 md:px-8 overflow-x-hidden overflow-y-auto">
-        {/* Background decoration */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-        </div>
-
-        <div className="relative z-10 w-full max-w-5xl mx-auto space-y-6 pt-6 sm:pt-8 pb-12 sm:pb-16">
-          {/* Header section */}
+    <div className="min-h-screen w-full flex flex-col text-white">
+      <div className="flex-1 py-14 sm:py-20 px-5 sm:px-8 overflow-x-hidden overflow-y-auto">
+        <div className="w-full max-w-4xl mx-auto">
           <PageHeader
             title={{
               en: "UDST Links",
               ar: "روابط UDST",
             }}
             description={{
-              en: "Quick access to all UDST services and resources",
-              ar: "وصول سريع لجميع خدمات وموارد UDST",
+              en: "Quick access to UDST services and resources.",
+              ar: "وصول سريع لخدمات وموارد UDST.",
             }}
           />
 
-          {/* Links Grid */}
-          <div className="space-y-8">
+          <div className={sectionGap}>
             {categories.map((category, index) => (
-              <div key={index} className="space-y-4">
-                <h2 className="text-xl font-semibold text-white">
-                  {locale === "ar" ? category.title.ar : category.title.en}
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card
+                key={index}
+                title={locale === "ar" ? category.title.ar : category.title.en}
+                className={cardClass}
+              >
+                <div className="space-y-0">
                   {category.links.map((link, linkIndex) => (
                     <a
                       key={linkIndex}
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group bg-zinc-800/30 hover:bg-zinc-800/50 rounded-xl p-4 border border-zinc-700/50 transition-all duration-300 hover:border-blue-500/50"
+                      className={`group flex items-start gap-4 py-4 ${linkIndex > 0 ? "border-t border-zinc-600/25" : ""} transition-colors hover:opacity-90`}
                     >
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                          <div className="text-blue-400">{link.icon}</div>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-white mb-1 flex items-center gap-2">
-                            {locale === "ar" ? link.title.ar : link.title.en}
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-4 h-4 text-zinc-400 group-hover:translate-x-1 transition-transform"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
-                              />
-                            </svg>
-                          </h3>
-                          <p className="text-sm text-zinc-400 line-clamp-2">
-                            {locale === "ar"
-                              ? link.description.ar
-                              : link.description.en}
-                          </p>
-                        </div>
+                      <div className="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center flex-shrink-0 text-blue-400">
+                        {link.icon}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-white flex items-center gap-2">
+                          {locale === "ar" ? link.title.ar : link.title.en}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="w-4 h-4 text-zinc-500 group-hover:translate-x-0.5 transition-transform"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+                          </svg>
+                        </p>
+                        <p className="text-sm text-zinc-500 mt-0.5 line-clamp-2">
+                          {locale === "ar" ? link.description.ar : link.description.en}
+                        </p>
                       </div>
                     </a>
                   ))}
                 </div>
-              </div>
+              </Card>
             ))}
-          </div>
 
-          {/* Support Information */}
-          <div className="mt-12 p-4 rounded-xl bg-zinc-800/30 border border-zinc-700/50">
-            <h3 className="text-lg font-medium text-white mb-2">
-              {locale === "ar" ? "بحاجة إلى مساعدة؟" : "Need Help?"}
-            </h3>
-            <p className="text-sm text-zinc-400">
-              {locale === "ar"
-                ? "للمساعدة التقنية، يرجى التواصل مع مكتب المساعدة: "
-                : "For technical support, please contact the IT Help Desk: "}
-              <a
-                href="mailto:ithelpdesk@udst.edu.qa"
-                className="text-blue-400 hover:text-blue-300 transition-colors"
-              >
-                ithelpdesk@udst.edu.qa
-              </a>
-            </p>
+            <Card
+              title={locale === "ar" ? "المساعدة" : "Need Help?"}
+              className={cardClass}
+            >
+              <p className="text-sm text-zinc-400">
+                {locale === "ar"
+                  ? "للدعم الفني: "
+                  : "Technical support: "}
+                <a
+                  href="mailto:ithelpdesk@udst.edu.qa"
+                  className="text-blue-400 hover:text-blue-300 transition-colors"
+                >
+                  ithelpdesk@udst.edu.qa
+                </a>
+              </p>
+            </Card>
           </div>
         </div>
       </div>

@@ -7,6 +7,15 @@ import Footer from "../components/ui/Footer";
 import PageHeader from "../components/ui/PageHeader";
 import { useLocale } from "../context/LanguageContext";
 
+const CARD = {
+  base: "!bg-zinc-800/50 !rounded-2xl !border !border-zinc-600/40 backdrop-blur-xl",
+  padding: "!px-6 !pt-6 !pb-7 sm:!px-8 sm:!pt-7 sm:!pb-8",
+};
+const cardClass = `${CARD.base} ${CARD.padding}`;
+const sectionGap = "space-y-12";
+const inputSelectClass =
+  "!bg-zinc-800/50 !border-zinc-500/40 !rounded-xl focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/20 placeholder-zinc-500 [&_input]:py-2.5 [&_select]:py-2.5";
+
 type TimeSlot = {
   id: string;
   day: string;
@@ -201,37 +210,19 @@ export default function SchedulePlanner() {
   const timeOptions = generateTimeOptions();
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col bg-gradient-to-br from-black via-zinc-900 to-black text-white">
-      <div className="flex-1 py-4 md:py-8 px-3 md:px-8 overflow-x-hidden overflow-y-auto">
-        {/* Background decoration */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-        </div>
-
-        <div className="relative z-10 w-full max-w-6xl mx-auto space-y-4 sm:space-y-6 md:space-y-8 pt-6 sm:pt-8 pb-12 sm:pb-16">
+    <div className="min-h-screen w-full flex flex-col text-white">
+      <div className="flex-1 py-14 sm:py-20 px-5 sm:px-8">
+        <div className={`max-w-4xl mx-auto ${sectionGap}`}>
           <PageHeader
-            title={{
-              en: "Schedule Planner",
-              ar: "مخطط الجدول",
-            }}
+            title={{ en: "Schedule Planner", ar: "مخطط الجدول" }}
             description={{
-              en: "Plan your course schedule and detect time conflicts in real-time",
-              ar: "خطط جدولك الدراسي واكتشف تعارضات المواعيد مباشرة",
+              en: "Plan your schedule and detect time conflicts",
+              ar: "خطط جدولك واكتشف تعارضات المواعيد",
             }}
           />
 
-          {/* Introduction Card */}
-          
-
-          {/* Main content */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            {/* Left Column - Course Management */}
-            <div className="space-y-4 md:space-y-6">
-              <Card
-                title={locale === "ar" ? "المواد" : "Courses"}
-                className="relative bg-gradient-to-br from-zinc-900/50 via-zinc-900/70 to-zinc-900/50"
-              >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
+            <Card title={locale === "ar" ? "المواد" : "Courses"} className={cardClass}>
                 <div className="flex items-center justify-between mb-4 md:mb-6">
                   <Button
                     variant="outline"
@@ -257,37 +248,18 @@ export default function SchedulePlanner() {
                 </div>
 
                 {courses.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-8 px-3 text-center min-h-[200px] bg-gradient-to-br from-zinc-800/30 via-zinc-800/20 to-zinc-800/30 rounded-xl border border-zinc-700/50">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-zinc-600 mb-3"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                      />
-                    </svg>
-                    <p className="text-zinc-400 text-sm sm:text-base md:text-lg mb-1 sm:mb-2">
-                      {locale === "ar" ? "لا توجد مواد بعد" : "No Courses Yet"}
+                  <div className="flex flex-col items-center justify-center py-10 px-4 text-center border border-zinc-600/30 rounded-xl border-dashed">
+                    <p className="text-zinc-400 text-sm mb-1">
+                      {locale === "ar" ? "لا توجد مواد بعد" : "No courses yet"}
                     </p>
-                    <p className="text-zinc-500 text-xs sm:text-sm max-w-[180px] sm:max-w-[250px]">
-                      {locale === "ar"
-                        ? "أضف مادتك الأولى لبدء تخطيط جدولك"
-                        : "Add your first course to start planning your schedule"}
+                    <p className="text-zinc-500 text-xs">
+                      {locale === "ar" ? "أضف مادة لبدء التخطيط" : "Add a course to start planning"}
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="divide-y divide-zinc-600/25 space-y-0">
                     {courses.map((course) => (
-                      <div
-                        key={course.id}
-                        className="bg-gradient-to-br from-zinc-800/30 via-zinc-800/20 to-zinc-800/30 rounded-xl border border-zinc-700/50 p-4"
-                      >
+                      <div key={course.id} className="py-4 first:pt-0">
                         <div className="flex items-center gap-2">
                           <Input
                             value={course.name}
@@ -297,7 +269,7 @@ export default function SchedulePlanner() {
                             placeholder={
                               locale === "ar" ? "اسم المادة" : "Course Name"
                             }
-                            className="flex-1"
+                            className={`flex-1 ${inputSelectClass}`}
                           />
                           <Button
                             variant="outline"
@@ -327,7 +299,7 @@ export default function SchedulePlanner() {
                           {course.timeSlots.map((slot) => (
                             <div
                               key={slot.id}
-                              className="flex items-center gap-2 p-3 bg-gradient-to-br from-zinc-800/40 via-zinc-800/30 to-zinc-800/40 rounded-lg border border-zinc-700/30"
+                              className="flex flex-wrap items-center gap-2 py-3 border-t border-zinc-600/25 first:border-t-0 first:pt-0"
                             >
                               <Select
                                 value={slot.day}
@@ -339,7 +311,7 @@ export default function SchedulePlanner() {
                                     e.target.value
                                   )
                                 }
-                                className="w-[140px] bg-zinc-900/50"
+                                className={`w-[140px] shrink-0 ${inputSelectClass}`}
                               >
                                 {daysOfWeek[locale === "ar" ? "ar" : "en"].map(
                                   (day) => (
@@ -359,7 +331,7 @@ export default function SchedulePlanner() {
                                     e.target.value
                                   )
                                 }
-                                className="w-[130px] bg-zinc-900/50"
+                                className={`w-[130px] shrink-0 ${inputSelectClass}`}
                               >
                                 {timeOptions.map((time) => (
                                   <option key={time.value} value={time.value}>
@@ -367,7 +339,7 @@ export default function SchedulePlanner() {
                                   </option>
                                 ))}
                               </Select>
-                              <span className="text-zinc-400">-</span>
+                              <span className="text-zinc-400 shrink-0">-</span>
                               <Select
                                 value={slot.endTime}
                                 onChange={(e) =>
@@ -378,7 +350,7 @@ export default function SchedulePlanner() {
                                     e.target.value
                                   )
                                 }
-                                className="w-[130px] bg-zinc-900/50"
+                                className={`w-[130px] shrink-0 ${inputSelectClass}`}
                               >
                                 {timeOptions.map((time) => (
                                   <option key={time.value} value={time.value}>
@@ -439,84 +411,30 @@ export default function SchedulePlanner() {
                   </div>
                 )}
               </Card>
-            </div>
 
-            {/* Right Column - Conflicts */}
-            <div className="space-y-4 md:space-y-6">
-              {/* Conflicts Card */}
               <Card
                 title={locale === "ar" ? "تعارضات المواعيد" : "Time Conflicts"}
-                className={`bg-gradient-to-br from-zinc-900/50 via-zinc-900/70 to-zinc-900/50 ${
-                  conflicts.length > 0 ? "border-red-500/30" : ""
-                }`}
+                className={cardClass}
               >
                 {conflicts.length === 0 ? (
-                  <div className="flex items-center justify-center py-4 px-3 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 ltr:mr-2 rtl:ml-2"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    {locale === "ar"
-                      ? "لا توجد تعارضات في المواعيد"
-                      : "No time conflicts detected"}
-                  </div>
+                  <p className="text-sm text-zinc-400 py-2">
+                    {locale === "ar" ? "لا توجد تعارضات" : "No conflicts detected"}
+                  </p>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="divide-y divide-zinc-600/25 space-y-0">
                     {conflicts.map((conflict, index) => (
-                      <div
-                        key={index}
-                        className="p-3 bg-gradient-to-br from-red-500/10 via-red-500/5 to-red-500/10 text-red-400 rounded-xl border border-red-500/20"
-                      >
-                        <div className="flex items-start">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5 mt-0.5 ltr:mr-2 rtl:ml-2"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          <div>
-                            <p className="font-medium">
-                              {locale === "ar" ? "تعارض في" : "Conflict on"}{" "}
-                              {conflict.day}
-                            </p>
-                            <p className="text-sm mt-1">
-                              {getCourseName(conflict.courseId1)} (
-                              {getTimeSlotDetails(
-                                conflict.courseId1,
-                                conflict.timeSlotId1
-                              )}
-                              )
-                            </p>
-                            <p className="text-sm">
-                              {getCourseName(conflict.courseId2)} (
-                              {getTimeSlotDetails(
-                                conflict.courseId2,
-                                conflict.timeSlotId2
-                              )}
-                              )
-                            </p>
-                          </div>
-                        </div>
+                      <div key={index} className="py-3 first:pt-0 last:pb-0">
+                        <p className="text-sm font-medium text-white">
+                          {locale === "ar" ? "تعارض في" : "Conflict on"} {conflict.day}
+                        </p>
+                        <p className="text-xs text-zinc-400 mt-0.5">
+                          {getCourseName(conflict.courseId1)} ({getTimeSlotDetails(conflict.courseId1, conflict.timeSlotId1)}) / {getCourseName(conflict.courseId2)} ({getTimeSlotDetails(conflict.courseId2, conflict.timeSlotId2)})
+                        </p>
                       </div>
                     ))}
                   </div>
                 )}
               </Card>
-            </div>
           </div>
         </div>
       </div>

@@ -5,6 +5,15 @@ import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import Footer from "../components/ui/Footer";
 
+const CARD = {
+  base: "!bg-zinc-800/50 !rounded-2xl !border !border-zinc-600/40 backdrop-blur-xl",
+  padding: "!px-6 !pt-6 !pb-7 sm:!px-8 sm:!pt-7 sm:!pb-8",
+};
+const cardClass = `${CARD.base} ${CARD.padding}`;
+const sectionGap = "space-y-12";
+const inputSelectClass =
+  "!bg-zinc-800/50 !border-zinc-500/40 !rounded-xl focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/20 placeholder-zinc-500 [&_input]:py-2.5 [&_select]:py-2.5";
+
 type FeedbackType = "bug" | "feature" | "suggestion" | "other";
 
 export default function Feedback() {
@@ -112,27 +121,18 @@ export default function Feedback() {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col bg-gradient-to-br from-black via-zinc-900 to-black text-white">
-      <div className="flex-1 py-4 md:py-8 px-3 md:px-8 overflow-x-hidden overflow-y-auto">
-        {/* Background decoration */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-        </div>
-
-        <div className="relative z-10 w-full max-w-2xl mx-auto space-y-6 pt-6 sm:pt-8 pb-12 sm:pb-16">
+    <div className="min-h-screen w-full flex flex-col text-white">
+      <div className="flex-1 py-14 sm:py-20 px-5 sm:px-8">
+        <div className={`max-w-2xl mx-auto ${sectionGap}`}>
           <PageHeader
-            title={{
-              en: "Feedback",
-              ar: "الملاحظات",
-            }}
+            title={{ en: "Feedback", ar: "الملاحظات" }}
             description={{
-              en: "Share your thoughts, report issues, or suggest improvements",
-              ar: "شارك أفكارك، أبلغ عن المشاكل، أو اقترح تحسينات",
+              en: "Share thoughts, report issues, or suggest improvements",
+              ar: "شارك أفكارك، أبلغ عن مشكلة، أو اقترح تحسينات",
             }}
           />
 
-          <Card>
+          <Card title={locale === "ar" ? "إرسال ملاحظات" : "Send Feedback"} className={cardClass}>
             <form onSubmit={handleSubmit} className="space-y-6">
               <Input
                 label={locale === "ar" ? "الاسم (اختياري)" : "Name (Optional)"}
@@ -140,6 +140,7 @@ export default function Feedback() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder={locale === "ar" ? "أدخل اسمك" : "Enter your name"}
+                className={inputSelectClass}
               />
 
               <div>
@@ -154,10 +155,10 @@ export default function Feedback() {
                       key={type}
                       type="button"
                       onClick={() => setFeedbackType(type)}
-                      className={`p-2 rounded-lg text-sm font-medium transition-all ${
+                      className={`p-2.5 rounded-xl text-sm font-medium transition-all ${
                         feedbackType === type
-                          ? "bg-blue-500/20 text-blue-400 ring-1 ring-blue-500/50"
-                          : "bg-zinc-800/50 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-300"
+                          ? "bg-blue-500/20 text-blue-400 border border-blue-500/40"
+                          : "bg-zinc-800/50 border border-zinc-600/40 text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-300"
                       }`}
                     >
                       {getFeedbackTypeLabel(type)}
@@ -179,46 +180,44 @@ export default function Feedback() {
                       ? "اكتب ملاحظاتك هنا..."
                       : "Write your feedback here..."
                   }
-                  className="w-full h-32 px-3 py-2 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all resize-none"
+                  className="w-full h-32 px-3 py-2.5 bg-zinc-800/50 border border-zinc-500/40 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"
                 />
               </div>
 
-              <div>
-                <button
-                  type="submit"
-                  disabled={isSubmitting || !message.trim()}
-                  className={`w-full py-2.5 px-4 rounded-lg font-medium transition-all ${
-                    isSubmitting || !message.trim()
-                      ? "bg-zinc-800 text-zinc-500 cursor-not-allowed"
-                      : "bg-blue-500 hover:bg-blue-600 text-white"
-                  }`}
-                >
-                  {isSubmitting
-                    ? locale === "ar"
-                      ? "جارٍ الإرسال..."
-                      : "Submitting..."
-                    : locale === "ar"
-                    ? "إرسال الملاحظات"
-                    : "Submit Feedback"}
-                </button>
-              </div>
+              <button
+                type="submit"
+                disabled={isSubmitting || !message.trim()}
+                className={`w-full py-2.5 px-4 rounded-xl font-medium transition-all ${
+                  isSubmitting || !message.trim()
+                    ? "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+                    : "bg-blue-500 hover:bg-blue-600 text-white"
+                }`}
+              >
+                {isSubmitting
+                  ? locale === "ar"
+                    ? "جارٍ الإرسال..."
+                    : "Submitting..."
+                  : locale === "ar"
+                  ? "إرسال الملاحظات"
+                  : "Submit Feedback"}
+              </button>
 
               {submitStatus !== "idle" && (
-                <div
-                  className={`p-4 rounded-lg ${
+                <p
+                  className={`text-sm pt-2 border-t border-zinc-600/40 ${
                     submitStatus === "success"
-                      ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                      : "bg-red-500/10 text-red-400 border border-red-500/20"
+                      ? "text-zinc-400"
+                      : "text-red-400/90"
                   }`}
                 >
                   {submitStatus === "success"
                     ? locale === "ar"
-                      ? "تم إرسال ملاحظاتك بنجاح! شكراً لك."
-                      : "Your feedback has been submitted successfully! Thank you."
+                      ? "تم إرسال ملاحظاتك بنجاح. شكراً لك."
+                      : "Your feedback was submitted successfully. Thank you."
                     : locale === "ar"
-                    ? "عذراً، حدث خطأ أثناء إرسال ملاحظاتك. يرجى المحاولة مرة أخرى."
-                    : "Sorry, there was an error submitting your feedback. Please try again."}
-                </div>
+                    ? "حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى."
+                    : "Something went wrong. Please try again."}
+                </p>
               )}
             </form>
           </Card>

@@ -6,6 +6,17 @@ import Select from "../components/ui/Select";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import Checkbox from "../components/ui/Checkbox";
+import Footer from "../components/ui/Footer";
+
+/* Theme: match Attendance / GPA / Grade Calculator / Calendar */
+const CARD = {
+  base: "!bg-zinc-800/50 !rounded-2xl !border !border-zinc-600/40 backdrop-blur-xl",
+  padding: "!px-6 !pt-6 !pb-7 sm:!px-8 sm:!pt-7 sm:!pb-8",
+};
+const cardClass = `${CARD.base} ${CARD.padding}`;
+const inputSelectClass =
+  "!bg-zinc-800/50 !border-zinc-500/40 !rounded-xl focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/20 placeholder-zinc-500 [&_input]:py-2.5 [&_select]:py-2.5";
+const sectionGap = "space-y-12";
 
 // Fee structure interfaces
 interface Course {
@@ -103,8 +114,8 @@ export default function FeesManager() {
       ar: "إدارة الرسوم"
     },
     description: {
-      en: "Calculate your semester fees based on your program, courses, and student status",
-      ar: "احسب رسوم الفصل الدراسي بناءً على برنامجك ومقرراتك وحالة الطالب"
+      en: "Estimate semester fees by program, courses, and student status.",
+      ar: "قدّر رسوم الفصل حسب البرنامج والمقررات وحالة الطالب."
     },
     step1Title: {
       en: "Program Information",
@@ -525,62 +536,46 @@ export default function FeesManager() {
   ];
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col bg-gradient-to-br from-black via-zinc-900 to-black text-white">
-      <div className="flex-1 py-4 md:py-8 px-3 md:px-8 overflow-x-hidden overflow-y-auto">
-        {/* Background decoration */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-900/10 blur-3xl"></div>
-        </div>
-
-        <div className="relative z-10 w-full max-w-6xl mx-auto space-y-4 sm:space-y-6 md:space-y-8 pt-6 sm:pt-8 pb-12 sm:pb-16">
+    <div className="min-h-screen w-full flex flex-col text-white">
+      <div className="flex-1 py-14 sm:py-20 px-5 sm:px-8 overflow-x-hidden overflow-y-auto">
+        <div className="w-full max-w-4xl mx-auto">
           <PageHeader
             title={translations.title}
             description={translations.description}
           />
 
-          {/* Step Indicator */}
-          <div className="flex items-center justify-center mb-8">
-            <div className="flex items-center gap-4">
+          <div className="flex items-center justify-center mb-10">
+            <div className="flex items-center gap-2">
               {[1, 2, 3].map((stepNum, index) => (
                 <div key={stepNum} className="flex items-center">
                   <div
-                    className={`
-                      w-10 h-10 rounded-full flex items-center justify-center
-                      ${step >= stepNum ? 'bg-blue-600 text-white' : 'bg-zinc-800 text-zinc-400'}
-                      font-bold text-sm transition-all duration-300
-                      shadow-lg
-                    `}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center font-semibold text-sm transition-all ${
+                      step >= stepNum ? "bg-blue-500/20 text-blue-400 border border-blue-500/40" : "bg-zinc-800/50 text-zinc-500 border border-zinc-600/40"
+                    }`}
                   >
                     {stepNum}
                   </div>
                   {index < 2 && (
-                    <div className={`
-                      w-16 h-1 mx-3
-                      ${step > stepNum ? 'bg-blue-600' : 'bg-zinc-800'}
-                      transition-all duration-300
-                    `} />
+                    <div className={`w-12 h-0.5 mx-1.5 ${step > stepNum ? "bg-blue-500/50" : "bg-zinc-600/40"}`} />
                   )}
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Step 1: Program Information */}
           {step === 1 && (
-            <div className="grid grid-cols-1 gap-6 md:gap-8">
-              {/* Program Configuration */}
-              <Card title={translations.step1Title[locale]}>
-                                  <div className="space-y-6">
-                  <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ${locale === "ar" ? 'text-right' : ''}`}>
-                    <Select
-                      label={translations.programType[locale]}
-                      value={programType}
-                      onChange={(e) => {
-                        setProgramType(e.target.value);
-                        setMajor(""); // Reset major when program type changes
-                      }}
-                    >
+            <div className={sectionGap}>
+              <Card title={translations.step1Title[locale]} className={cardClass}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <Select
+                    label={translations.programType[locale]}
+                    value={programType}
+                    onChange={(e) => {
+                      setProgramType(e.target.value);
+                      setMajor("");
+                    }}
+                    className={inputSelectClass}
+                  >
                       <option value="">{locale === "en" ? "Select Program Type" : "اختر نوع البرنامج"}</option>
                       <option value="foundation">{locale === "en" ? "Foundation Program" : "برنامج التأسيسي"}</option>
                       <option value="diploma">{locale === "en" ? "Diploma Program" : "برنامج الدبلوم"}</option>
@@ -597,6 +592,7 @@ export default function FeesManager() {
                         label={translations.major[locale]}
                         value={major}
                         onChange={(e) => setMajor(e.target.value)}
+                        className={inputSelectClass}
                       >
                         <option value="">{locale === "en" ? "Select Major" : "اختر التخصص"}</option>
                         <option value="business">{locale === "en" ? "Business Management" : "إدارة الأعمال"}</option>
@@ -612,6 +608,7 @@ export default function FeesManager() {
                         label={translations.major[locale]}
                         value={major}
                         onChange={(e) => setMajor(e.target.value)}
+                        className={inputSelectClass}
                       >
                         <option value="">{locale === "en" ? "Select Program" : "اختر البرنامج"}</option>
                         <option value="neonatalCare">{locale === "en" ? "Neonatal Intensive Care" : "العناية المركزة لحديثي الولادة"}</option>
@@ -623,6 +620,7 @@ export default function FeesManager() {
                       label={translations.enrollmentType[locale]}
                       value={enrollmentType}
                       onChange={(e) => setEnrollmentType(e.target.value)}
+                      className={inputSelectClass}
                     >
                       <option value="fullTime">{locale === "en" ? "Full-time" : "دوام كامل"}</option>
                       <option value="partTime">{locale === "en" ? "Part-time" : "دوام جزئي"}</option>
@@ -633,6 +631,7 @@ export default function FeesManager() {
                         label={locale === "en" ? "Admission Date" : "تاريخ القبول"}
                         value={admissionDate}
                         onChange={(e) => setAdmissionDate(e.target.value)}
+                        className={inputSelectClass}
                       >
                         <option value="afterFall2020">{locale === "en" ? "Fall 2020 or later" : "خريف 2020 أو بعدها"}</option>
                         <option value="beforeFall2020">{locale === "en" ? "Before Fall 2020" : "قبل خريف 2020"}</option>
@@ -644,138 +643,91 @@ export default function FeesManager() {
                         label={locale === "en" ? "Sponsorship Type" : "نوع الرعاية"}
                         value={sponsorshipType}
                         onChange={(e) => setSponsorshipType(e.target.value)}
+                        className={inputSelectClass}
                       >
                         <option value="nonSponsored">{locale === "en" ? "Non-sponsored" : "غير مدعوم"}</option>
                         <option value="sponsored">{locale === "en" ? "Sponsored" : "مدعوم"}</option>
                       </Select>
                     )}
-                  </div>
                 </div>
               </Card>
 
-              {/* Student Status */}
-              <Card title={translations.studentStatus[locale]}>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {getStudentStatusOptions().map((option) => {
-                      const isSelected = studentStatus === option.value;
-                      const getColorClasses = () => {
-                        if (!isSelected) return 'border-zinc-700 bg-zinc-800/30 hover:border-zinc-600';
-                        
-                        switch (option.color) {
-                          case 'blue': return 'border-blue-500 bg-blue-500/10';
-                          case 'purple': return 'border-purple-500 bg-purple-500/10';
-                          case 'green': return 'border-green-500 bg-green-500/10';
-                          case 'orange': return 'border-orange-500 bg-orange-500/10';
-                          default: return 'border-blue-500 bg-blue-500/10';
-                        }
-                      };
-
-                      const getRadioClasses = () => {
-                        if (!isSelected) return 'border-zinc-400';
-                        
-                        switch (option.color) {
-                          case 'blue': return 'border-blue-500 bg-blue-500';
-                          case 'purple': return 'border-purple-500 bg-purple-500';
-                          case 'green': return 'border-green-500 bg-green-500';
-                          case 'orange': return 'border-orange-500 bg-orange-500';
-                          default: return 'border-blue-500 bg-blue-500';
-                        }
-                      };
-
-                      return (
-                        <div
-                          key={option.value}
-                          className={`
-                            p-3 rounded-lg border-2 cursor-pointer transition-all duration-200
-                            ${getColorClasses()}
-                          `}
-                          onClick={() => setStudentStatus(option.value)}
-                        >
-                          <div className={`flex items-start gap-3 ${locale === "ar" ? 'flex-row-reverse' : ''}`}>
-                            <div className={`
-                              w-4 h-4 rounded-full border-2 transition-all duration-200 flex items-center justify-center mt-0.5 flex-shrink-0
-                              ${getRadioClasses()}
-                            `}>
-                              {isSelected && (
-                                <div className="w-2 h-2 rounded-full bg-white transition-all duration-200" />
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className={`font-medium text-white text-sm leading-tight ${locale === "ar" ? 'mr-1' : ''}`}>{option.label}</div>
-                              <div className={`text-xs text-zinc-400 mt-1 leading-tight ${locale === "ar" ? 'mr-1' : ''}`}>{option.description}</div>
-                            </div>
-                          </div>
+              <Card title={translations.studentStatus[locale]} className={cardClass}>
+                <div className="space-y-0">
+                  {getStudentStatusOptions().map((option, idx) => {
+                    const isSelected = studentStatus === option.value;
+                    const dotClass = isSelected
+                      ? option.color === "blue"
+                        ? "border-blue-500 bg-blue-500/20"
+                        : option.color === "purple"
+                          ? "border-purple-500 bg-purple-500/20"
+                          : option.color === "green"
+                            ? "border-green-500 bg-green-500/20"
+                            : "border-orange-500 bg-orange-500/20"
+                      : "border-zinc-600 bg-transparent";
+                    return (
+                      <div
+                        key={option.value}
+                        className={`flex items-start gap-3 py-3 cursor-pointer transition-colors ${locale === "ar" ? "flex-row-reverse" : ""} ${
+                          idx > 0 ? "border-t border-zinc-600/25" : ""
+                        }`}
+                        onClick={() => setStudentStatus(option.value)}
+                      >
+                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mt-0.5 flex-shrink-0 ${dotClass}`}>
+                          {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
                         </div>
-                      );
-                    })}
-                  </div>
-
-                  <div className="pt-4 border-t border-zinc-700">
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      fullWidth
-                      onClick={() => setStep(2)}
-                      disabled={!canProceedToStep2()}
-                    >
-                      {translations.nextStep[locale]}
-                    </Button>
-                  </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-white text-sm">{option.label}</p>
+                          <p className="text-xs text-zinc-500 mt-0.5">{option.description}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="pt-4 mt-4 border-t border-zinc-600/40">
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    fullWidth
+                    onClick={() => setStep(2)}
+                    disabled={!canProceedToStep2()}
+                  >
+                    {translations.nextStep[locale]}
+                  </Button>
                 </div>
               </Card>
             </div>
           )}
 
-          {/* Step 2: Courses & Credit Hours */}
           {step === 2 && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-              <Card title={translations.step2Title[locale]}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+              <Card title={translations.step2Title[locale]} className={cardClass}>
                 <div className="space-y-6">
                   <Select
                     label={translations.numCourses[locale]}
                     value={numCourses.toString()}
                     onChange={(e) => setNumCourses(parseInt(e.target.value))}
-                    className={locale === "ar" ? 'text-right' : ''}
+                    className={inputSelectClass}
                   >
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                       <option key={num} value={num.toString()}>
-                        {num} {locale === "en" ? (num === 1 ? "Course" : "Courses") : (num === 1 ? "مقرر" : "مقررات")}
+                        {num} {locale === "en" ? (num === 1 ? "course" : "courses") : (num === 1 ? "مقرر" : "مقررات")}
                       </option>
                     ))}
                   </Select>
 
-                  <div className="space-y-4">
+                  <div className="space-y-0">
                     {courses.map((course, index) => (
-                      <div key={course.id} className="p-4 bg-zinc-800/30 rounded-lg space-y-4">
-                        <div className={`flex items-center justify-between ${locale === "ar" ? 'flex-row-reverse' : ''}`}>
-                          <h4 className={`font-medium text-zinc-300 ${locale === "ar" ? 'ml-2' : 'mr-2'}`}>
-                            {locale === "ar" 
-                              ? index === 0 ? "المقرر الأول"
-                              : index === 1 ? "المقرر الثاني"
-                              : index === 2 ? "المقرر الثالث"
-                              : index === 3 ? "المقرر الرابع"
-                              : index === 4 ? "المقرر الخامس"
-                              : index === 5 ? "المقرر السادس"
-                              : index === 6 ? "المقرر السابع"
-                              : "المقرر الثامن"
-                              : `${translations.courseName[locale]} ${index + 1}`}
-                          </h4>
-                          {shouldShowRepeatedOption() && (
-                            <Checkbox
-                              label={translations.repeatedCourse[locale]}
-                              checked={course.isRepeated}
-                              onChange={(e) => updateCourse(index, 'isRepeated', e.target.checked)}
-                              className={locale === "ar" ? 'mr-2' : ''}
-                            />
-                          )}
-                        </div>
-                        
-                        <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 ${locale === "ar" ? 'text-right' : ''}`}>
+                      <div
+                        key={course.id}
+                        className={`flex flex-col sm:flex-row sm:items-center gap-3 py-4 ${index > 0 ? "border-t border-zinc-600/25" : ""}`}
+                      >
+                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <Input
                             label={translations.courseName[locale]}
                             value={course.name}
-                            onChange={(e) => updateCourse(index, 'name', e.target.value)}
+                            onChange={(e) => updateCourse(index, "name", e.target.value)}
+                            className={`${inputSelectClass} !mb-0`}
                           />
                           <Input
                             label={translations.creditHours[locale]}
@@ -783,20 +735,27 @@ export default function FeesManager() {
                             min="1"
                             max="6"
                             value={course.credits}
-                            onChange={(e) => updateCourse(index, 'credits', parseInt(e.target.value) || 3)}
+                            onChange={(e) => updateCourse(index, "credits", parseInt(e.target.value) || 3)}
+                            className={`${inputSelectClass} !mb-0 [&_input]:py-2`}
                           />
                         </div>
+                        {shouldShowRepeatedOption() && (
+                          <Checkbox
+                            label={translations.repeatedCourse[locale]}
+                            checked={course.isRepeated}
+                            onChange={(e) => updateCourse(index, "isRepeated", e.target.checked)}
+                          />
+                        )}
                       </div>
                     ))}
                   </div>
 
-                  <div className="pt-4 border-t border-zinc-700">
+                  <div className="pt-4 border-t border-zinc-600/40">
                     <Checkbox
-                      label={`${translations.additionalFees[locale]} (${locale === "en" ? "Optional" : "اختياري"})`}
+                      label={`${translations.additionalFees[locale]} (${locale === "en" ? "optional" : "اختياري"})`}
                       checked={includeAdditionalFees}
                       onChange={(e) => setIncludeAdditionalFees(e.target.checked)}
                     />
-                    
                     {includeAdditionalFees && (
                       <div className="mt-3">
                         <Input
@@ -805,10 +764,8 @@ export default function FeesManager() {
                           min="0"
                           value={additionalFeesAmount}
                           onChange={(e) => setAdditionalFeesAmount(parseInt(e.target.value) || 0)}
-                          helperText={locale === "en" 
-                            ? "Include housing, printing, administrative fees, etc."
-                            : "يشمل السكن والطباعة والرسوم الإدارية وغيرها"
-                          }
+                          helperText={locale === "en" ? "Housing, printing, etc." : "سكن، طباعة، إلخ"}
+                          className={inputSelectClass}
                         />
                       </div>
                     )}
@@ -816,48 +773,42 @@ export default function FeesManager() {
                 </div>
               </Card>
 
-              <Card title={locale === "en" ? "Course Summary" : "ملخص المقررات"}>
+              <Card title={locale === "en" ? "Course Summary" : "ملخص المقررات"} className={cardClass}>
                 <div className="space-y-4">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-blue-400">
+                  <div className="text-center pb-4 border-b border-zinc-600/40">
+                    <p className="text-3xl font-bold tabular-nums text-blue-400">
                       {courses.reduce((sum, course) => sum + course.credits, 0)}
-                    </div>
-                    <p className="text-zinc-400 text-sm">
-                      {locale === "en" ? "Total Credit Hours" : "إجمالي الساعات المعتمدة"}
+                    </p>
+                    <p className="text-xs text-zinc-500 uppercase tracking-wider mt-1">
+                      {locale === "en" ? "Total credits" : "إجمالي الساعات"}
                     </p>
                   </div>
-
-                  <div className="space-y-2">
-                    {courses.map((course) => (
-                      <div key={course.id} className={`flex justify-between items-center p-2 bg-zinc-800/20 rounded ${locale === "ar" ? 'flex-row-reverse' : ''}`}>
-                        <span className="text-sm">{course.name}</span>
-                        <div className={`flex items-center ${locale === "ar" ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
-                          <span className="text-blue-400">{course.credits} {locale === "en" ? "h" : "س"}</span>
+                  <div className="space-y-0">
+                    {courses.map((course, idx) => (
+                      <div
+                        key={course.id}
+                        className={`flex justify-between items-center py-3 ${locale === "ar" ? "flex-row-reverse" : ""} ${
+                          idx > 0 ? "border-t border-zinc-600/25" : ""
+                        }`}
+                      >
+                        <span className="text-sm text-white truncate">{course.name}</span>
+                        <span className="text-sm text-blue-400 tabular-nums">
+                          {course.credits} {locale === "en" ? "h" : "س"}
                           {course.isRepeated && (
-                            <span className={`text-xs bg-orange-500/20 text-orange-300 px-2 py-1 rounded ${locale === "ar" ? "mr-2" : "ml-2"}`}>
-                              {locale === "en" ? "Repeat" : "معاد"}
+                            <span className="text-xs text-orange-400 ms-1">
+                              {locale === "en" ? "(repeat)" : "(معاد)"}
                             </span>
                           )}
-                        </div>
+                        </span>
                       </div>
                     ))}
                   </div>
-
                   {hasFullExemption() && (
-                                          <div className="mt-4 p-3 bg-blue-900/20 border border-blue-800/30 rounded-lg">
-                        <div className={`text-sm text-blue-300 font-medium ${locale === "ar" ? "text-right px-1" : ""}`}>
-                          {locale === "en" ? "Tuition Exemption Applies!" : "تم تطبيق الإعفاء من الرسوم"}
-                        </div>
-                        <div className={`text-xs text-blue-200 mt-1 ${locale === "ar" ? "text-right px-1" : ""}`}>
-                          {locale === "en" 
-                            ? "No fees except for repeated courses"
-                            : "لا توجد رسوم إلا للمقررات المعادة"
-                          }
-                        </div>
-                      </div>
+                    <p className="text-xs text-blue-400/90 pt-2 border-t border-zinc-600/25">
+                      {locale === "en" ? "Tuition exempt. Only repeated courses are charged." : "معفى من الرسوم. تُحسب المقررات المعادة فقط."}
+                    </p>
                   )}
-
-                  <div className={`flex gap-3 pt-4 ${locale === "ar" ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex gap-3 pt-4 ${locale === "ar" ? "flex-row-reverse" : ""}`}>
                     <Button
                       variant="outline"
                       size="md"
@@ -881,57 +832,49 @@ export default function FeesManager() {
             </div>
           )}
 
-          {/* Step 3: Fee Calculation Results */}
           {step === 3 && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-              <Card title={translations.step3Title[locale]} className="h-full">
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-baseline">
-                    <span className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
-                      {feeBreakdown.total.toLocaleString()}
-                    </span>
-                    <span className={`text-lg text-zinc-400 ${locale === "ar" ? 'mr-2' : 'ml-2'}`}>{translations.qar[locale]}</span>
-                  </div>
-                  <p className="text-zinc-400 text-base mt-3">
-                    {translations.totalSemesterFees[locale]}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+              <Card title={translations.step3Title[locale]} className={cardClass}>
+                <div className="text-center mb-6">
+                  <p className="text-5xl sm:text-6xl font-bold tabular-nums text-blue-400">
+                    {feeBreakdown.total.toLocaleString()}
                   </p>
+                  <p className="text-sm text-zinc-500 mt-1">{translations.qar[locale]}</p>
+                  <p className="text-xs text-zinc-500 uppercase tracking-wider mt-2">{translations.totalSemesterFees[locale]}</p>
                 </div>
 
-                <div className="space-y-4 mb-8">
-                  <div className={`flex items-center justify-between ${locale === "ar" ? 'flex-row-reverse' : ''}`}>
-                    <span className={`text-zinc-300 ${locale === "ar" ? 'ml-2' : 'mr-2'}`}>{translations.tuitionFees[locale]}</span>
-                    <span className="font-semibold text-blue-400">
-                      {hasFullExemption() && feeBreakdown.tuitionFees === 0 
+                <div className="space-y-0 py-4 border-t border-zinc-600/40">
+                  <div className={`flex justify-between py-2 ${locale === "ar" ? "flex-row-reverse" : ""}`}>
+                    <span className="text-sm text-zinc-400">{translations.tuitionFees[locale]}</span>
+                    <span className="text-sm font-semibold text-white tabular-nums">
+                      {hasFullExemption() && feeBreakdown.tuitionFees === 0
                         ? translations.free[locale]
                         : `${feeBreakdown.tuitionFees.toLocaleString()} ${translations.qar[locale]}`
                       }
                     </span>
                   </div>
-                  
-                  <div className={`flex items-center justify-between ${locale === "ar" ? 'flex-row-reverse' : ''}`}>
-                    <span className={`text-zinc-300 ${locale === "ar" ? 'ml-2' : 'mr-2'}`}>{translations.materialsSupplies[locale]}</span>
-                    <span className="font-semibold text-green-400">
+                  <div className={`flex justify-between py-2 border-t border-zinc-600/25 ${locale === "ar" ? "flex-row-reverse" : ""}`}>
+                    <span className="text-sm text-zinc-400">{translations.materialsSupplies[locale]}</span>
+                    <span className="text-sm font-semibold text-white tabular-nums">
                       {hasFullExemption() && feeBreakdown.materialsSupplies === 0
                         ? translations.free[locale]
                         : `${feeBreakdown.materialsSupplies.toLocaleString()} ${translations.qar[locale]}`
                       }
                     </span>
                   </div>
-                  
-                  <div className={`flex items-center justify-between ${locale === "ar" ? 'flex-row-reverse' : ''}`}>
-                    <span className={`text-zinc-300 ${locale === "ar" ? 'ml-2' : 'mr-2'}`}>{translations.studentServices[locale]}</span>
-                    <span className="font-semibold text-purple-400">
+                  <div className={`flex justify-between py-2 border-t border-zinc-600/25 ${locale === "ar" ? "flex-row-reverse" : ""}`}>
+                    <span className="text-sm text-zinc-400">{translations.studentServices[locale]}</span>
+                    <span className="text-sm font-semibold text-white tabular-nums">
                       {hasFullExemption() && feeBreakdown.studentServices === 0
                         ? translations.free[locale]
                         : `${feeBreakdown.studentServices.toLocaleString()} ${translations.qar[locale]}`
                       }
                     </span>
                   </div>
-                  
                   {feeBreakdown.additionalFees > 0 && (
-                    <div className={`flex items-center justify-between ${locale === "ar" ? 'flex-row-reverse' : ''}`}>
-                      <span className={`text-zinc-300 ${locale === "ar" ? 'ml-2' : 'mr-2'}`}>{translations.additionalFees[locale]}</span>
-                      <span className="font-semibold text-orange-400">
+                    <div className={`flex justify-between py-2 border-t border-zinc-600/25 ${locale === "ar" ? "flex-row-reverse" : ""}`}>
+                      <span className="text-sm text-zinc-400">{translations.additionalFees[locale]}</span>
+                      <span className="text-sm font-semibold text-white tabular-nums">
                         {feeBreakdown.additionalFees.toLocaleString()} {translations.qar[locale]}
                       </span>
                     </div>
@@ -939,30 +882,15 @@ export default function FeesManager() {
                 </div>
 
                 {hasTuitionExemption() && (
-                  <div className="bg-blue-900/20 border border-blue-800/30 rounded-lg p-4 mb-6">
-                    <div className={`flex items-start ${locale === "ar" ? 'space-x-reverse space-x-3' : 'space-x-3'}`}>
-                      <svg className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                      </svg>
-                      <div>
-                                                  <h4 className={`font-medium text-blue-300 mb-1 ${locale === "ar" ? "text-right px-1" : ""}`}>
-                            {locale === "en" ? "Fee Exemption Applied" : "تم تطبيق الإعفاء من الرسوم"}
-                          </h4>
-                          <p className={`text-sm text-blue-100 ${locale === "ar" ? "text-right px-1" : ""}`}>
-                            {hasFullExemption() 
-                              ? (locale === "en" 
-                                ? "Complete fee exemption applies. You only pay for repeated courses."
-                                : "يُطبّق الإعفاء الكامل من الرسوم. تدفع فقط للمقررات المعادة."
-                              )
-                              : (locale === "en" 
-                                ? `${studentStatus === "udst_employee_child" ? "50%" : "100%"} tuition waiver applied. Repeated courses are charged separately.`
-                                : `تم تطبيق إعفاء ${studentStatus === "udst_employee_child" ? "50%" : "100%"} من الرسوم الدراسية. يتم تحصيل رسوم المقررات المعادة بشكل منفصل.`
-                              )
-                            }
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <p className="text-xs text-blue-400/90 pt-3 border-t border-zinc-600/40">
+                    {hasFullExemption()
+                      ? (locale === "en" ? "Full exemption. You only pay for repeated courses." : "إعفاء كامل. تدفع فقط للمقررات المعادة.")
+                      : (locale === "en"
+                          ? `${studentStatus === "udst_employee_child" ? "50%" : "100%"} waiver. Repeated courses charged separately.`
+                          : `إعفاء ${studentStatus === "udst_employee_child" ? "50%" : "100%"}، المقررات المعادة تُحسب منفصلة.`
+                        )
+                    }
+                  </p>
                 )}
 
                 <Button
@@ -970,84 +898,63 @@ export default function FeesManager() {
                   size="lg"
                   fullWidth
                   onClick={() => setStep(2)}
-                  className="mt-4"
+                  className="mt-6 rounded-xl border-zinc-500/40 text-zinc-300 hover:text-white hover:bg-zinc-700/40"
                 >
                   {translations.previousStep[locale]}
                 </Button>
               </Card>
 
-              <Card title={locale === "en" ? "Program Summary" : "ملخص البرنامج"}>
-                <div className="space-y-4">
-                  <div className="p-3 bg-zinc-800/20 rounded-lg">
-                    <div className="text-sm text-zinc-400">{translations.programType[locale]}</div>
-                    <div className="font-medium capitalize">
-                      {programType === "foundation" && (locale === "en" ? "Foundation Program" : "برنامج التأسيسي")}
-                      {programType === "bachelor" && (locale === "en" ? "Bachelor's Degree" : "درجة البكالوريوس")}
-                      {programType === "graduate" && (locale === "en" ? "Master's Degree" : "درجة الماجستير")}
-                      {programType === "tcp" && (locale === "en" ? "Technician Certificate" : "شهادة التقني")}
-                      {programType === "diploma" && (locale === "en" ? "Diploma Program" : "برنامج الدبلوم")}
+              <Card title={locale === "en" ? "Program Summary" : "ملخص البرنامج"} className={cardClass}>
+                <div className="space-y-0">
+                  <div className={`flex justify-between py-3 ${locale === "ar" ? "flex-row-reverse" : ""}`}>
+                    <span className="text-xs text-zinc-500">{translations.programType[locale]}</span>
+                    <span className="text-sm font-medium text-white capitalize">
+                      {programType === "foundation" && (locale === "en" ? "Foundation" : "برنامج التأسيسي")}
+                      {programType === "bachelor" && (locale === "en" ? "Bachelor" : "بكالوريوس")}
+                      {programType === "graduate" && (locale === "en" ? "Master" : "ماجستير")}
+                      {programType === "tcp" && (locale === "en" ? "TCP" : "شهادة التقني")}
+                      {programType === "diploma" && (locale === "en" ? "Diploma" : "دبلوم")}
                       {programType === "postDiploma" && (locale === "en" ? "Post-Diploma" : "ما بعد الدبلوم")}
                       {programType === "preMaster" && (locale === "en" ? "Pre-Master" : "ما قبل الماجستير")}
                       {programType === "postgraduate" && (locale === "en" ? "Postgraduate Diploma" : "دبلوم الدراسات العليا")}
-                    </div>
+                    </span>
                   </div>
-
                   {major && (
-                    <div className="p-3 bg-zinc-800/20 rounded-lg">
-                      <div className="text-sm text-zinc-400">{translations.major[locale]}</div>
-                      <div className="font-medium capitalize">
-                        {major === "business" && (locale === "en" ? "Business Management" : "إدارة الأعمال")}
-                        {major === "computing" && (locale === "en" ? "Computing & IT" : "الحاسوب وتكنولوجيا المعلومات")}
-                        {major === "engineering" && (locale === "en" ? "Engineering & Technology" : "الهندسة والتكنولوجيا")}
+                    <div className={`flex justify-between py-3 border-t border-zinc-600/25 ${locale === "ar" ? "flex-row-reverse" : ""}`}>
+                      <span className="text-xs text-zinc-500">{translations.major[locale]}</span>
+                      <span className="text-sm font-medium text-white capitalize">
+                        {major === "business" && (locale === "en" ? "Business" : "إدارة الأعمال")}
+                        {major === "computing" && (locale === "en" ? "Computing" : "الحاسوب وتكنولوجيا المعلومات")}
+                        {major === "engineering" && (locale === "en" ? "Engineering" : "الهندسة والتكنولوجيا")}
                         {major === "generalEducation" && (locale === "en" ? "General Education" : "التعليم العام")}
                         {major === "healthSciences" && (locale === "en" ? "Health Sciences" : "العلوم الصحية")}
-                        {major === "neonatalCare" && (locale === "en" ? "Neonatal Intensive Care" : "العناية المركزة لحديثي الولادة")}
-                        {major === "stemEducation" && (locale === "en" ? "STEM/TVET Education" : "تعليم العلوم والتكنولوجيا")}
-                      </div>
+                        {major === "neonatalCare" && (locale === "en" ? "Neonatal Care" : "العناية المركزة لحديثي الولادة")}
+                        {major === "stemEducation" && (locale === "en" ? "STEM Education" : "تعليم العلوم والتكنولوجيا")}
+                      </span>
                     </div>
                   )}
-
-                  <div className="p-3 bg-zinc-800/20 rounded-lg">
-                    <div className="text-sm text-zinc-400">{translations.enrollmentType[locale]}</div>
-                    <div className="font-medium">
-                      {enrollmentType === "fullTime" 
-                        ? (locale === "en" ? "Full-time" : "دوام كامل")
-                        : (locale === "en" ? "Part-time" : "دوام جزئي")
-                      }
-                    </div>
+                  <div className={`flex justify-between py-3 border-t border-zinc-600/25 ${locale === "ar" ? "flex-row-reverse" : ""}`}>
+                    <span className="text-xs text-zinc-500">{translations.enrollmentType[locale]}</span>
+                    <span className="text-sm font-medium text-white">
+                      {enrollmentType === "fullTime" ? (locale === "en" ? "Full-time" : "دوام كامل") : (locale === "en" ? "Part-time" : "دوام جزئي")}
+                    </span>
                   </div>
-
-                  <div className="p-3 bg-zinc-800/20 rounded-lg">
-                    <div className="text-sm text-zinc-400">{translations.studentStatus[locale]}</div>
-                    <div className="font-medium">
-                      {getStudentStatusOptions().find(option => option.value === studentStatus)?.label}
-                    </div>
+                  <div className={`flex justify-between py-3 border-t border-zinc-600/25 ${locale === "ar" ? "flex-row-reverse" : ""}`}>
+                    <span className="text-xs text-zinc-500">{translations.studentStatus[locale]}</span>
+                    <span className="text-sm font-medium text-white">{getStudentStatusOptions().find((o) => o.value === studentStatus)?.label}</span>
                   </div>
-
-                  <div className="p-3 bg-zinc-800/20 rounded-lg">
-                    <div className="text-sm text-zinc-400">{locale === "en" ? "Total Courses" : "إجمالي المقررات"}</div>
-                    <div className="font-medium">{courses.length}</div>
+                  <div className={`flex justify-between py-3 border-t border-zinc-600/25 ${locale === "ar" ? "flex-row-reverse" : ""}`}>
+                    <span className="text-xs text-zinc-500">{locale === "en" ? "Courses" : "المقررات"}</span>
+                    <span className="text-sm font-medium text-white tabular-nums">{courses.length}</span>
                   </div>
-
-                  <div className="p-3 bg-zinc-800/20 rounded-lg">
-                    <div className="text-sm text-zinc-400">{locale === "en" ? "Total Credit Hours" : "إجمالي الساعات المعتمدة"}</div>
-                    <div className="font-medium">{courses.reduce((sum, course) => sum + course.credits, 0)}</div>
+                  <div className={`flex justify-between py-3 border-t border-zinc-600/25 ${locale === "ar" ? "flex-row-reverse" : ""}`}>
+                    <span className="text-xs text-zinc-500">{locale === "en" ? "Credits" : "الساعات المعتمدة"}</span>
+                    <span className="text-sm font-medium text-white tabular-nums">{courses.reduce((s, c) => s + c.credits, 0)}</span>
                   </div>
-
-                  {shouldShowRepeatedOption() && courses.some(course => course.isRepeated) && (
-                    <div className="p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg">
-                      <div className="text-sm text-orange-300">
-                        {locale === "en" ? "Repeated Courses" : "المقررات المعادة"}
-                      </div>
-                      <div className="font-medium text-orange-400">
-                        {courses.filter(course => course.isRepeated).length}
-                      </div>
-                      <div className="text-xs text-orange-200 mt-1">
-                        {locale === "en" 
-                          ? "These courses will be charged tuition fees"
-                          : "سيتم تحصيل رسوم دراسية لهذه المقررات"
-                        }
-                      </div>
+                  {shouldShowRepeatedOption() && courses.some((c) => c.isRepeated) && (
+                    <div className={`flex justify-between py-3 border-t border-zinc-600/25 ${locale === "ar" ? "flex-row-reverse" : ""}`}>
+                      <span className="text-xs text-orange-400/90">{locale === "en" ? "Repeated" : "المقررات المعادة"}</span>
+                      <span className="text-sm font-medium text-orange-400">{courses.filter((c) => c.isRepeated).length}</span>
                     </div>
                   )}
                 </div>
@@ -1056,6 +963,8 @@ export default function FeesManager() {
           )}
         </div>
       </div>
+      <Footer />
     </div>
+    
   );
 } 

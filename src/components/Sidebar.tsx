@@ -383,18 +383,18 @@ export default function Sidebar({
 
   return (
     <div
-      className={`flex h-screen w-screen overflow-hidden page-bg-gradient text-white ${
+      className={`flex h-screen w-screen overflow-hidden bg-[#141414] text-white ${
         locale === "ar" ? "rtl" : "ltr"
       }`}
     >
-      {/* Mobile header - RTL: logo on the right */}
+      {/* Mobile header */}
       {isMobile && (
         <div
-          className={`fixed top-0 left-0 right-0 z-20 flex items-center h-12 gap-2 px-3 bg-zinc-900/90 backdrop-blur-xl border-b border-white/[0.06] ${locale === "ar" ? "flex-row-reverse" : ""}`}
+          className={`fixed top-0 left-0 right-0 z-20 flex items-center h-12 gap-2 px-3 bg-zinc-800/50 backdrop-blur-xl border-b border-zinc-600/40 ${locale === "ar" ? "flex-row-reverse" : ""}`}
         >
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors duration-150"
+            className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-600/40 transition-colors duration-150"
             aria-label={isOpen ? "Close menu" : "Open menu"}
           >
             {isOpen ? (
@@ -433,22 +433,20 @@ export default function Sidebar({
             : `relative ${sidebarWidth}`
         } flex flex-col shrink-0 transition-[transform] duration-300 ease-out ${
           isMobile ? "mt-12" : ""
-        } flex flex-col bg-zinc-900/90 border-white/[0.06] ${
+        } bg-zinc-800/50 backdrop-blur-xl border-zinc-600/40 ${
           locale === "ar" ? "border-l" : "border-r"
         }`}
-        style={{ boxShadow: locale === "ar" ? "-4px 0 24px rgba(0,0,0,0.25)" : "4px 0 24px rgba(0,0,0,0.25)" }}
       >
-        {/* Header - text only; start = left in LTR, right in RTL */}
         {!isMobile && (
-          <div className="w-full px-4 pt-4 pb-3 text-start">
+          <div className="w-full px-4 pt-4 pb-3 text-start border-b border-zinc-600/25">
             <h2 className="text-sm font-semibold tracking-tight text-white">
               {locale === "ar" ? "أدوات UDST" : "UDST Tools"}
             </h2>
           </div>
         )}
 
-        <nav className="flex-1 overflow-y-auto overscroll-contain min-h-0 px-2 py-2">
-          <div className="space-y-5">
+        <nav className="flex-1 overflow-y-auto overscroll-contain min-h-0 px-2 py-3">
+          <div className="space-y-6">
             {navCategories.map((category) => (
               <div key={category.name}>
                 {isOpen && (
@@ -471,16 +469,16 @@ export default function Sidebar({
                             e.preventDefault();
                             handleNavigation(item.path);
                           }}
-                          className={`group flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-all duration-150 ${
+                          className={`group flex items-center gap-2.5 rounded-xl px-2.5 py-2 transition-all duration-150 ${
                             isActive
                               ? "bg-blue-500/15 text-blue-300"
-                              : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"
+                              : "text-zinc-400 hover:bg-zinc-600/40 hover:text-zinc-200"
                           }`}
                           title={locale === "ar" ? item.nameAr : item.name}
                         >
                           <span
-                            className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md transition-colors duration-150 [&>svg]:w-3.5 [&>svg]:h-3.5 ${
-                              isActive ? "bg-blue-500/20 text-blue-400" : "bg-white/[0.04] text-zinc-500 group-hover:bg-white/[0.08] group-hover:text-zinc-300"
+                            className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg transition-colors duration-150 [&>svg]:w-3.5 [&>svg]:h-3.5 ${
+                              isActive ? "bg-blue-500/20 text-blue-400" : "bg-zinc-600/40 text-zinc-500 group-hover:bg-zinc-500/40 group-hover:text-zinc-300"
                             }`}
                           >
                             {item.icon}
@@ -489,12 +487,12 @@ export default function Sidebar({
                             {locale === "ar" && item.nameAr ? item.nameAr : item.name}
                           </span>
                           {(item.path === "/fees-manager" || item.path === "/schedule-planner") && (
-                            <span className="shrink-0 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-md bg-blue-500/20 text-blue-300">
+                            <span className="shrink-0 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-lg bg-blue-500/20 text-blue-300">
                               {locale === "ar" ? "جديد" : "NEW"}
                             </span>
                           )}
                           {item.comingSoon && (
-                            <span className="shrink-0 text-[9px] font-medium px-1.5 py-0.5 rounded-md bg-white/[0.06] text-zinc-500">
+                            <span className="shrink-0 text-[9px] font-medium px-1.5 py-0.5 rounded-lg bg-zinc-700/50 border border-zinc-600/40 text-zinc-400">
                               {locale === "ar" ? "قريبًا" : "Soon"}
                             </span>
                           )}
@@ -506,16 +504,15 @@ export default function Sidebar({
               </div>
             ))}
 
-            {/* Language + Version footer block */}
             {isOpen && (
-              <div className="pt-4 mt-2 space-y-3">
+              <div className="pt-4 mt-2 border-t border-zinc-600/25 space-y-3">
                 <div className="mb-2 text-start">
                   <span className="text-[10px] font-medium uppercase tracking-widest text-zinc-500 px-2">
                     {locale === "ar" ? "اللغة" : "Language"}
                   </span>
                 </div>
                 <LanguageSwitcher />
-                <p className="text-[10px] text-zinc-600 text-center">v{version}</p>
+                <p className="text-[10px] text-zinc-500 text-center">v{version}</p>
               </div>
             )}
           </div>
@@ -524,7 +521,7 @@ export default function Sidebar({
 
       {/* Main content */}
       <div
-        className={`flex-1 h-full overflow-auto page-bg-gradient ${
+        className={`flex-1 h-full overflow-auto bg-[#141414] ${
           locale === "ar" ? "text-right" : "text-left"
         } ${isMobile ? "pt-12" : ""}`}
       >
