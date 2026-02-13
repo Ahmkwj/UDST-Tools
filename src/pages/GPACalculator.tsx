@@ -459,9 +459,7 @@ export default function GPACalculator() {
                         className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-4 ${index > 0 ? "border-t border-zinc-600/25" : ""}`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          <span className="flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/15 text-blue-400 text-xs font-semibold">
-                            {index + 1}
-                          </span>
+                         
                           <span className="text-sm font-medium text-white truncate">
                             {locale === "ar" ? `المادة ${index + 1}` : `Course ${index + 1}`}
                           </span>
