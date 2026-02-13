@@ -395,12 +395,16 @@ export default function GPACalculator() {
                       {previousCumulativeGPA.toFixed(2)}
                     </p>
                   </div>
-                  <p className="text-[10px] text-zinc-500 uppercase tracking-wider text-center">/ 4.00</p>
+                  <p className="text-[10px] text-zinc-500 uppercase tracking-wider text-center">
+                    / 4.00
+                  </p>
                 </div>
               </Card>
 
               <Card
-                title={locale === "ar" ? "من السجل الأكاديمي" : "From Transcript"}
+                title={
+                  locale === "ar" ? "من السجل الأكاديمي" : "From Transcript"
+                }
                 className={cardClass}
               >
                 <div className="grid grid-cols-1 gap-6">
@@ -412,7 +416,11 @@ export default function GPACalculator() {
                     value={totalGradePoints}
                     onChange={(e) => setTotalGradePoints(e.target.value)}
                     placeholder="0"
-                    helperText={locale === "ar" ? "مجموع (الدرجة × الساعات) لجميع المواد السابقة" : "Sum of (grade × credits) for all past courses"}
+                    helperText={
+                      locale === "ar"
+                        ? "مجموع (الدرجة × الساعات) لجميع المواد السابقة"
+                        : "Sum of (grade × credits) for all past courses"
+                    }
                     className={inputSelectClass}
                   />
                   <Input
@@ -423,7 +431,11 @@ export default function GPACalculator() {
                     value={totalCredits}
                     onChange={(e) => setTotalCredits(e.target.value)}
                     placeholder="0"
-                    helperText={locale === "ar" ? "مجموع ساعات المواد المنجزة" : "Total completed credit hours"}
+                    helperText={
+                      locale === "ar"
+                        ? "مجموع ساعات المواد المنجزة"
+                        : "Total completed credit hours"
+                    }
                     className={inputSelectClass}
                   />
                 </div>
@@ -440,13 +452,24 @@ export default function GPACalculator() {
                   <Select
                     label={locale === "ar" ? "عدد المواد" : "Number of courses"}
                     value={numberOfCourses.toString()}
-                    onChange={(e) => setNumberOfCourses(parseInt(e.target.value))}
+                    onChange={(e) =>
+                      setNumberOfCourses(parseInt(e.target.value))
+                    }
                     className={inputSelectClass}
                   >
-                    <option value="0">{locale === "ar" ? "اختر" : "Select"}</option>
+                    <option value="0">
+                      {locale === "ar" ? "اختر" : "Select"}
+                    </option>
                     {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                       <option key={num} value={num}>
-                        {num} {locale === "ar" ? (num === 1 ? "مادة" : "مواد") : (num === 1 ? "course" : "courses")}
+                        {num}{" "}
+                        {locale === "ar"
+                          ? num === 1
+                            ? "مادة"
+                            : "مواد"
+                          : num === 1
+                            ? "course"
+                            : "courses"}
                       </option>
                     ))}
                   </Select>
@@ -459,9 +482,10 @@ export default function GPACalculator() {
                         className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-4 ${index > 0 ? "border-t border-zinc-600/25" : ""}`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                         
                           <span className="text-sm font-medium text-white truncate">
-                            {locale === "ar" ? `المادة ${index + 1}` : `Course ${index + 1}`}
+                            {locale === "ar"
+                              ? `المادة ${index + 1}`
+                              : `Course ${index + 1}`}
                           </span>
                         </div>
                         <div className="flex flex-wrap items-center gap-3 sm:gap-5 sm:ms-auto">
@@ -471,12 +495,29 @@ export default function GPACalculator() {
                             </span>
                             <Select
                               value={course.grade}
-                              onChange={(e) => updateCourse(index, "grade", e.target.value)}
+                              onChange={(e) =>
+                                updateCourse(index, "grade", e.target.value)
+                              }
                               className={`${inputSelectClass} !mb-0 min-w-[88px] [&_select]:py-2 [&_select]:text-sm`}
                             >
-                              {["A", "B+", "B", "C+", "C", "D+", "D", "F", "W"].map((g) => (
+                              {[
+                                "A",
+                                "B+",
+                                "B",
+                                "C+",
+                                "C",
+                                "D+",
+                                "D",
+                                "F",
+                                "W",
+                              ].map((g) => (
                                 <option key={g} value={g}>
-                                  {g}{g === "W" ? (locale === "ar" ? " (انسحاب)" : " (W)") : ""}
+                                  {g}
+                                  {g === "W"
+                                    ? locale === "ar"
+                                      ? " (انسحاب)"
+                                      : " (W)"
+                                    : ""}
                                 </option>
                               ))}
                             </Select>
@@ -493,33 +534,55 @@ export default function GPACalculator() {
                               value={course.credits}
                               onChange={(e) => {
                                 const v = parseFloat(e.target.value);
-                                updateCourse(index, "credits", isNaN(v) ? 1 : Math.max(1, Math.min(6, v)));
+                                updateCourse(
+                                  index,
+                                  "credits",
+                                  isNaN(v) ? 1 : Math.max(1, Math.min(6, v)),
+                                );
                               }}
                               className={`${inputSelectClass} !mb-0 w-20 [&_input]:py-2`}
                             />
                           </div>
                           {course.grade === "W" && (
                             <span className="text-xs text-amber-400">
-                              {locale === "ar" ? "لا تدخل في المعدل" : "Not counted in GPA"}
+                              {locale === "ar"
+                                ? "لا تدخل في المعدل"
+                                : "Not counted in GPA"}
                             </span>
                           )}
                           {course.grade !== "W" && (
                             <>
                               <Checkbox
                                 checked={course.isRepeat}
-                                onChange={(e) => updateCourse(index, "isRepeat", e.target.checked)}
+                                onChange={(e) =>
+                                  updateCourse(
+                                    index,
+                                    "isRepeat",
+                                    e.target.checked,
+                                  )
+                                }
                                 label={locale === "ar" ? "إعادة" : "Repeat"}
                               />
                               {course.isRepeat && (
                                 <div className="flex items-center gap-2">
-                                  <span className="text-xs text-zinc-500">{locale === "ar" ? "السابق:" : "Previous:"}</span>
+                                  <span className="text-xs text-zinc-500">
+                                    {locale === "ar" ? "السابق:" : "Previous:"}
+                                  </span>
                                   <Select
                                     value={course.previousGrade}
-                                    onChange={(e) => updateCourse(index, "previousGrade", e.target.value)}
+                                    onChange={(e) =>
+                                      updateCourse(
+                                        index,
+                                        "previousGrade",
+                                        e.target.value,
+                                      )
+                                    }
                                     className={`${inputSelectClass} !mb-0 min-w-[72px] [&_select]:py-2 [&_select]:text-sm`}
                                   >
                                     {["F", "D+", "D"].map((g) => (
-                                      <option key={g} value={g}>{g}</option>
+                                      <option key={g} value={g}>
+                                        {g}
+                                      </option>
                                     ))}
                                   </Select>
                                 </div>
@@ -539,199 +602,203 @@ export default function GPACalculator() {
               title={locale === "ar" ? "المعدل الجديد" : "New GPA"}
               className={cardClass}
             >
-                <div className="flex items-center justify-center gap-2">
-                  <p className="text-5xl sm:text-6xl font-bold tabular-nums tracking-tight text-blue-400">
-                    {newCumulativeGPA.toFixed(2)}
-                  </p>
-                  <span className="text-xl text-zinc-500">/ 4.00</span>
-                </div>
+              <div className="flex items-center justify-center gap-2">
+                <p className="text-5xl sm:text-6xl font-bold tabular-nums tracking-tight text-blue-400">
+                  {newCumulativeGPA.toFixed(2)}
+                </p>
+                <span className="text-xl text-zinc-500">/ 4.00</span>
+              </div>
 
-                <div className="flex flex-wrap items-center gap-x-8 gap-y-2 py-4 border-t border-zinc-600/40">
-                  <span className="text-sm text-zinc-400">
-                    {locale === "ar" ? "نقاط الدرجات:" : "Grade points:"}{" "}
-                    <span className="font-semibold text-white tabular-nums">{newTotalGradePoints.toFixed(2)}</span>
+              <div className="flex flex-wrap items-center gap-x-8 gap-y-2 py-4 border-t border-zinc-600/40">
+                <span className="text-sm text-zinc-400">
+                  {locale === "ar" ? "نقاط الدرجات:" : "Grade points:"}{" "}
+                  <span className="font-semibold text-white tabular-nums">
+                    {newTotalGradePoints.toFixed(2)}
                   </span>
-                  <span className="text-sm text-zinc-400">
-                    {locale === "ar" ? "الساعات:" : "Credits:"}{" "}
-                    <span className="font-semibold text-white tabular-nums">{newTotalCredits.toFixed(0)}</span>
+                </span>
+                <span className="text-sm text-zinc-400">
+                  {locale === "ar" ? "الساعات:" : "Credits:"}{" "}
+                  <span className="font-semibold text-white tabular-nums">
+                    {newTotalCredits.toFixed(0)}
                   </span>
-                </div>
+                </span>
+              </div>
 
-                <div className="pt-6 border-t border-zinc-600/40">
-                  <h3 className="text-sm font-semibold text-white mb-1">
-                    {locale === "ar" ? "من السابق إلى الحالي" : "Previous to current"}
-                  </h3>
-                  <p className="text-xs text-zinc-500 mb-4">
-                    {locale === "ar" ? "مقارنة المعدل قبل وبعد إضافة هذا الفصل." : "Compare GPA before and after this semester."}
+              <div className="pt-6 border-t border-zinc-600/40">
+                <h3 className="text-sm font-semibold text-white mb-1">
+                  {locale === "ar"
+                    ? "من السابق إلى الحالي"
+                    : "Previous to current"}
+                </h3>
+                <p className="text-xs text-zinc-500 mb-4">
+                  {locale === "ar"
+                    ? "مقارنة المعدل قبل وبعد إضافة هذا الفصل."
+                    : "Compare GPA before and after this semester."}
+                </p>
+
+                {courses.some((course) => course.grade === "W") && (
+                  <p className="mb-4 text-xs text-amber-400/90">
+                    {locale === "ar"
+                      ? "الانسحاب (W) لا يدخل في المعدل ولا في الساعات."
+                      : "Withdrawals (W) are not included in GPA or credits."}
                   </p>
-
-                  {courses.some((course) => course.grade === "W") && (
-                    <p className="mb-4 text-xs text-amber-400/90">
-                      {locale === "ar"
-                        ? "الانسحاب (W) لا يدخل في المعدل ولا في الساعات."
-                        : "Withdrawals (W) are not included in GPA or credits."}
-                    </p>
-                  )}
-                    <div className="h-[180px] sm:h-[200px] w-full">
-                      <Line
-                        data={{
-                          labels: [
-                            locale === "ar" ? "السابق" : "Previous",
-                            locale === "ar" ? "الحالي" : "Current",
-                          ],
-                          datasets: [
-                            {
-                              label:
-                                locale === "ar" ? "المعدل التراكمي" : "GPA",
-                              data: [previousCumulativeGPA, newCumulativeGPA],
-                              borderColor: "rgb(59, 130, 246)",
-                              backgroundColor: "rgba(59, 130, 246, 0.5)",
-                              tension: 0.4,
-                              fill: true,
-                              pointBackgroundColor: "rgb(59, 130, 246)",
-                              pointBorderColor: "#fff",
-                              pointBorderWidth: 2,
-                              pointRadius: 6,
-                              pointHoverRadius: 8,
-                            },
-                          ],
-                        }}
-                        options={{
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          scales: {
-                            y: {
-                              min:
-                                Math.floor(
-                                  Math.min(
-                                    previousCumulativeGPA,
-                                    newCumulativeGPA,
-                                  ) * 2,
-                                ) / 2,
-                              max:
-                                Math.ceil(
-                                  Math.max(
-                                    previousCumulativeGPA,
-                                    newCumulativeGPA,
-                                  ) * 2,
-                                ) / 2,
-                              grid: {
-                                color: "rgba(161, 161, 170, 0.25)",
-                              },
-                              ticks: {
-                                color: "rgba(161, 161, 170, 0.8)",
-                                stepSize: 1,
-                                callback: function (
-                                  tickValue: number | string,
-                                ) {
-                                  return typeof tickValue === "number"
-                                    ? tickValue.toFixed(1)
-                                    : tickValue;
-                                },
-                              },
-                              title: {
-                                display: true,
-                                text:
-                                  locale === "ar" ? "المعدل التراكمي" : "GPA",
-                                color: "rgba(161, 161, 170, 0.8)",
-                                font: {
-                                  size: 12,
-                                },
-                              },
-                            },
-                            x: {
-                              grid: {
-                                color: "rgba(161, 161, 170, 0.25)",
-                              },
-                              ticks: {
-                                color: "rgba(161, 161, 170, 0.8)",
-                              },
+                )}
+                <div className="h-[180px] sm:h-[200px] w-full">
+                  <Line
+                    data={{
+                      labels: [
+                        locale === "ar" ? "السابق" : "Previous",
+                        locale === "ar" ? "الحالي" : "Current",
+                      ],
+                      datasets: [
+                        {
+                          label: locale === "ar" ? "المعدل التراكمي" : "GPA",
+                          data: [previousCumulativeGPA, newCumulativeGPA],
+                          borderColor: "rgb(59, 130, 246)",
+                          backgroundColor: "rgba(59, 130, 246, 0.5)",
+                          tension: 0.4,
+                          fill: true,
+                          pointBackgroundColor: "rgb(59, 130, 246)",
+                          pointBorderColor: "#fff",
+                          pointBorderWidth: 2,
+                          pointRadius: 6,
+                          pointHoverRadius: 8,
+                        },
+                      ],
+                    }}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      scales: {
+                        y: {
+                          min:
+                            Math.floor(
+                              Math.min(
+                                previousCumulativeGPA,
+                                newCumulativeGPA,
+                              ) * 2,
+                            ) / 2,
+                          max:
+                            Math.ceil(
+                              Math.max(
+                                previousCumulativeGPA,
+                                newCumulativeGPA,
+                              ) * 2,
+                            ) / 2,
+                          grid: {
+                            color: "rgba(161, 161, 170, 0.25)",
+                          },
+                          ticks: {
+                            color: "rgba(161, 161, 170, 0.8)",
+                            stepSize: 1,
+                            callback: function (tickValue: number | string) {
+                              return typeof tickValue === "number"
+                                ? tickValue.toFixed(1)
+                                : tickValue;
                             },
                           },
-                          plugins: {
-                            legend: {
-                              display: false,
-                            },
-                            tooltip: {
-                              backgroundColor: "rgba(39, 39, 42, 0.95)",
-                              titleColor: "rgb(255, 255, 255)",
-                              bodyColor: "rgb(255, 255, 255)",
-                              padding: 12,
-                              borderColor: "rgba(161, 161, 170, 0.4)",
-                              borderWidth: 1,
-                              displayColors: false,
-                              callbacks: {
-                                label: (context: any) =>
-                                  locale === "ar"
-                                    ? `المعدل: ${context.parsed.y.toFixed(3)}`
-                                    : `GPA: ${context.parsed.y.toFixed(3)}`,
-                              },
+                          title: {
+                            display: true,
+                            text: locale === "ar" ? "المعدل التراكمي" : "GPA",
+                            color: "rgba(161, 161, 170, 0.8)",
+                            font: {
+                              size: 12,
                             },
                           },
-                        }}
-                      />
-                    </div>
+                        },
+                        x: {
+                          grid: {
+                            color: "rgba(161, 161, 170, 0.25)",
+                          },
+                          ticks: {
+                            color: "rgba(161, 161, 170, 0.8)",
+                          },
+                        },
+                      },
+                      plugins: {
+                        legend: {
+                          display: false,
+                        },
+                        tooltip: {
+                          backgroundColor: "rgba(39, 39, 42, 0.95)",
+                          titleColor: "rgb(255, 255, 255)",
+                          bodyColor: "rgb(255, 255, 255)",
+                          padding: 12,
+                          borderColor: "rgba(161, 161, 170, 0.4)",
+                          borderWidth: 1,
+                          displayColors: false,
+                          callbacks: {
+                            label: (context: any) =>
+                              locale === "ar"
+                                ? `المعدل: ${context.parsed.y.toFixed(3)}`
+                                : `GPA: ${context.parsed.y.toFixed(3)}`,
+                          },
+                        },
+                      },
+                    }}
+                  />
+                </div>
 
-                    {/* GPA Change Indicator */}
-                    <div className="flex items-center justify-center mt-6">
-                      <div
-                        className={`text-sm font-medium flex items-center gap-1 ${
-                          newCumulativeGPA > previousCumulativeGPA
-                            ? "text-emerald-400"
-                            : newCumulativeGPA < previousCumulativeGPA
-                              ? "text-red-400"
-                              : "text-zinc-400"
-                        }`}
+                {/* GPA Change Indicator */}
+                <div className="flex items-center justify-center mt-6">
+                  <div
+                    className={`text-sm font-medium flex items-center gap-1 ${
+                      newCumulativeGPA > previousCumulativeGPA
+                        ? "text-emerald-400"
+                        : newCumulativeGPA < previousCumulativeGPA
+                          ? "text-red-400"
+                          : "text-zinc-400"
+                    }`}
+                  >
+                    {newCumulativeGPA > previousCumulativeGPA ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className="w-4 h-4"
                       >
-                        {newCumulativeGPA > previousCumulativeGPA ? (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            className="w-4 h-4"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M12.577 4.878a.75.75 0 01.919-.53l4.78 1.281a.75.75 0 01.531.919l-1.281 4.78a.75.75 0 01-1.449-.387l.81-3.022a19.407 19.407 0 00-5.594 5.203a.75.75 0 01-1.139.093L7 10.06l-4.72 4.72a.75.75 0 01-1.06-1.061l5.25-5.25a.75.75 0 011.06 0l3.074 3.073a20.923 20.923 0 015.545-4.931l-3.042-.815a.75.75 0 01-.53-.919z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        ) : newCumulativeGPA < previousCumulativeGPA ? (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            className="w-4 h-4"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M1.22 5.222a.75.75 0 011.06 0L7 9.942l3.768-3.769a.75.75 0 011.113.058 20.908 20.908 0 013.813 7.254l1.574-2.727a.75.75 0 011.3.75l-2.475 4.286a.75.75 0 01-1.025.275l-4.287-2.475a.75.75 0 01.75-1.3l2.71 1.565a19.422 19.422 0 00-3.013-6.024L7.53 11.533a.75.75 0 01-1.06 0l-5.25-5.25a.75.75 0 010-1.06z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        ) : (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            className="w-4 h-4"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        )}
-                        <span>
-                          {Math.abs(
-                            newCumulativeGPA - previousCumulativeGPA,
-                          ).toFixed(2)}{" "}
-                          {locale === "ar" ? "فرق" : "change"}
-                        </span>
-                      </div>
-                    </div>
+                        <path
+                          fillRule="evenodd"
+                          d="M12.577 4.878a.75.75 0 01.919-.53l4.78 1.281a.75.75 0 01.531.919l-1.281 4.78a.75.75 0 01-1.449-.387l.81-3.022a19.407 19.407 0 00-5.594 5.203a.75.75 0 01-1.139.093L7 10.06l-4.72 4.72a.75.75 0 01-1.06-1.061l5.25-5.25a.75.75 0 011.06 0l3.074 3.073a20.923 20.923 0 015.545-4.931l-3.042-.815a.75.75 0 01-.53-.919z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    ) : newCumulativeGPA < previousCumulativeGPA ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className="w-4 h-4"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M1.22 5.222a.75.75 0 011.06 0L7 9.942l3.768-3.769a.75.75 0 011.113.058 20.908 20.908 0 013.813 7.254l1.574-2.727a.75.75 0 011.3.75l-2.475 4.286a.75.75 0 01-1.025.275l-4.287-2.475a.75.75 0 01.75-1.3l2.71 1.565a19.422 19.422 0 00-3.013-6.024L7.53 11.533a.75.75 0 01-1.06 0l-5.25-5.25a.75.75 0 010-1.06z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className="w-4 h-4"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    )}
+                    <span>
+                      {Math.abs(
+                        newCumulativeGPA - previousCumulativeGPA,
+                      ).toFixed(2)}{" "}
+                      {locale === "ar" ? "فرق" : "change"}
+                    </span>
                   </div>
+                </div>
+              </div>
             </Card>
           </div>
 
