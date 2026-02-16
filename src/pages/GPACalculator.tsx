@@ -456,7 +456,7 @@ export default function GPACalculator() {
               title={locale === "ar" ? "مواد الفصل الحالي" : "This Semester"}
               className={cardClass}
             >
-              <p className="text-xs text-zinc-500 mb-3 sm:mb-4">
+              <p className="text-xs text-zinc-500 mb-3 sm:mb-4 leading-relaxed">
                 {locale === "ar"
                   ? "أضف مواد هذا الفصل والدرجات المتوقعة أو الفعلية."
                   : "Add this term's courses and expected or actual grades."}
@@ -489,22 +489,23 @@ export default function GPACalculator() {
                   </Select>
                 </div>
                 {numberOfCourses > 0 && (
-                  <div className="space-y-0">
+                  <div className="space-y-6">
                     {courses.map((course, index) => (
                       <div
                         key={index}
-                        className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 py-3 sm:py-4 ${index > 0 ? "border-t border-zinc-600/25" : ""}`}
+                        className="rounded-xl border border-zinc-600/30 bg-zinc-800/20 p-4 sm:p-5"
                       >
-                        <div className="shrink-0 w-full sm:w-20 lg:w-24">
-                          <span className="text-sm font-medium text-white truncate block">
+                        <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                         
+                          <span className="text-sm font-medium text-white">
                             {locale === "ar"
                               ? `المادة ${index + 1}`
                               : `Course ${index + 1}`}
                           </span>
                         </div>
-                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 sm:flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-medium text-zinc-500 whitespace-nowrap">
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4 min-w-0">
+                          <div className="flex items-center gap-2 w-full sm:w-auto">
+                            <span className="text-xs font-medium text-zinc-500 whitespace-nowrap w-20 sm:w-auto shrink-0">
                               {locale === "ar" ? "الدرجة" : "Grade"}
                             </span>
                             <Select
@@ -512,7 +513,7 @@ export default function GPACalculator() {
                               onChange={(e) =>
                                 updateCourse(index, "grade", e.target.value)
                               }
-                              className={`${inputSelectClass} !mb-0 min-w-[88px] [&_select]:py-2 [&_select]:text-sm w-full sm:w-auto`}
+                              className={`flex-1 min-w-0 sm:flex-none sm:min-w-[88px] ${inputSelectClass} !mb-0 [&_select]:py-2 [&_select]:text-sm w-full sm:w-auto`}
                             >
                               {[
                                 "A",
@@ -536,8 +537,8 @@ export default function GPACalculator() {
                               ))}
                             </Select>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-medium text-zinc-500 whitespace-nowrap">
+                          <div className="flex items-center gap-2 w-full sm:w-auto">
+                            <span className="text-xs font-medium text-zinc-500 whitespace-nowrap w-20 sm:w-auto shrink-0">
                               {locale === "ar" ? "الساعات" : "Credits"}
                             </span>
                             <Input
@@ -554,11 +555,11 @@ export default function GPACalculator() {
                                   isNaN(v) ? 1 : Math.max(1, Math.min(6, v)),
                                 );
                               }}
-                              className={`${inputSelectClass} !mb-0 w-20 min-w-[72px] [&_input]:py-2 [&_input]:text-center`}
+                              className={`flex-1 min-w-0 sm:flex-none sm:w-20 w-full min-w-[72px] ${inputSelectClass} !mb-0 [&_input]:py-2 [&_input]:text-center`}
                             />
                           </div>
                           {course.grade === "W" && (
-                            <span className="text-xs text-amber-400">
+                            <span className="text-xs text-amber-400 w-full sm:w-auto">
                               {locale === "ar"
                                 ? "لا تدخل في المعدل"
                                 : "Not counted in GPA"}
@@ -567,9 +568,9 @@ export default function GPACalculator() {
                           {course.grade !== "W" && (
                             <div
                               className={`
-                                w-full flex flex-col gap-3 pt-3 mt-2 border-t border-zinc-600/25
-                                sm:flex-row sm:flex-wrap sm:gap-3 sm:pt-0 sm:mt-0 sm:border-t-0 sm:border-zinc-600/30 sm:w-auto
-                                ${locale === "ar" ? "sm:border-r sm:pr-3 sm:pl-4" : "sm:border-l sm:pl-3 sm:pr-4"}
+                                w-full flex flex-col gap-3 pt-3 mt-1 border-t border-zinc-600/25
+                                sm:flex-row sm:flex-wrap sm:gap-3 sm:pt-0 sm:mt-0 sm:border-t-0 sm:border-zinc-600/30 sm:w-auto shrink-0
+                                ${locale === "ar" ? "sm:me-auto sm:border-r sm:pr-3 sm:pl-4" : "sm:ms-auto sm:border-l sm:pl-3 sm:pr-4"}
                               `}
                             >
                               <div className="flex items-center gap-2">
@@ -623,7 +624,7 @@ export default function GPACalculator() {
                                         e.target.value,
                                       )
                                     }
-                                    className={`${inputSelectClass} !mb-0 min-w-[72px] w-full max-w-[140px] sm:max-w-none [&_select]:py-2 [&_select]:text-sm`}
+                                    className={`flex-1 min-w-0 sm:flex-none ${inputSelectClass} !mb-0 min-w-[72px] w-full max-w-[140px] sm:max-w-none [&_select]:py-2 [&_select]:text-sm`}
                                   >
                                     {["F", "D+", "D"].map((g) => (
                                       <option key={g} value={g}>
