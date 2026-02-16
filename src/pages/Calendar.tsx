@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useLocale } from "../context/LanguageContext";
 import useLocalStorage from "../hooks/useLocalStorage";
 import Card from "../components/ui/Card";
@@ -46,9 +47,14 @@ export default function Calendar() {
   const [selectedYear, setSelectedYear] = useLocalStorage("cal-selectedYear", academicCalendarData[0].id);
   const [selectedSemester, setSelectedSemester] = useLocalStorage("cal-selectedSemester", academicCalendarData[0].semesters[0].id);
 
-  const currentYear = academicCalendarData.find((y) => y.id === selectedYear);
-  const currentSemester = currentYear?.semesters.find((s) => s.id === selectedSemester);
+  const currentYear = academicCalendarData.find((y) => y.id === selectedYear) ?? academicCalendarData[0];
+  const currentSemester = currentYear?.semesters.find((s) => s.id === selectedSemester) ?? currentYear?.semesters[0];
   const events = currentSemester?.events || [];
+
+  useEffect(() => {
+    if (currentYear && selectedYear !== currentYear.id) setSelectedYear(currentYear.id);
+    if (currentSemester && selectedSemester !== currentSemester.id) setSelectedSemester(currentSemester.id);
+  }, [currentYear?.id, currentSemester?.id, selectedYear, selectedSemester, setSelectedYear, setSelectedSemester]);
 
   const eventCounts = events.reduce<Record<string, number>>((acc, e) => {
     const t = e.type || "academic";
