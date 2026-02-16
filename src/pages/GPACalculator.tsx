@@ -3,7 +3,6 @@ import Input from "../components/ui/Input";
 import Select from "../components/ui/Select";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
-import Checkbox from "../components/ui/Checkbox";
 import Footer from "../components/ui/Footer";
 import PageHeader from "../components/ui/PageHeader";
 import { useLocale } from "../context/LanguageContext";
@@ -19,20 +18,6 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
-// Feature flags
-const SHOW_FUTURE_SCENARIOS = false;
-
-/* Theme: match Attendance page exactly */
-const CARD = {
-  base: "!bg-zinc-800/50 !rounded-2xl !border !border-zinc-600/40 backdrop-blur-xl",
-  padding: "!px-6 !pt-6 !pb-7 sm:!px-8 sm:!pt-7 sm:!pb-8",
-};
-const cardClass = `${CARD.base} ${CARD.padding}`;
-const gpaDisplayCardClass = `${CARD.base} !px-6 !pt-6 !pb-6 sm:!px-8 sm:!pt-7 sm:!pb-7 flex flex-col`;
-const inputSelectClass =
-  "!bg-zinc-800/50 !border-zinc-500/40 !rounded-xl focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/20 placeholder-zinc-500 [&_input]:py-2.5 [&_select]:py-2.5";
-const sectionGap = "space-y-12";
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -42,6 +27,20 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
+
+// Feature flags
+const SHOW_FUTURE_SCENARIOS = false;
+
+/* Theme: match Attendance page exactly */
+const CARD = {
+  base: "!bg-zinc-800/50 !rounded-2xl !border !border-zinc-600/40 backdrop-blur-xl",
+  padding: "!px-6 !pt-6 !pb-7 sm:!px-8 sm:!pt-7 sm:!pb-8",
+};
+const cardClass = `${CARD.base} !px-4 !pt-4 !pb-5 sm:!px-6 sm:!pt-6 sm:!pb-7 lg:!px-8 lg:!pt-7 lg:!pb-8`;
+const gpaDisplayCardClass = `${CARD.base} !px-4 !pt-4 !pb-5 sm:!px-6 sm:!pt-6 sm:!pb-6 lg:!px-8 lg:!pt-7 lg:!pb-7 flex flex-col`;
+const inputSelectClass =
+  "!bg-zinc-800/50 !border-zinc-500/40 !rounded-xl focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/20 placeholder-zinc-500 [&_input]:min-h-[44px] [&_select]:min-h-[44px] [&_input]:py-3 [&_select]:py-3 sm:[&_input]:min-h-0 sm:[&_select]:min-h-0 sm:[&_input]:py-2.5 sm:[&_select]:py-2.5";
+const sectionGap = "space-y-8 sm:space-y-12";
 
 type Course = {
   grade: string;
@@ -369,7 +368,7 @@ export default function GPACalculator() {
 
   return (
     <div className="page-container">
-      <div className="flex-1 py-14 sm:py-20 px-5 sm:px-8 overflow-x-hidden overflow-y-auto">
+      <div className="flex-1 py-8 pb-20 px-4 sm:py-14 sm:pb-14 sm:px-5 lg:py-20 lg:px-8 overflow-x-hidden overflow-y-auto">
         <div className="w-full max-w-4xl mx-auto">
           <PageHeader
             title={{
@@ -384,14 +383,19 @@ export default function GPACalculator() {
 
           <div className={sectionGap}>
             {/* Row 1: Current GPA display + Inputs side by side (like Absenteeism | Semester Setup) */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
               <Card
                 title={locale === "ar" ? "المعدل الحالي" : "Current GPA"}
                 className={gpaDisplayCardClass}
               >
-                <div className="flex flex-1 flex-col min-h-[160px] w-full">
+                <p className="text-xs text-zinc-500 mb-3 sm:mb-4">
+                  {locale === "ar"
+                    ? "معدلك التراكمي من المواد المنجزة حتى الآن."
+                    : "Your cumulative GPA from completed courses so far."}
+                </p>
+                <div className="flex flex-1 flex-col min-h-[120px] sm:min-h-[160px] w-full">
                   <div className="flex-1 flex items-center justify-center">
-                    <p className="text-6xl sm:text-7xl font-bold tabular-nums tracking-tight text-blue-400 text-center">
+                    <p className="text-5xl sm:text-6xl lg:text-7xl font-bold tabular-nums tracking-tight text-blue-400 text-center">
                       {previousCumulativeGPA.toFixed(2)}
                     </p>
                   </div>
@@ -407,7 +411,12 @@ export default function GPACalculator() {
                 }
                 className={cardClass}
               >
-                <div className="grid grid-cols-1 gap-6">
+                <p className="text-xs text-zinc-500 mb-3 sm:mb-4">
+                  {locale === "ar"
+                    ? "أدخل الإجماليات من كشف درجاتك الأكاديمي."
+                    : "Enter the totals from your academic transcript."}
+                </p>
+                <div className="grid grid-cols-1 gap-4 sm:gap-6">
                   <Input
                     label={locale === "ar" ? "نقاط الدرجات" : "Grade Points"}
                     type="number"
@@ -447,8 +456,13 @@ export default function GPACalculator() {
               title={locale === "ar" ? "مواد الفصل الحالي" : "This Semester"}
               className={cardClass}
             >
-              <div className="space-y-6">
-                <div className="max-w-xs">
+              <p className="text-xs text-zinc-500 mb-3 sm:mb-4">
+                {locale === "ar"
+                  ? "أضف مواد هذا الفصل والدرجات المتوقعة أو الفعلية."
+                  : "Add this term's courses and expected or actual grades."}
+              </p>
+              <div className="space-y-4 sm:space-y-6">
+                <div className="w-full max-w-xs">
                   <Select
                     label={locale === "ar" ? "عدد المواد" : "Number of courses"}
                     value={numberOfCourses.toString()}
@@ -479,16 +493,16 @@ export default function GPACalculator() {
                     {courses.map((course, index) => (
                       <div
                         key={index}
-                        className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-4 ${index > 0 ? "border-t border-zinc-600/25" : ""}`}
+                        className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 py-3 sm:py-4 ${index > 0 ? "border-t border-zinc-600/25" : ""}`}
                       >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <span className="text-sm font-medium text-white truncate">
+                        <div className="shrink-0 w-full sm:w-20 lg:w-24">
+                          <span className="text-sm font-medium text-white truncate block">
                             {locale === "ar"
                               ? `المادة ${index + 1}`
                               : `Course ${index + 1}`}
                           </span>
                         </div>
-                        <div className="flex flex-wrap items-center gap-3 sm:gap-5 sm:ms-auto">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 sm:flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-medium text-zinc-500 whitespace-nowrap">
                               {locale === "ar" ? "الدرجة" : "Grade"}
@@ -498,7 +512,7 @@ export default function GPACalculator() {
                               onChange={(e) =>
                                 updateCourse(index, "grade", e.target.value)
                               }
-                              className={`${inputSelectClass} !mb-0 min-w-[88px] [&_select]:py-2 [&_select]:text-sm`}
+                              className={`${inputSelectClass} !mb-0 min-w-[88px] [&_select]:py-2 [&_select]:text-sm w-full sm:w-auto`}
                             >
                               {[
                                 "A",
@@ -540,7 +554,7 @@ export default function GPACalculator() {
                                   isNaN(v) ? 1 : Math.max(1, Math.min(6, v)),
                                 );
                               }}
-                              className={`${inputSelectClass} !mb-0 w-20 [&_input]:py-2`}
+                              className={`${inputSelectClass} !mb-0 w-20 min-w-[72px] [&_input]:py-2 [&_input]:text-center`}
                             />
                           </div>
                           {course.grade === "W" && (
@@ -551,22 +565,54 @@ export default function GPACalculator() {
                             </span>
                           )}
                           {course.grade !== "W" && (
-                            <>
-                              <Checkbox
-                                checked={course.isRepeat}
-                                onChange={(e) =>
-                                  updateCourse(
-                                    index,
-                                    "isRepeat",
-                                    e.target.checked,
-                                  )
-                                }
-                                label={locale === "ar" ? "إعادة" : "Repeat"}
-                              />
+                            <div
+                              className={`
+                                w-full flex flex-col gap-3 pt-3 mt-2 border-t border-zinc-600/25
+                                sm:flex-row sm:flex-wrap sm:gap-3 sm:pt-0 sm:mt-0 sm:border-t-0 sm:border-zinc-600/30 sm:w-auto
+                                ${locale === "ar" ? "sm:border-r sm:pr-3 sm:pl-4" : "sm:border-l sm:pl-3 sm:pr-4"}
+                              `}
+                            >
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-medium text-zinc-500 whitespace-nowrap">
+                                  {locale === "ar"
+                                    ? "أقوم بإعادة هذه المادة"
+                                    : "Repeating this course?"}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    updateCourse(
+                                      index,
+                                      "isRepeat",
+                                      !course.isRepeat,
+                                    )
+                                  }
+                                  className={`
+                                    shrink-0 rounded-xl border px-3 py-2.5 min-h-[44px] text-xs font-medium transition-all duration-200
+                                    sm:py-2 sm:min-h-0
+                                    focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-2 focus:ring-offset-[#141414]
+                                    ${
+                                      course.isRepeat
+                                        ? "border-blue-500/40 bg-blue-500/10 text-blue-400 hover:bg-blue-500/15"
+                                        : "border-zinc-500/40 bg-zinc-800/50 text-zinc-400 hover:border-zinc-400/50 hover:text-zinc-300"
+                                    }
+                                  `}
+                                >
+                                  {course.isRepeat
+                                    ? locale === "ar"
+                                      ? "نعم"
+                                      : "Yes"
+                                    : locale === "ar"
+                                      ? "لا"
+                                      : "No"}
+                                </button>
+                              </div>
                               {course.isRepeat && (
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs text-zinc-500">
-                                    {locale === "ar" ? "السابق:" : "Previous:"}
+                                <div className="flex flex-col gap-1.5 w-full sm:flex-row sm:items-center sm:gap-2 sm:w-auto">
+                                  <span className="text-xs font-medium text-zinc-500 whitespace-nowrap">
+                                    {locale === "ar"
+                                      ? "الدرجة السابقة:"
+                                      : "Previous Grade:"}
                                   </span>
                                   <Select
                                     value={course.previousGrade}
@@ -577,7 +623,7 @@ export default function GPACalculator() {
                                         e.target.value,
                                       )
                                     }
-                                    className={`${inputSelectClass} !mb-0 min-w-[72px] [&_select]:py-2 [&_select]:text-sm`}
+                                    className={`${inputSelectClass} !mb-0 min-w-[72px] w-full max-w-[140px] sm:max-w-none [&_select]:py-2 [&_select]:text-sm`}
                                   >
                                     {["F", "D+", "D"].map((g) => (
                                       <option key={g} value={g}>
@@ -587,7 +633,7 @@ export default function GPACalculator() {
                                   </Select>
                                 </div>
                               )}
-                            </>
+                            </div>
                           )}
                         </div>
                       </div>
@@ -602,152 +648,190 @@ export default function GPACalculator() {
               title={locale === "ar" ? "المعدل الجديد" : "New GPA"}
               className={cardClass}
             >
-              <div className="flex items-center justify-center gap-2">
-                <p className="text-5xl sm:text-6xl font-bold tabular-nums tracking-tight text-blue-400">
-                  {newCumulativeGPA.toFixed(2)}
-                </p>
-                <span className="text-xl text-zinc-500">/ 4.00</span>
+              <p className="text-xs text-zinc-500 mb-3 sm:mb-4">
+                {locale === "ar"
+                  ? "معدلك التراكمي المتوقع بعد إضافة هذا الفصل."
+                  : "Your projected cumulative GPA after this semester."}
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-4 sm:gap-6 lg:gap-8 items-start">
+                <div className="flex flex-col items-center sm:items-start">
+                  <p className="text-5xl sm:text-6xl lg:text-7xl font-bold tabular-nums tracking-tight text-blue-400 text-center sm:text-left">
+                    {newCumulativeGPA.toFixed(2)}
+                  </p>
+                  <p className="text-[10px] text-zinc-500 uppercase tracking-wider mt-0.5">
+                    / 4.00
+                  </p>
+                </div>
+                <div className="flex flex-col gap-3 min-w-0 w-full">
+                  {courses.length > 0 ? (
+                    <div className="space-y-2">
+                      <p className="text-sm text-zinc-400 leading-relaxed">
+                        {locale === "ar"
+                          ? `بناءً على الدرجات في ${courses.length === 1 ? "مادتك" : `موادك (${courses.length})`} هذا الفصل.`
+                          : `Based on the grades for your ${courses.length} ${courses.length === 1 ? "course" : "courses"} this semester.`}
+                      </p>
+                      <p className="text-sm text-zinc-300 leading-relaxed">
+                        {locale === "ar" ? (
+                          <>
+                            معدلك التراكمي في نهاية الفصل{" "}
+                            <span className="font-semibold text-white">
+                              {newCumulativeGPA.toFixed(2)}
+                            </span>
+                            .
+                          </>
+                        ) : (
+                          <>
+                            Your cumulative GPA at the end of the term will be{" "}
+                            <span className="font-semibold text-white">
+                              {newCumulativeGPA.toFixed(2)}
+                            </span>
+                            .
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-zinc-400 leading-relaxed">
+                      {locale === "ar"
+                        ? "أدخل مواد الفصل الحالي أعلاه لمعرفة معدلك المتوقع."
+                        : "Enter this semester's courses above to see your projected GPA."}
+                    </p>
+                  )}
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:gap-x-6 sm:gap-y-1">
+                    <span className="text-xs font-medium text-zinc-500">
+                      {locale === "ar"
+                        ? "نقاط الدرجات الجديدة: "
+                        : "New Grade points:"}{" "}
+                      <span className="font-semibold text-white tabular-nums">
+                        {newTotalGradePoints.toFixed(2)}
+                      </span>
+                    </span>
+                    <span className="text-xs font-medium text-zinc-500">
+                      {locale === "ar"
+                        ? "إجمالي الساعات الجديدة:"
+                        : "New Total Credits:"}{" "}
+                      <span className="font-semibold text-white tabular-nums">
+                        {newTotalCredits.toFixed(0)}
+                      </span>
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-x-8 gap-y-2 py-4 border-t border-zinc-600/40">
-                <span className="text-sm text-zinc-400">
-                  {locale === "ar" ? "نقاط الدرجات:" : "Grade points:"}{" "}
-                  <span className="font-semibold text-white tabular-nums">
-                    {newTotalGradePoints.toFixed(2)}
-                  </span>
-                </span>
-                <span className="text-sm text-zinc-400">
-                  {locale === "ar" ? "الساعات:" : "Credits:"}{" "}
-                  <span className="font-semibold text-white tabular-nums">
-                    {newTotalCredits.toFixed(0)}
-                  </span>
-                </span>
-              </div>
-
-              <div className="pt-6 border-t border-zinc-600/40">
+              <div className="pt-4 mt-4 sm:pt-6 sm:mt-6 border-t border-zinc-600/40">
                 <h3 className="text-sm font-semibold text-white mb-1">
                   {locale === "ar"
                     ? "من السابق إلى الحالي"
                     : "Previous to current"}
                 </h3>
-                <p className="text-xs text-zinc-500 mb-4">
+                <p className="text-xs text-zinc-500 mb-3 sm:mb-4">
                   {locale === "ar"
                     ? "مقارنة المعدل قبل وبعد إضافة هذا الفصل."
                     : "Compare GPA before and after this semester."}
                 </p>
 
                 {courses.some((course) => course.grade === "W") && (
-                  <p className="mb-4 text-xs text-amber-400/90">
+                  <p className="mb-3 sm:mb-4 text-xs text-amber-400/90">
                     {locale === "ar"
                       ? "الانسحاب (W) لا يدخل في المعدل ولا في الساعات."
                       : "Withdrawals (W) are not included in GPA or credits."}
                   </p>
                 )}
-                <div className="h-[180px] sm:h-[200px] w-full">
-                  <Line
-                    data={{
-                      labels: [
-                        locale === "ar" ? "السابق" : "Previous",
-                        locale === "ar" ? "الحالي" : "Current",
-                      ],
-                      datasets: [
-                        {
-                          label: locale === "ar" ? "المعدل التراكمي" : "GPA",
-                          data: [previousCumulativeGPA, newCumulativeGPA],
-                          borderColor: "rgb(59, 130, 246)",
-                          backgroundColor: "rgba(59, 130, 246, 0.5)",
-                          tension: 0.4,
-                          fill: true,
-                          pointBackgroundColor: "rgb(59, 130, 246)",
-                          pointBorderColor: "#fff",
-                          pointBorderWidth: 2,
-                          pointRadius: 6,
-                          pointHoverRadius: 8,
-                        },
-                      ],
-                    }}
-                    options={{
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      scales: {
-                        y: {
-                          min:
-                            Math.floor(
-                              Math.min(
-                                previousCumulativeGPA,
-                                newCumulativeGPA,
-                              ) * 2,
-                            ) / 2,
-                          max:
-                            Math.ceil(
-                              Math.max(
-                                previousCumulativeGPA,
-                                newCumulativeGPA,
-                              ) * 2,
-                            ) / 2,
-                          grid: {
-                            color: "rgba(161, 161, 170, 0.25)",
+                <div className="rounded-xl bg-zinc-800/30 border border-zinc-600/30 p-3 sm:p-5">
+                  <div className="h-[160px] sm:h-[180px] lg:h-[200px] w-full min-h-0">
+                    <Line
+                      data={{
+                        labels: [
+                          locale === "ar" ? "السابق" : "Previous",
+                          locale === "ar" ? "الحالي" : "Current",
+                        ],
+                        datasets: [
+                          {
+                            label: locale === "ar" ? "المعدل التراكمي" : "GPA",
+                            data: [previousCumulativeGPA, newCumulativeGPA],
+                            borderColor: "rgb(59, 130, 246)",
+                            backgroundColor: "rgba(59, 130, 246, 0.08)",
+                            borderWidth: 2.5,
+                            tension: 0,
+                            fill: true,
+                            pointBackgroundColor: [
+                              "rgba(161, 161, 170, 0.6)",
+                              "rgb(59, 130, 246)",
+                            ],
+                            pointBorderColor: "#fff",
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
                           },
-                          ticks: {
-                            color: "rgba(161, 161, 170, 0.8)",
-                            stepSize: 1,
-                            callback: function (tickValue: number | string) {
-                              return typeof tickValue === "number"
-                                ? tickValue.toFixed(1)
-                                : tickValue;
+                        ],
+                      }}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: {
+                          padding: { top: 8, bottom: 8, left: 4, right: 12 },
+                        },
+                        scales: {
+                          y: {
+                            min: 0,
+                            max: 4,
+                            grid: {
+                              color: "rgba(161, 161, 170, 0.15)",
+                              drawTicks: false,
+                            },
+                            border: { display: false },
+                            ticks: {
+                              color: "rgba(161, 161, 170, 0.7)",
+                              stepSize: 0.5,
+                              font: { size: 11 },
+                              callback: function (tickValue: number | string) {
+                                return typeof tickValue === "number"
+                                  ? tickValue.toFixed(1)
+                                  : tickValue;
+                              },
                             },
                           },
-                          title: {
-                            display: true,
-                            text: locale === "ar" ? "المعدل التراكمي" : "GPA",
-                            color: "rgba(161, 161, 170, 0.8)",
-                            font: {
-                              size: 12,
+                          x: {
+                            grid: { display: false },
+                            border: { display: false },
+                            ticks: {
+                              color: "rgba(161, 161, 170, 0.8)",
+                              font: { size: 12 },
                             },
                           },
                         },
-                        x: {
-                          grid: {
-                            color: "rgba(161, 161, 170, 0.25)",
-                          },
-                          ticks: {
-                            color: "rgba(161, 161, 170, 0.8)",
-                          },
-                        },
-                      },
-                      plugins: {
-                        legend: {
-                          display: false,
-                        },
-                        tooltip: {
-                          backgroundColor: "rgba(39, 39, 42, 0.95)",
-                          titleColor: "rgb(255, 255, 255)",
-                          bodyColor: "rgb(255, 255, 255)",
-                          padding: 12,
-                          borderColor: "rgba(161, 161, 170, 0.4)",
-                          borderWidth: 1,
-                          displayColors: false,
-                          callbacks: {
-                            label: (context: any) =>
-                              locale === "ar"
-                                ? `المعدل: ${context.parsed.y.toFixed(3)}`
-                                : `GPA: ${context.parsed.y.toFixed(3)}`,
+                        plugins: {
+                          legend: { display: false },
+                          tooltip: {
+                            backgroundColor: "rgba(24, 24, 27, 0.98)",
+                            titleColor: "rgb(255, 255, 255)",
+                            bodyColor: "rgb(228, 228, 231)",
+                            padding: 12,
+                            borderColor: "rgba(63, 63, 70, 0.8)",
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            displayColors: true,
+                            callbacks: {
+                              label: (context: { parsed: { y: number } }) =>
+                                locale === "ar"
+                                  ? `المعدل: ${context.parsed.y.toFixed(2)}`
+                                  : `GPA: ${context.parsed.y.toFixed(2)}`,
+                            },
                           },
                         },
-                      },
-                    }}
-                  />
+                      }}
+                    />
+                  </div>
                 </div>
 
-                {/* GPA Change Indicator */}
-                <div className="flex items-center justify-center mt-6">
+                <div className="flex items-center justify-center mt-4 sm:mt-5">
                   <div
-                    className={`text-sm font-medium flex items-center gap-1 ${
+                    className={`inline-flex items-center gap-2 rounded-lg px-4 py-2.5 sm:py-2 text-sm font-medium min-h-[44px] sm:min-h-0 items-center justify-center ${
                       newCumulativeGPA > previousCumulativeGPA
-                        ? "text-emerald-400"
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
                         : newCumulativeGPA < previousCumulativeGPA
-                          ? "text-red-400"
-                          : "text-zinc-400"
+                          ? "bg-red-500/10 text-red-400 border border-red-500/30"
+                          : "bg-zinc-500/10 text-zinc-400 border border-zinc-500/30"
                     }`}
                   >
                     {newCumulativeGPA > previousCumulativeGPA ? (
@@ -755,7 +839,7 @@ export default function GPACalculator() {
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
                         fill="currentColor"
-                        className="w-4 h-4"
+                        className="w-4 h-4 shrink-0"
                       >
                         <path
                           fillRule="evenodd"
@@ -768,7 +852,7 @@ export default function GPACalculator() {
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
                         fill="currentColor"
-                        className="w-4 h-4"
+                        className="w-4 h-4 shrink-0"
                       >
                         <path
                           fillRule="evenodd"
@@ -781,7 +865,7 @@ export default function GPACalculator() {
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
                         fill="currentColor"
-                        className="w-4 h-4"
+                        className="w-4 h-4 shrink-0"
                       >
                         <path
                           fillRule="evenodd"
@@ -795,6 +879,14 @@ export default function GPACalculator() {
                         newCumulativeGPA - previousCumulativeGPA,
                       ).toFixed(2)}{" "}
                       {locale === "ar" ? "فرق" : "change"}
+                      {Math.abs(newCumulativeGPA - previousCumulativeGPA) >
+                        0 && (
+                        <span className="opacity-80">
+                          {" "}
+                          {locale === "ar" ? "عن" : "from"}{" "}
+                          {previousCumulativeGPA.toFixed(2)}
+                        </span>
+                      )}
                     </span>
                   </div>
                 </div>
