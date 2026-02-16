@@ -67,8 +67,8 @@ export default function SchedulePlanner() {
   const updateCourseName = (courseId: string, name: string) => {
     setCourses(
       courses.map((course) =>
-        course.id === courseId ? { ...course, name } : course
-      )
+        course.id === courseId ? { ...course, name } : course,
+      ),
     );
   };
 
@@ -85,8 +85,8 @@ export default function SchedulePlanner() {
       courses.map((course) =>
         course.id === courseId
           ? { ...course, timeSlots: [...course.timeSlots, newTimeSlot] }
-          : course
-      )
+          : course,
+      ),
     );
   };
 
@@ -98,11 +98,11 @@ export default function SchedulePlanner() {
           ? {
               ...course,
               timeSlots: course.timeSlots.filter(
-                (slot) => slot.id !== timeSlotId
+                (slot) => slot.id !== timeSlotId,
               ),
             }
-          : course
-      )
+          : course,
+      ),
     );
   };
 
@@ -111,7 +111,7 @@ export default function SchedulePlanner() {
     courseId: string,
     timeSlotId: string,
     field: keyof TimeSlot,
-    value: string
+    value: string,
   ) => {
     setCourses(
       courses.map((course) =>
@@ -119,11 +119,11 @@ export default function SchedulePlanner() {
           ? {
               ...course,
               timeSlots: course.timeSlots.map((slot) =>
-                slot.id === timeSlotId ? { ...slot, [field]: value } : slot
+                slot.id === timeSlotId ? { ...slot, [field]: value } : slot,
               ),
             }
-          : course
-      )
+          : course,
+      ),
     );
   };
 
@@ -192,8 +192,8 @@ export default function SchedulePlanner() {
               ? "ص"
               : "AM"
             : locale === "ar"
-            ? "م"
-            : "PM";
+              ? "م"
+              : "PM";
         const displayHour = hour % 12 || 12;
         const time = `${hour.toString().padStart(2, "0")}:${minute
           .toString()
@@ -222,7 +222,10 @@ export default function SchedulePlanner() {
           />
 
           <div className={`${sectionGap} mt-8 sm:mt-12`}>
-            <Card title={locale === "ar" ? "المواد" : "Courses"} className={cardClass}>
+            <Card
+              title={locale === "ar" ? "المواد" : "Courses"}
+              className={cardClass}
+            >
               <p className="text-xs text-zinc-500 mb-4">
                 {locale === "ar"
                   ? "أضف المواد ومواعيدها لاكتشاف التعارضات."
@@ -237,16 +240,33 @@ export default function SchedulePlanner() {
                 onClick={addCourse}
                 className="mb-6"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
                 </svg>
                 {locale === "ar" ? "إضافة مادة" : "Add Course"}
               </Button>
 
               {courses.length === 0 ? (
                 <div className="py-10 sm:py-12 text-center rounded-xl border border-zinc-600/30 border-dashed bg-zinc-800/20">
-                  <p className="text-sm text-zinc-400">{locale === "ar" ? "لا توجد مواد بعد" : "No courses yet"}</p>
-                  <p className="text-xs text-zinc-500 mt-1">{locale === "ar" ? "أضف مادة لبدء التخطيط" : "Add a course to start planning"}</p>
+                  <p className="text-sm text-zinc-400">
+                    {locale === "ar" ? "لا توجد مواد بعد" : "No courses yet"}
+                  </p>
+                  <p className="text-xs text-zinc-500 mt-1">
+                    {locale === "ar"
+                      ? "أضف مادة لبدء التخطيط"
+                      : "Add a course to start planning"}
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-6">
@@ -258,8 +278,12 @@ export default function SchedulePlanner() {
                       <div className="flex gap-3 items-center mb-4">
                         <Input
                           value={course.name}
-                          onChange={(e) => updateCourseName(course.id, e.target.value)}
-                          placeholder={locale === "ar" ? "اسم المادة" : "Course Name"}
+                          onChange={(e) =>
+                            updateCourseName(course.id, e.target.value)
+                          }
+                          placeholder={
+                            locale === "ar" ? "اسم المادة" : "Course Name"
+                          }
                           className={`flex-1 min-w-0 ${inputSelectClass} !mb-0`}
                         />
                         <Button
@@ -268,10 +292,23 @@ export default function SchedulePlanner() {
                           size="sm"
                           onClick={() => removeCourse(course.id)}
                           className="!p-2 shrink-0"
-                          aria-label={locale === "ar" ? "حذف المادة" : "Remove course"}
+                          aria-label={
+                            locale === "ar" ? "حذف المادة" : "Remove course"
+                          }
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
                           </svg>
                         </Button>
                       </div>
@@ -284,30 +321,61 @@ export default function SchedulePlanner() {
                           >
                             <Select
                               value={slot.day}
-                              onChange={(e) => updateTimeSlot(course.id, slot.id, "day", e.target.value)}
+                              onChange={(e) =>
+                                updateTimeSlot(
+                                  course.id,
+                                  slot.id,
+                                  "day",
+                                  e.target.value,
+                                )
+                              }
                               className={`shrink-0 w-[7.5rem] ${inputSelectClass} !mb-0 [&_select]:text-sm`}
                             >
-                              {daysOfWeek[locale === "ar" ? "ar" : "en"].map((day) => (
-                                <option key={day} value={day}>{day}</option>
-                              ))}
+                              {daysOfWeek[locale === "ar" ? "ar" : "en"].map(
+                                (day) => (
+                                  <option key={day} value={day}>
+                                    {day}
+                                  </option>
+                                ),
+                              )}
                             </Select>
                             <Select
                               value={slot.startTime}
-                              onChange={(e) => updateTimeSlot(course.id, slot.id, "startTime", e.target.value)}
+                              onChange={(e) =>
+                                updateTimeSlot(
+                                  course.id,
+                                  slot.id,
+                                  "startTime",
+                                  e.target.value,
+                                )
+                              }
                               className={`shrink-0 w-[5.25rem] ${inputSelectClass} !mb-0 [&_select]:text-xs`}
                             >
                               {timeOptions.map((time) => (
-                                <option key={time.value} value={time.value}>{time.display}</option>
+                                <option key={time.value} value={time.value}>
+                                  {time.display}
+                                </option>
                               ))}
                             </Select>
-                            <span className="text-zinc-500 text-xs shrink-0">–</span>
+                            <span className="text-zinc-500 text-xs shrink-0">
+                              –
+                            </span>
                             <Select
                               value={slot.endTime}
-                              onChange={(e) => updateTimeSlot(course.id, slot.id, "endTime", e.target.value)}
+                              onChange={(e) =>
+                                updateTimeSlot(
+                                  course.id,
+                                  slot.id,
+                                  "endTime",
+                                  e.target.value,
+                                )
+                              }
                               className={`shrink-0 w-[5.25rem] ${inputSelectClass} !mb-0 [&_select]:text-xs`}
                             >
                               {timeOptions.map((time) => (
-                                <option key={time.value} value={time.value}>{time.display}</option>
+                                <option key={time.value} value={time.value}>
+                                  {time.display}
+                                </option>
                               ))}
                             </Select>
                             <Button
@@ -316,10 +384,23 @@ export default function SchedulePlanner() {
                               size="sm"
                               onClick={() => removeTimeSlot(course.id, slot.id)}
                               className="!p-2 shrink-0 ms-auto"
-                              aria-label={locale === "ar" ? "حذف الموعد" : "Remove slot"}
+                              aria-label={
+                                locale === "ar" ? "حذف الموعد" : "Remove slot"
+                              }
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M6 18L18 6M6 6l12 12"
+                                />
                               </svg>
                             </Button>
                           </div>
@@ -332,8 +413,19 @@ export default function SchedulePlanner() {
                           onClick={() => addTimeSlot(course.id)}
                           className="mt-2"
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 shrink-0"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                            />
                           </svg>
                           {locale === "ar" ? "إضافة موعد" : "Add Time Slot"}
                         </Button>
@@ -355,8 +447,16 @@ export default function SchedulePlanner() {
               </p>
               {conflicts.length === 0 ? (
                 <div className="py-8 sm:py-10 text-center rounded-xl border border-zinc-600/30 bg-zinc-800/20">
-                  <p className="text-sm text-zinc-400">{locale === "ar" ? "لا توجد تعارضات" : "No conflicts detected"}</p>
-                  <p className="text-xs text-zinc-500 mt-1">{locale === "ar" ? "أضف مواد ومواعيدها للتحقق" : "Add courses and times to check"}</p>
+                  <p className="text-sm text-zinc-400">
+                    {locale === "ar"
+                      ? "لا توجد تعارضات"
+                      : "No conflicts detected"}
+                  </p>
+                  <p className="text-xs text-zinc-500 mt-1">
+                    {locale === "ar"
+                      ? "أضف مواد ومواعيدها للتحقق"
+                      : "Add courses and times to check"}
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-0">
@@ -366,10 +466,22 @@ export default function SchedulePlanner() {
                       className={`py-3 sm:py-3.5 ${index > 0 ? "border-t border-zinc-600/25" : ""}`}
                     >
                       <p className="text-sm font-medium text-white">
-                        {locale === "ar" ? "تعارض في" : "Conflict on"} {conflict.day}
+                        {locale === "ar" ? "تعارض في" : "Conflict on"}{" "}
+                        {conflict.day}
                       </p>
                       <p className="text-xs text-zinc-400 mt-0.5 break-words">
-                        {getCourseName(conflict.courseId1)} ({getTimeSlotDetails(conflict.courseId1, conflict.timeSlotId1)}) {locale === "ar" ? "و" : "and"} {getCourseName(conflict.courseId2)} ({getTimeSlotDetails(conflict.courseId2, conflict.timeSlotId2)})
+                        {getCourseName(conflict.courseId1)} (
+                        {getTimeSlotDetails(
+                          conflict.courseId1,
+                          conflict.timeSlotId1,
+                        )}
+                        ) {locale === "ar" ? "و" : "and"}{" "}
+                        {getCourseName(conflict.courseId2)} (
+                        {getTimeSlotDetails(
+                          conflict.courseId2,
+                          conflict.timeSlotId2,
+                        )}
+                        )
                       </p>
                     </div>
                   ))}
