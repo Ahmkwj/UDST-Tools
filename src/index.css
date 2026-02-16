@@ -18,11 +18,21 @@ body,
   @apply text-white;
 }
 
-/* Global page background: dark gray */
-.page-bg-gradient,
-body {
+/* Global page background - single source of truth for all pages */
+html,
+body,
+#root {
   background: #141414;
   background-attachment: fixed;
+}
+
+/* Common page layout - use for any page so bg and layout apply automatically */
+.page-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  color: white;
 }
 
 /* RTL Support */

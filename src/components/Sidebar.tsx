@@ -362,7 +362,7 @@ export default function Sidebar({
 
   return (
     <div
-      className={`flex h-screen w-screen overflow-hidden bg-[#141414] text-white ${
+      className={`flex h-screen w-screen overflow-hidden text-white ${
         locale === "ar" ? "rtl" : "ltr"
       }`}
     >
@@ -500,7 +500,7 @@ export default function Sidebar({
 
       {/* Main content */}
       <div
-        className={`flex-1 h-full overflow-auto bg-[#141414] ${
+        className={`flex-1 h-full overflow-auto ${
           locale === "ar" ? "text-right" : "text-left"
         } ${isMobile ? "pt-12" : ""}`}
       >

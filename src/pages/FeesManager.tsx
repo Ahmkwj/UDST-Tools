@@ -536,7 +536,7 @@ export default function FeesManager() {
   ];
 
   return (
-    <div className="min-h-screen w-full flex flex-col text-white">
+    <div className="page-container">
       <div className="flex-1 py-14 sm:py-20 px-5 sm:px-8 overflow-x-hidden overflow-y-auto">
         <div className="w-full max-w-4xl mx-auto">
           <PageHeader

@@ -71,7 +71,7 @@ const Home: React.FC = () => {
   const handleGetStarted = () => navigate(`/${locale}/guide`);
 
   return (
-    <div className="min-h-screen w-full flex flex-col text-white bg-[#141414]">
+    <div className="page-container">
       {/* Hero: one clear block */}
       <section className="px-5 sm:px-8 pt-16 sm:pt-24 pb-12 sm:pb-16">
         <div className="max-w-3xl mx-auto text-center">
