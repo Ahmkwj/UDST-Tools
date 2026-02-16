@@ -26,6 +26,7 @@ import {
 } from "./context/LanguageContext";
 import Home from "..";
 import FeesManager from "./pages/FeesManager";
+import RamadanSchedule from "./pages/RamadanSchedule";
 
 // Redirect component to handle locale in routes
 function LocaleRedirect() {
@@ -94,6 +95,8 @@ const LocalizedApp = () => {
           {/* Public routes */}
           <Route path="/en/calendar" element={<Calendar />} />
           <Route path="/ar/calendar" element={<Calendar />} />
+          <Route path="/en/ramadan-schedule" element={<RamadanSchedule />} />
+          <Route path="/ar/ramadan-schedule" element={<RamadanSchedule />} />
           <Route path="/en/links" element={<Links />} />
           <Route path="/ar/links" element={<Links />} />
           <Route path="/en/about" element={<About />} />
