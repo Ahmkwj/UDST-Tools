@@ -293,10 +293,15 @@ export default function AttendanceCalculator() {
               }
               className={cardClass}
             >
-              <p className="text-xs text-zinc-500 mb-3 sm:mb-4">
+              <p className="text-xs text-zinc-500 mb-3 sm:mb-4 leading-relaxed">
                 {locale === "ar"
                   ? "أضف كل محاضرة وتتبع الجلسات الغائبة والمتبقي المسموح."
                   : "Add each class and track missed sessions and remaining allowance."}
+                <span className="block mt-1.5">
+                  {locale === "ar"
+                    ? "المدة: طول المحاضرة. الغياب: عدد الجلسات التي غبتها. المتبقي: الجلسات المتبقية قبل الوصول إلى حد 15٪."
+                    : "Duration: length of one class. Missed: sessions you have missed. Left: sessions you can still miss before the 15% limit."}
+                </span>
               </p>
               {classesPerWeek === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 sm:py-24 lg:py-28 text-center">
@@ -330,7 +335,7 @@ export default function AttendanceCalculator() {
                   </p>
                 </div>
               ) : (
-                <div className="space-y-0">
+                <div className="space-y-6">
                   {classInfos.map((classInfo, index) => {
                     const totalMinutesInSemester =
                       (classInfo.duration || 0) *
@@ -364,20 +369,18 @@ export default function AttendanceCalculator() {
                     return (
                       <div
                         key={index}
-                        className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 py-3 sm:py-4 ${
-                          index > 0 ? "border-t border-zinc-600/25" : ""
-                        }`}
+                        className="rounded-xl border border-zinc-600/30 bg-zinc-800/20 p-4 sm:p-5"
                       >
-                        <div className="shrink-0 w-full sm:w-20 lg:w-24 flex items-center gap-2">
-                          <span className="text-sm font-medium text-white truncate block">
+                        <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                          <span className="text-sm font-medium text-white">
                             {locale === "ar"
                               ? `المحاضرة ${index + 1}`
                               : `Class ${index + 1}`}
                           </span>
                         </div>
-                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 sm:flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-medium text-zinc-500 whitespace-nowrap">
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4 min-w-0">
+                          <div className="flex items-center gap-2 w-full sm:w-auto">
+                            <span className="text-xs font-medium text-zinc-500 whitespace-nowrap w-20 sm:w-auto shrink-0">
                               {locale === "ar" ? "المدة" : "Duration"}
                             </span>
                             <Select
@@ -389,7 +392,7 @@ export default function AttendanceCalculator() {
                                   parseInt(e.target.value),
                                 )
                               }
-                              className={`${inputSelectClass} !mb-0 min-w-[100px] [&_select]:py-2 [&_select]:text-sm w-full sm:w-auto`}
+                              className={`flex-1 min-w-0 sm:flex-none sm:min-w-[100px] w-full sm:w-auto ${inputSelectClass} !mb-0 [&_select]:py-2 [&_select]:text-sm`}
                             >
                               <option value={30}>
                                 {locale === "ar" ? "30 د" : "30 min"}
@@ -411,8 +414,8 @@ export default function AttendanceCalculator() {
                               </option>
                             </Select>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-medium text-zinc-500 whitespace-nowrap">
+                          <div className="flex items-center gap-2 w-full sm:w-auto">
+                            <span className="text-xs font-medium text-zinc-500 whitespace-nowrap w-20 sm:w-auto shrink-0">
                               {locale === "ar" ? "الغياب" : "Missed"}
                             </span>
                             {typeof classInfo.missedTimes === "number" ? (
@@ -429,7 +432,7 @@ export default function AttendanceCalculator() {
                                     );
                                   }
                                 }}
-                                className={`${inputSelectClass} !mb-0 min-w-[72px] w-full sm:w-auto [&_select]:py-2 [&_select]:text-sm`}
+                                className={`flex-1 min-w-0 sm:flex-none sm:min-w-[72px] w-full sm:w-auto ${inputSelectClass} !mb-0 [&_select]:py-2 [&_select]:text-sm`}
                               >
                                 {[0, 1, 2, 3, 4, 5, 6].map((num) => (
                                   <option key={num} value={num}>
@@ -453,22 +456,20 @@ export default function AttendanceCalculator() {
                                     e.target.value,
                                   )
                                 }
-                                className={`${inputSelectClass} !mb-0 w-20 min-w-[72px] [&_input]:py-2 [&_input]:text-center`}
+                                className={`flex-1 min-w-0 sm:flex-none sm:w-20 w-full min-w-[72px] ${inputSelectClass} !mb-0 [&_input]:py-2 [&_input]:text-center [&_input]:text-sm`}
                               />
                             )}
                           </div>
                           <div
-                            className={`flex items-center gap-2 w-full sm:w-auto pt-2 mt-2 border-t border-zinc-600/25 sm:pt-0 sm:mt-0 sm:border-t-0 sm:border-zinc-600/40 ${
-                              locale === "ar"
-                                ? "sm:border-r sm:pr-5"
-                                : "sm:border-l sm:pl-5"
+                            className={`flex items-center justify-between gap-2 w-full pt-3 mt-1 border-t border-zinc-600/25 sm:pt-0 sm:mt-0 sm:border-t-0 sm:w-auto shrink-0 ${
+                              locale === "ar" ? "sm:me-auto" : "sm:ms-auto"
                             }`}
                           >
                             <span className="text-xs font-medium text-zinc-500 whitespace-nowrap">
                               {locale === "ar" ? "المتبقي" : "Left"}
                             </span>
                             <span
-                              className={`inline-flex items-center justify-center min-w-[3rem] px-3 py-2 sm:py-1.5 rounded-xl text-sm font-semibold tabular-nums ${
+                              className={`inline-flex items-center justify-center min-w-[3rem] px-3 py-2.5 sm:py-2 rounded-lg text-sm font-semibold tabular-nums ${
                                 isOver
                                   ? "bg-red-500/15 text-red-400"
                                   : "bg-blue-500/15 text-blue-400"
