@@ -77,19 +77,19 @@ export default function Guide() {
                   </h3>
                   <div className="space-y-3">
                     <div className="flex items-center">
-                      <div className={`w-1.5 h-1.5 bg-green-400 rounded-full flex-shrink-0 me-3`}></div>
+                      <div className={`w-1.5 h-1.5 bg-emerald-400 rounded-full flex-shrink-0 me-3`}></div>
                       <span className="text-zinc-300 text-sm">
                         {locale === "ar" ? "تأكد من دقة البيانات المدخلة" : "Ensure accuracy of entered data"}
                       </span>
                     </div>
                     <div className="flex items-center">
-                      <div className={`w-1.5 h-1.5 bg-green-400 rounded-full flex-shrink-0 me-3`}></div>
+                      <div className={`w-1.5 h-1.5 bg-emerald-400 rounded-full flex-shrink-0 me-3`}></div>
                       <span className="text-zinc-300 text-sm">
                         {locale === "ar" ? "احتفظ بكشف درجاتك الرسمي كمرجع" : "Keep your official transcript as reference"}
                       </span>
                     </div>
                     <div className="flex items-center">
-                      <div className={`w-1.5 h-1.5 bg-green-400 rounded-full flex-shrink-0 me-3`}></div>
+                      <div className={`w-1.5 h-1.5 bg-emerald-400 rounded-full flex-shrink-0 me-3`}></div>
                       <span className="text-zinc-300 text-sm">
                         {locale === "ar" ? "استخدم الأدوات للتخطيط المسبق" : "Use tools for advance planning"}
                       </span>

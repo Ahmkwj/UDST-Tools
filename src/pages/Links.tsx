@@ -372,7 +372,7 @@ export default function Links() {
                       rel="noopener noreferrer"
                       className={`group flex items-start gap-4 py-4 ${linkIndex > 0 ? "border-t border-zinc-600/25" : ""} transition-colors hover:opacity-90`}
                     >
-                      <div className="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center flex-shrink-0 text-blue-400">
+                      <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center flex-shrink-0 text-blue-400">
                         {link.icon}
                       </div>
                       <div className="flex-1 min-w-0">

@@ -102,7 +102,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="mt-8 pt-5 border-t border-zinc-700/30 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-[11px] text-zinc-600">
-            {isRTL ? "بواسطة أحمد" : "By Ahmed"}
+            {isRTL ? "تم بواسطة أحمد :)" : "Created by Ahmed :)"}
           </p>
           <p className="text-[11px] text-zinc-600">
             {isRTL
