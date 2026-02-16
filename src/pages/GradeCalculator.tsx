@@ -9,12 +9,11 @@ import { useLocale } from "../context/LanguageContext";
 /* Theme: match Attendance / GPA */
 const CARD = {
   base: "!bg-zinc-800/50 !rounded-2xl !border !border-zinc-600/40 backdrop-blur-xl",
-  padding: "!px-6 !pt-6 !pb-7 sm:!px-8 sm:!pt-7 sm:!pb-8",
 };
-const cardClass = `${CARD.base} ${CARD.padding}`;
+const cardClass = `${CARD.base} !px-4 !pt-4 !pb-5 sm:!px-6 sm:!pt-6 sm:!pb-7 lg:!px-8 lg:!pt-7 lg:!pb-8`;
 const inputSelectClass =
-  "!bg-zinc-800/50 !border-zinc-500/40 !rounded-xl focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/20 placeholder-zinc-500 [&_input]:py-2.5";
-const sectionGap = "space-y-12";
+  "!bg-zinc-800/50 !border-zinc-500/40 !rounded-xl focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/20 placeholder-zinc-500 [&_input]:min-h-[44px] [&_select]:min-h-[44px] [&_input]:py-3 [&_select]:py-3 sm:[&_input]:min-h-0 sm:[&_select]:min-h-0 sm:[&_input]:py-2.5 sm:[&_select]:py-2.5";
+const sectionGap = "space-y-8 sm:space-y-12";
 
 type Assignment = {
   id: string;
@@ -230,7 +229,7 @@ export default function GradeCalculator() {
 
   return (
     <div className="page-container">
-      <div className="flex-1 py-14 sm:py-20 px-5 sm:px-8 overflow-x-hidden overflow-y-auto">
+      <div className="flex-1 py-8 pb-20 px-4 sm:py-14 sm:pb-14 sm:px-5 lg:py-20 lg:px-8 overflow-x-hidden overflow-y-auto">
         <div className="w-full max-w-4xl mx-auto">
           <PageHeader
             title={{
@@ -244,12 +243,16 @@ export default function GradeCalculator() {
           />
 
           <div className={sectionGap}>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-            {/* Left: Assignments */}
-              <Card
+            {/* Assignments: full width on top */}
+            <Card
                 title={locale === "ar" ? "التكليفات" : "Assignments"}
                 className={cardClass}
               >
+                <p className="text-xs text-zinc-500 mb-3 sm:mb-4 leading-relaxed">
+                  {locale === "ar"
+                    ? "أضف تكليفات المادة وأوزانها ودرجاتك لمعرفة وضعك الحالي والتوقع النهائي."
+                    : "Add assignment names, weights, and scores to see current and projected final grade."}
+                </p>
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
                   <span
                     className={`text-xs font-medium px-2.5 py-1 rounded-lg ${
@@ -275,7 +278,7 @@ export default function GradeCalculator() {
                 </div>
 
                 {assignments.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="flex flex-col items-center justify-center py-16 sm:py-24 text-center rounded-xl border border-zinc-600/30 border-dashed bg-zinc-800/20">
                     <p className="text-zinc-400 text-sm mb-1">
                       {locale === "ar" ? "لا توجد تكليفات" : "No assignments yet"}
                     </p>
@@ -284,62 +287,83 @@ export default function GradeCalculator() {
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-0">
-                    {assignments.map((assignment) => (
+                  <div className="space-y-6">
+                    {assignments.map((assignment, index) => (
                       <div
                         key={assignment.id}
-                        className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 py-4 ${assignments.indexOf(assignment) > 0 ? "border-t border-zinc-600/25" : ""}`}
+                        className="rounded-xl border border-zinc-600/30 bg-zinc-800/20 p-4 sm:p-5"
                       >
-                        <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                        <div className="flex gap-3 items-center mb-3 sm:mb-4">
+                          <span className="inline-flex h-8 w-8 sm:h-7 sm:w-7 shrink-0 items-center justify-center rounded-lg bg-zinc-600/40 text-zinc-300 text-xs font-semibold">
+                            {index + 1}
+                          </span>
                           <Input
-                            label={locale === "ar" ? "الاسم" : "Name"}
                             value={assignment.name}
                             onChange={(e) => updateAssignment(assignment.id, "name", e.target.value)}
-                            className={`${inputSelectClass} !mb-0`}
+                            placeholder={locale === "ar" ? "اسم التكليف" : "Assignment name"}
+                            className={`flex-1 min-w-0 ${inputSelectClass} !mb-0`}
                           />
-                          <Input
-                            label={locale === "ar" ? "الوزن %" : "Weight %"}
-                            type="number"
-                            min="0"
-                            max="100"
-                            value={assignment.weight}
-                            onChange={(e) => updateAssignment(assignment.id, "weight", Number(e.target.value))}
-                            className={`${inputSelectClass} !mb-0 [&_input]:py-2`}
-                          />
-                          <Input
-                            label={locale === "ar" ? "الدرجة %" : "Score %"}
-                            type="number"
-                            min="0"
-                            max="100"
-                            value={assignment.score ?? ""}
-                            onChange={(e) =>
-                              updateAssignment(
-                                assignment.id,
-                                "score",
-                                e.target.value === "" ? null : Math.min(100, Math.max(0, Number(e.target.value)))
-                              )
-                            }
-                            placeholder={locale === "ar" ? "—" : "—"}
-                            className={`${inputSelectClass} !mb-0 [&_input]:py-2`}
-                          />
-                        </div>
-                        <div className="flex items-center gap-2 sm:ms-auto">
-                          <span className="text-xs text-zinc-500 tabular-nums">
-                            {assignment.score !== null
-                              ? `${((assignment.score * assignment.weight) / 100).toFixed(1)} / ${assignment.weight}`
-                              : `— / ${assignment.weight}`}
-                          </span>
                           <Button
-                            variant="outline"
+                            type="button"
+                            variant="ghost"
                             size="sm"
                             onClick={() => removeAssignment(assignment.id)}
-                            className="!p-2 rounded-xl border-zinc-500/40 text-zinc-400 hover:text-red-400 hover:border-red-500/40"
+                            className="!p-2 shrink-0"
                             aria-label={locale === "ar" ? "حذف" : "Remove"}
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                           </Button>
+                        </div>
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4 min-w-0">
+                          <div className="flex items-center gap-2 w-full sm:w-auto">
+                            <span className="text-xs font-medium text-zinc-500 whitespace-nowrap w-20 sm:w-auto shrink-0">
+                              {locale === "ar" ? "الوزن %" : "Weight %"}
+                            </span>
+                            <Input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={assignment.weight}
+                              onChange={(e) => updateAssignment(assignment.id, "weight", Number(e.target.value))}
+                              className={`flex-1 min-w-0 sm:flex-none sm:w-20 w-full min-w-[72px] ${inputSelectClass} !mb-0 [&_input]:py-2 [&_input]:text-center`}
+                            />
+                          </div>
+                          <div className="flex items-center gap-2 w-full sm:w-auto">
+                            <span className="text-xs font-medium text-zinc-500 whitespace-nowrap w-20 sm:w-auto shrink-0">
+                              {locale === "ar" ? "الدرجة %" : "Score %"}
+                            </span>
+                            <Input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={assignment.score ?? ""}
+                              onChange={(e) =>
+                                updateAssignment(
+                                  assignment.id,
+                                  "score",
+                                  e.target.value === "" ? null : Math.min(100, Math.max(0, Number(e.target.value)))
+                                )
+                              }
+                              placeholder={locale === "ar" ? "—" : "—"}
+                              className={`flex-1 min-w-0 sm:flex-none sm:w-20 w-full min-w-[72px] ${inputSelectClass} !mb-0 [&_input]:py-2 [&_input]:text-center`}
+                            />
+                          </div>
+                          <div
+                            className={`flex items-center justify-between gap-2 w-full pt-3 mt-1 border-t border-zinc-600/25 sm:pt-0 sm:mt-0 sm:border-t-0 sm:w-auto shrink-0 tabular-nums text-xs text-zinc-500 ${
+                              locale === "ar" ? "sm:me-auto" : "sm:ms-auto"
+                            }`}
+                          >
+                            <span className="text-zinc-500">
+                              {locale === "ar" ? "المساهمة" : "Contribution"}
+                            </span>
+                            <span>
+                              {assignment.score !== null
+                                ? `${((assignment.score * assignment.weight) / 100).toFixed(1)} / ${assignment.weight}`
+                                : `— / ${assignment.weight}`}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -347,100 +371,111 @@ export default function GradeCalculator() {
                 )}
               </Card>
 
-            {/* Right: Results + Grade Scale */}
-              <div className={sectionGap}>
-                <Card
-                  title={locale === "ar" ? "النتيجة" : "Results"}
-                  className={cardClass}
-                >
-                  {!hasCompletedAssignments ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-center">
-                      <p className="text-zinc-400 text-sm mb-1">
-                        {locale === "ar" ? "لا توجد درجات مُدخلة" : "No scores entered yet"}
-                      </p>
-                      <p className="text-zinc-500 text-xs max-w-[200px]">
-                        {locale === "ar" ? "أدخل درجات التكليفات أقصى اليسار لرؤية النتيجة." : "Enter assignment scores on the left to see results."}
-                      </p>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pb-6 border-b border-zinc-600/40">
-                        <div className="text-center sm:text-center">
-                          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">
-                            {locale === "ar" ? "الوضع الحالي" : "Current"}
-                          </p>
-                          <p className="text-4xl sm:text-5xl font-bold tabular-nums text-blue-400">
-                            {currentGrade.toFixed(1)}%
-                          </p>
-                          <p className={`text-lg font-semibold ${currentLetterGrade.color}`}>
-                            {currentLetterGrade.letter}
-                          </p>
-                          <p className="text-xs text-zinc-500 mt-1">
-                            {assignments.filter((a) => a.score !== null).length} {locale === "ar" ? "تكليف مكتمل" : "completed"}
-                          </p>
-                        </div>
-                        <div className="text-center sm:text-center">
-                          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">
-                            {locale === "ar" ? "التوقع النهائي" : "Projected final"}
-                          </p>
-                          <p className="text-4xl sm:text-5xl font-bold tabular-nums text-white">
-                            {finalGrade.toFixed(1)}%
-                          </p>
-                          <p className={`text-lg font-semibold ${finalLetterGrade.color}`}>
-                            {finalLetterGrade.letter}
-                          </p>
-                          <p className="text-xs text-zinc-500 mt-1">
-                            {locale === "ar" ? "بافتراض 0% للمتبقي" : "If rest is 0%"}
-                          </p>
-                        </div>
+            {/* Results + Grade Scale: side by side below */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+              <Card
+                title={locale === "ar" ? "النتيجة" : "Results"}
+                className={cardClass}
+              >
+                <p className="text-xs text-zinc-500 mb-3 sm:mb-4 leading-relaxed">
+                  {locale === "ar"
+                    ? "وضعك الحالي والتوقع النهائي بناءً على الدرجات المُدخلة."
+                    : "Your current grade and projected final based on entered scores."}
+                </p>
+                {!hasCompletedAssignments ? (
+                  <div className="flex flex-col items-center justify-center py-16 sm:py-24 text-center rounded-xl border border-zinc-600/30 border-dashed bg-zinc-800/20">
+                    <p className="text-zinc-400 text-sm mb-1">
+                      {locale === "ar" ? "لا توجد درجات مُدخلة" : "No scores entered yet"}
+                    </p>
+                    <p className="text-zinc-500 text-xs max-w-[240px] leading-relaxed">
+                      {locale === "ar" ? "أدخل درجات التكليفات أعلاه لرؤية النتيجة." : "Enter assignment scores above to see results."}
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                      <div className="rounded-xl border border-zinc-600/30 bg-zinc-800/20 p-4 sm:p-5 flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px]">
+                        <p className="text-[10px] sm:text-xs font-medium text-zinc-500 uppercase tracking-wider mb-2">
+                          {locale === "ar" ? "الوضع الحالي" : "Current"}
+                        </p>
+                        <p className="text-4xl sm:text-5xl font-bold tabular-nums tracking-tight text-blue-400">
+                          {currentGrade.toFixed(1)}%
+                        </p>
+                        <p className={`text-base sm:text-lg font-semibold mt-1 ${currentLetterGrade.color}`}>
+                          {currentLetterGrade.letter}
+                        </p>
+                        <p className="text-xs text-zinc-500 mt-2">
+                          {assignments.filter((a) => a.score !== null).length} {locale === "ar" ? "تكليف مكتمل" : "completed"}
+                        </p>
                       </div>
-                      <div className="flex flex-wrap gap-x-8 gap-y-2 pt-4">
-                        <span className="text-sm text-zinc-400">
+                      <div className="rounded-xl border border-zinc-600/30 bg-zinc-800/20 p-4 sm:p-5 flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px]">
+                        <p className="text-[10px] sm:text-xs font-medium text-zinc-500 uppercase tracking-wider mb-2">
+                          {locale === "ar" ? "التوقع النهائي" : "Projected final"}
+                        </p>
+                        <p className="text-4xl sm:text-5xl font-bold tabular-nums tracking-tight text-white">
+                          {finalGrade.toFixed(1)}%
+                        </p>
+                        <p className={`text-base sm:text-lg font-semibold mt-1 ${finalLetterGrade.color}`}>
+                          {finalLetterGrade.letter}
+                        </p>
+                        <p className="text-xs text-zinc-500 mt-2">
+                          {locale === "ar" ? "بافتراض 0% للمتبقي" : "If rest is 0%"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="pt-4 mt-4 sm:pt-5 sm:mt-5 border-t border-zinc-600/40">
+                      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 sm:gap-x-8">
+                        <span className="text-xs font-medium text-zinc-500">
                           {locale === "ar" ? "مكتمل:" : "Completed:"}{" "}
-                          <span className="font-medium text-white">
+                          <span className="font-semibold text-white tabular-nums">
                             {assignments.filter((a) => a.score !== null).reduce((s, a) => s + a.weight, 0)}%
                           </span>
                         </span>
-                        <span className="text-sm text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-500">
                           {locale === "ar" ? "متبقي:" : "Remaining:"}{" "}
-                          <span className="font-medium text-white">
+                          <span className="font-semibold text-white tabular-nums">
                             {assignments.filter((a) => a.score === null).reduce((s, a) => s + a.weight, 0)}%
                           </span>
                         </span>
-                        <span className="text-sm text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-500">
                           {locale === "ar" ? "التقدم:" : "Progress:"}{" "}
-                          <span className="font-medium text-white">
+                          <span className="font-semibold text-white tabular-nums">
                             {assignments.length ? Math.round((assignments.filter((a) => a.score !== null).length / assignments.length) * 100) : 0}%
                           </span>
                         </span>
                       </div>
-                    </>
-                  )}
-                </Card>
+                    </div>
+                  </>
+                )}
+              </Card>
 
-                <Card
-                  title={locale === "ar" ? "سلم الدرجات" : "Grade Scale"}
-                  className={cardClass}
-                >
-                  <div className="space-y-0">
-                    {Object.entries(gradeScale).map(([grade, info]) => (
-                      <div
-                        key={grade}
-                        className={`flex flex-wrap items-center gap-x-4 gap-y-1 py-3 ${grade !== "A" ? "border-t border-zinc-600/25" : ""}`}
-                      >
-                        <span className={`w-8 font-semibold ${info.color}`}>{grade}</span>
-                        <span className="text-sm text-zinc-400 tabular-nums">
-                          {info.min} – {info.max}%
-                        </span>
-                        <span className="text-sm text-zinc-500">{info.points.toFixed(1)} pts</span>
-                        <span className="text-sm text-zinc-500 ms-auto">
-                          {locale === "ar" ? info.descriptionAr : info.description}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </Card>
-              </div>
+              <Card
+                title={locale === "ar" ? "سلم الدرجات" : "Grade Scale"}
+                className={cardClass}
+              >
+                <p className="text-xs text-zinc-500 mb-3 sm:mb-4 leading-relaxed">
+                  {locale === "ar"
+                    ? "نطاقات الدرجات والنقاط المعتمدة للمعدل."
+                    : "Letter grade ranges and grade points used for GPA."}
+                </p>
+                <div className="rounded-xl border border-zinc-600/30 bg-zinc-800/20 overflow-hidden">
+                  {Object.entries(gradeScale).map(([grade, info]) => (
+                    <div
+                      key={grade}
+                      className={`flex flex-wrap items-center gap-x-4 gap-y-1.5 px-4 py-3 sm:px-5 sm:py-3.5 ${grade !== "A" ? "border-t border-zinc-600/25" : ""}`}
+                    >
+                      <span className={`w-8 shrink-0 font-semibold text-sm ${info.color}`}>{grade}</span>
+                      <span className="text-xs sm:text-sm text-zinc-400 tabular-nums">
+                        {info.min} – {info.max}%
+                      </span>
+                      <span className="text-xs sm:text-sm text-zinc-500">{info.points.toFixed(1)} pts</span>
+                      <span className="text-xs sm:text-sm text-zinc-500 ms-auto">
+                        {locale === "ar" ? info.descriptionAr : info.description}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
             </div>
           </div>
         </div>
