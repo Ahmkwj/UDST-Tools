@@ -75,7 +75,10 @@ const LocalizedApp = () => {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/gpa-calculator" element={<GPACalculator />} />
           <Route path="/grade-calculator" element={<GradeCalculator />} />
-          <Route path="/attendance-calculator" element={<AttendanceCalculator />} />
+          <Route
+            path="/attendance-calculator"
+            element={<AttendanceCalculator />}
+          />
           <Route path="/schedule-planner" element={<SchedulePlanner />} />
           <Route path="/fees-manager" element={<FeesManager />} />
           <Route path="*" element={<NotFound />} />

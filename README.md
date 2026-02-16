@@ -1,114 +1,74 @@
-# UDST Tools - Arabic Language Support Implementation
+# UDST Tools
 
-## Overview
+A free, open-source academic toolkit designed specifically for students at the University of Doha for Science and Technology (UDST).
 
-This project implements Arabic language support using the following approach:
+## Features
 
-1. **Locale-based Routing** - URLs structured as `/en/...` and `/ar/...`
-2. **RTL Support** - Dynamically setting `dir="rtl"` for Arabic UI
-3. **Inline Translation Strategy** - Using `locale === 'ar' ? 'Arabic text' : 'English text'` throughout
-4. **Language Switcher** - A toggle in the sidebar to switch between English and Arabic
+- **GPA Calculator** - Project your cumulative GPA based on transcript data and current semester courses
+- **Grade Calculator** - Track assignment weights and scores to estimate your final course grade
+- **Attendance Tracker** - Monitor absences and stay within the 15% limit
+- **Schedule Planner** - Build your weekly timetable and detect time conflicts
+- **Ramadan Schedule Converter** - Convert regular class times to Ramadan hours with downloadable image
+- **Academic Calendar** - View important dates, exam periods, and registration deadlines
+- **Fees Manager** - Estimate tuition and semester costs by program and enrollment status
+- **UDST Links** - Quick access to student portals and resources
 
-## Implementation Details
+## Technical Details
 
-### 1. Language Context
+### Stack
 
-A React context (`LanguageContext`) manages the current locale and provides hooks:
+- React 18 with TypeScript
+- Tailwind CSS for styling
+- Framer Motion for animations
+- Vite for build tooling
+- Client-side only (no backend)
 
-- `useLocale()` - Get the current locale ('en' or 'ar')
-- `useSetLocale()` - Set a new locale
-- `useIsRTL()` - Check if current locale is RTL (returns true for Arabic)
+### Privacy
 
-### 2. Routing Structure
+All calculations run in your browser. No data is sent to servers. No accounts required. Your data stays on your device using localStorage.
 
-We use React Router with localized routes:
+### Bilingual Support
 
-- `/en` and `/ar` for home pages
-- `/en/gpa-calculator` and `/ar/gpa-calculator` for sub-pages
-- Automatic redirection from `/` to `/en` or `/ar` based on user preference
+Full English and Arabic support with RTL layout, managed through React Context and localStorage.
 
-### 3. RTL Support
+## Development
 
-RTL direction is implemented via:
+```bash
+# Install dependencies
+npm install
 
-- Setting `dir="rtl"` on the HTML document when Arabic is active
-- Adding the `rtl` class to the body for CSS targeting
-- CSS utilities in `index.css` to handle RTL-specific styling
-- Component-level RTL accommodations (text alignment, flex direction, etc.)
+# Run development server
+npm run dev
 
-### 4. Translation Strategy
+# Build for production
+npm run build
 
-All UI text is translated using conditional rendering based on the current locale:
-
-```tsx
-{
-  locale === "ar" ? "نص عربي" : "English text";
-}
+# Preview production build
+npm run preview
 ```
 
-This approach is used consistently throughout all components.
+## SEO & Social Sharing
 
-### 5. Components with Language Support
-
-All core UI components have been modified to support RTL layout and Arabic text:
-
-- **Card** - Supports RTL text alignment
-- **Button** - Reverses flex direction in RTL mode
-- **Input** - Sets `dir="rtl"` and text alignment
-- **Select** - Adjusts dropdown indicator position
-- **Checkbox** - Reverses alignment in RTL mode
-- **Sidebar** - Full RTL support with Arabic navigation labels
-- **Footer** - Localized text
-
-### 6. Page Content
-
-Pages like GPACalculator have been updated with Arabic translations for:
-
-- Section titles
-- Labels
-- Helper text
-- Buttons
-- Error messages
-
-## Usage Example
-
-```tsx
-import { useLocale } from "../context/LanguageContext";
-
-function MyComponent() {
-  const locale = useLocale();
-
-  return (
-    <div>
-      <h1>{locale === "ar" ? "العنوان بالعربية" : "English Title"}</h1>
-      <p>{locale === "ar" ? "محتوى النص بالعربية" : "English content text"}</p>
-    </div>
-  );
-}
-```
-
-## Language Switcher
-
-A language switcher component in the sidebar allows users to toggle between English and Arabic:
-
-```tsx
-<button onClick={handleLanguageChange}>
-  {locale === "ar" ? "English" : "العربية"}
-</button>
-```
-
-When clicked, it changes the locale in the context and navigates to the equivalent page in the new locale.
+The site includes comprehensive meta tags for:
+- Search engine optimization (title, description, keywords)
+- Open Graph tags for Facebook/LinkedIn
+- Twitter Cards for enhanced sharing
+- JSON-LD structured data for rich search results
+- Sitemap and robots.txt for proper crawling
 
 ## Deployment
 
-This project can be deployed to any static hosting platform. The build output is located in the `dist` directory after running:
+Deploy to any static hosting platform:
 
 ```bash
 npm run build
+# Upload the `dist` folder to your hosting provider
 ```
 
-The project is ready to be deployed to platforms like:
-- Vercel
-- Netlify
-- GitHub Pages
-- Any static file hosting service
+Recommended platforms: Vercel, Netlify, GitHub Pages, Cloudflare Pages
+
+## License
+
+Open source project by Ahmed Khawaja (@ahmkwj)
+
+Not affiliated with or endorsed by UDST.

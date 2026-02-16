@@ -34,9 +34,14 @@ export default function Sidebar({
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const startX = useRef(0);
   const currentX = useRef(0);
   const isDragging = useRef(false);
+
+  useEffect(() => {
+    contentRef.current?.scrollTo(0, 0);
+  }, [currentPath]);
 
   const navCategories: NavCategory[] = [
     {
@@ -424,6 +429,7 @@ export default function Sidebar({
 
       {/* Main */}
       <div
+        ref={contentRef}
         className={`flex-1 h-full overflow-auto text-start ${isMobile ? "pt-12" : ""}`}
       >
         {children}
