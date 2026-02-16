@@ -34,7 +34,6 @@ const TOOL_GROUPS: ToolGroup[] = [
     items: [
       { path: "/gpa-calculator", en: "GPA Calculator", ar: "حاسبة المعدل التراكمي", descEn: "Calculate current GPA, add courses from transcript, and see projected GPA", descAr: "احسب معدلك الحالي، أضف مواد من كشف الدرجات، وتوقع المعدل" },
       { path: "/grade-calculator", en: "Grade Calculator", ar: "حاسبة الدرجات", descEn: "Estimate final course grade from assignments and weights", descAr: "قدّر الدرجة النهائية من التقييمات وأوزانها" },
-      { path: "/study-time-calculator", en: "Study Time Calculator", ar: "حاسبة وقت الدراسة", descEn: "Plan study hours based on credits and goals", descAr: "خطط ساعات الدراسة حسب الساعات والأهداف" },
     ],
   },
   {
