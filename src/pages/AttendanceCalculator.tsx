@@ -5,6 +5,7 @@ import Card from "../components/ui/Card";
 import Footer from "../components/ui/Footer";
 import PageHeader from "../components/ui/PageHeader";
 import { useLocale } from "../context/LanguageContext";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 type ClassInfo = {
   duration: number;
@@ -25,10 +26,10 @@ const sectionGap = "space-y-8 sm:space-y-12";
 export default function AttendanceCalculator() {
   const locale = useLocale();
   const [absenteeismPercentage, setAbsenteeismPercentage] =
-    useState<string>("");
-  const [weeksInSemester, setWeeksInSemester] = useState<string>("14");
-  const [classesPerWeek, setClassesPerWeek] = useState<number>(0);
-  const [classInfos, setClassInfos] = useState<ClassInfo[]>([]);
+    useLocalStorage<string>("att-absenteeism", "");
+  const [weeksInSemester, setWeeksInSemester] = useLocalStorage<string>("att-weeks", "14");
+  const [classesPerWeek, setClassesPerWeek] = useLocalStorage<number>("att-classesPerWeek", 0);
+  const [classInfos, setClassInfos] = useLocalStorage<ClassInfo[]>("att-classInfos", []);
   const [newAbsenteeismPercentage, setNewAbsenteeismPercentage] =
     useState<number>(0);
   const [showWarning, setShowWarning] = useState<boolean>(true);
@@ -496,11 +497,7 @@ export default function AttendanceCalculator() {
                 title={locale === "ar" ? "تنبيه" : "Notice"}
                 className={`${cardClass} !py-4 sm:!py-5 lg:!py-6 border-s-4 border-s-amber-400/30`}
               >
-                <p className="text-xs text-zinc-500 mb-3 sm:mb-4">
-                  {locale === "ar"
-                    ? "معلومات مهمة حول دقة نظام الحضور."
-                    : "Important information about attendance system accuracy."}
-                </p>
+                
                 <div className="flex gap-3 sm:gap-4 items-start">
                   <p className="flex-1 min-w-0 text-sm text-zinc-400 leading-relaxed">
                     {locale === "ar"

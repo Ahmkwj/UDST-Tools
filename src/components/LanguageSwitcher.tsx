@@ -1,44 +1,18 @@
 import { useLocale, useSetLocale } from "../context/LanguageContext";
-import { useNavigate, useLocation } from "react-router-dom";
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
   const setLocale = useSetLocale();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  // Get the current path without the locale prefix
-  const getPathWithoutLocale = () => {
-    const path = location.pathname;
-    if (path.startsWith(`/${locale}/`)) {
-      return path.substring(`/${locale}/`.length);
-    } else if (path === `/${locale}`) {
-      return "/";
-    }
-    return path;
-  };
 
   const handleLanguageChange = () => {
-    const newLocale = locale === "ar" ? "en" : "ar";
-    setLocale(newLocale);
-
-    // Get current path without locale
-    const pathWithoutLocale = getPathWithoutLocale();
-
-    // Navigate to the same path but with new locale
-    const newPath =
-      pathWithoutLocale === "/"
-        ? `/${newLocale}`
-        : `/${newLocale}/${pathWithoutLocale}`;
-
-    navigate(newPath);
+    setLocale(locale === "ar" ? "en" : "ar");
   };
 
   return (
     <button
       onClick={handleLanguageChange}
       className="flex items-center gap-2.5 w-full rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-400 transition-all duration-150 hover:bg-white/[0.04] hover:text-zinc-200 text-start"
-      aria-label={locale === "ar" ? "Switch to English" : "التبديل إلى العربية"}
+      aria-label={locale === "ar" ? "Switch to English" : "Switch to Arabic"}
     >
       <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-white/[0.04] text-zinc-500">
         <svg

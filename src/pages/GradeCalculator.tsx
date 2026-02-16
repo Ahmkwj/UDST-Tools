@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import useLocalStorage from "../hooks/useLocalStorage";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
@@ -35,7 +36,7 @@ type GradeScale = {
 
 export default function GradeCalculator() {
   const locale = useLocale();
-  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [assignments, setAssignments] = useLocalStorage<Assignment[]>("grade-assignments", []);
   const [totalWeight, setTotalWeight] = useState<number>(0);
 
   // Grade scale configuration

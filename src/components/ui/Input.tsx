@@ -1,5 +1,4 @@
 import React from "react";
-import { useLocale } from "../../context/LanguageContext";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -16,17 +15,10 @@ export default function Input({
   className = "",
   ...props
 }: InputProps) {
-  const locale = useLocale();
-  const isRTL = locale === "ar";
-
   return (
     <div className={`space-y-2 ${fullWidth ? "w-full" : ""}`}>
       {label && (
-        <label
-          className={`block text-xs font-medium text-zinc-400 ${
-            isRTL ? "text-right" : "text-left"
-          }`}
-        >
+        <label className="block text-xs font-medium text-zinc-400 text-start">
           {label}
         </label>
       )}
@@ -41,17 +33,14 @@ export default function Input({
           }
           hover:border-zinc-400/40
           transition-all duration-200
-          ${isRTL ? "text-right" : "text-left"}
+          text-start
           ${className}
         `}
-        dir={isRTL ? "rtl" : "ltr"}
         {...props}
       />
       {helperText && (
         <p
-          className={`text-xs ${error ? "text-red-400" : "text-zinc-300"} ${
-            isRTL ? "text-right" : "text-left"
-          }`}
+          className={`text-xs text-start ${error ? "text-red-400" : "text-zinc-300"}`}
         >
           {helperText}
         </p>

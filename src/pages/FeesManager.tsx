@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocale } from "../context/LanguageContext";
+import useLocalStorage from "../hooks/useLocalStorage";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
 import Select from "../components/ui/Select";
@@ -82,20 +83,20 @@ const feeRates = {
 export default function FeesManager() {
   const locale = useLocale();
 
-  // Form state
-  const [step, setStep] = useState(1);
-  const [programType, setProgramType] = useState("");
-  const [major, setMajor] = useState("");
-  const [enrollmentType, setEnrollmentType] = useState("fullTime");
-  const [admissionDate, setAdmissionDate] = useState("afterFall2020");
-  const [sponsorshipType, setSponsorshipType] = useState("nonSponsored");
-  const [studentStatus, setStudentStatus] = useState<StudentStatus>("qatar_resident");
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [numCourses, setNumCourses] = useState(1);
+  // Form state (persisted to localStorage)
+  const [step, setStep] = useLocalStorage<number>("fees-step", 1);
+  const [programType, setProgramType] = useLocalStorage<string>("fees-programType", "");
+  const [major, setMajor] = useLocalStorage<string>("fees-major", "");
+  const [enrollmentType, setEnrollmentType] = useLocalStorage<string>("fees-enrollmentType", "fullTime");
+  const [admissionDate, setAdmissionDate] = useLocalStorage<string>("fees-admissionDate", "afterFall2020");
+  const [sponsorshipType, setSponsorshipType] = useLocalStorage<string>("fees-sponsorshipType", "nonSponsored");
+  const [studentStatus, setStudentStatus] = useLocalStorage<StudentStatus>("fees-studentStatus", "qatar_resident");
+  const [courses, setCourses] = useLocalStorage("fees-courses", [] as Course[]);
+  const [numCourses, setNumCourses] = useLocalStorage<number>("fees-numCourses", 1);
   
-  // Additional fees (simplified)
-  const [includeAdditionalFees, setIncludeAdditionalFees] = useState(false);
-  const [additionalFeesAmount, setAdditionalFeesAmount] = useState(0);
+  // Additional fees (persisted to localStorage)
+  const [includeAdditionalFees, setIncludeAdditionalFees] = useLocalStorage<boolean>("fees-includeAdditionalFees", false);
+  const [additionalFeesAmount, setAdditionalFeesAmount] = useLocalStorage<number>("fees-additionalFeesAmount", 0);
 
   // Fee breakdown state
   const [feeBreakdown, setFeeBreakdown] = useState<FeeBreakdown>({

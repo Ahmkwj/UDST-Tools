@@ -3,13 +3,8 @@ import Card from "../components/ui/Card";
 import { useLocale } from "../context/LanguageContext";
 import Footer from "../components/ui/Footer";
 
-/* Theme: match Attendance / GPA / Calendar */
-const CARD = {
-  base: "!bg-zinc-800/50 !rounded-2xl !border !border-zinc-600/40 backdrop-blur-xl",
-  padding: "!px-6 !pt-6 !pb-7 sm:!px-8 sm:!pt-7 sm:!pb-8",
-};
-const cardClass = `${CARD.base} ${CARD.padding}`;
-const sectionGap = "space-y-12";
+const cardClass = "!bg-zinc-800/50 !rounded-2xl !border !border-zinc-600/40 backdrop-blur-xl !px-4 !pt-4 !pb-5 sm:!px-6 sm:!pt-6 sm:!pb-7 lg:!px-8 lg:!pt-7 lg:!pb-8";
+const sectionGap = "space-y-8 sm:space-y-12";
 
 interface LinkCategory {
   title: {
@@ -348,7 +343,7 @@ export default function Links() {
 
   return (
     <div className="page-container">
-      <div className="flex-1 py-14 sm:py-20 px-5 sm:px-8 overflow-x-hidden overflow-y-auto">
+      <div className="flex-1 py-8 pb-20 px-4 sm:py-14 sm:pb-14 sm:px-5 lg:py-20 lg:px-8 overflow-x-hidden overflow-y-auto">
         <div className="w-full max-w-4xl mx-auto">
           <PageHeader
             title={{

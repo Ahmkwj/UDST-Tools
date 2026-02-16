@@ -6,6 +6,7 @@ import Select from "../components/ui/Select";
 import Footer from "../components/ui/Footer";
 import PageHeader from "../components/ui/PageHeader";
 import { useLocale } from "../context/LanguageContext";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 /* Match GPA & Attendance: responsive padding, touch-friendly inputs */
 const CARD = {
@@ -39,7 +40,7 @@ type Conflict = {
 
 export default function SchedulePlanner() {
   const locale = useLocale();
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [courses, setCourses] = useLocalStorage<Course[]>("sched-courses", []);
   const [conflicts, setConflicts] = useState<Conflict[]>([]);
 
   // Days of the week

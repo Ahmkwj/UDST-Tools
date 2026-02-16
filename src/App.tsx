@@ -16,57 +16,35 @@ import About from "./pages/About";
 import Privacy from "./pages/Privacy";
 import Guide from "./pages/Guide";
 import SchedulePlanner from "./pages/SchedulePlanner";
-import Feedback from "./pages/Feedback";
 import Links from "./pages/Links";
 import NotFound from "./pages/NotFound";
-import {
-  LanguageProvider,
-  useLocale,
-  useSetLocale,
-} from "./context/LanguageContext";
+import { LanguageProvider, useLocale } from "./context/LanguageContext";
 import Home from "..";
 import FeesManager from "./pages/FeesManager";
-import RamadanSchedule from "./pages/RamadanSchedule";
+import RamadanScheduleMaker from "./pages/RamadanScheduleMaker";
 
-// Redirect component to handle locale in routes
-function LocaleRedirect() {
+/**
+ * Strips any leftover /en or /ar prefix from URLs so old bookmarks still work.
+ */
+function LegacyLocaleRedirect() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const setLocale = useSetLocale();
-  const path = location.pathname;
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    // If already has locale prefix, don't redirect
-    if (path.match(/^\/(en|ar)(\/|$)/)) {
-      // Extract locale from URL and update context
-      const match = path.match(/^\/(en|ar)/);
-      if (match && match[1]) {
-        setLocale(match[1] as "en" | "ar");
-      }
-      return;
+    const match = pathname.match(/^\/(en|ar)(\/.*)?$/);
+    if (match) {
+      const target = match[2] || "/";
+      navigate(target, { replace: true });
     }
-
-    // Get preferred locale from localStorage or default to English
-    const savedLocale = localStorage.getItem("locale");
-    const preferredLocale =
-      savedLocale === "en" || savedLocale === "ar" ? savedLocale : "en";
-
-    // Redirect to path with preferred locale
-    const targetPath =
-      path === "/" ? `/${preferredLocale}` : `/${preferredLocale}${path}`;
-    navigate(targetPath, { replace: true });
-    setLocale(preferredLocale as "en" | "ar");
-  }, [path, navigate, setLocale]);
+  }, [pathname, navigate]);
 
   return null;
 }
 
-// Wrapper component to apply RTL direction based on locale
 function LocalizedLayout({ children }: { children: React.ReactNode }) {
   const locale = useLocale();
   const isRTL = locale === "ar";
 
-  // Set the HTML dir attribute based on the locale
   useEffect(() => {
     document.documentElement.dir = isRTL ? "rtl" : "ltr";
     document.documentElement.lang = locale;
@@ -79,7 +57,6 @@ const LocalizedApp = () => {
   const location = useLocation();
   const [currentPath, setCurrentPath] = useState(location.pathname);
 
-  // Update currentPath when location changes
   useEffect(() => {
     setCurrentPath(location.pathname);
   }, [location.pathname]);
@@ -87,47 +64,20 @@ const LocalizedApp = () => {
   return (
     <LocalizedLayout>
       <Sidebar currentPath={currentPath} onNavigate={setCurrentPath}>
+        <LegacyLocaleRedirect />
         <Routes>
-          {/* Home routes - Public */}
-          <Route path="/en" element={<Home />} />
-          <Route path="/ar" element={<Home />} />
-
-          {/* Public routes */}
-          <Route path="/en/calendar" element={<Calendar />} />
-          <Route path="/ar/calendar" element={<Calendar />} />
-          <Route path="/en/ramadan-schedule" element={<RamadanSchedule />} />
-          <Route path="/ar/ramadan-schedule" element={<RamadanSchedule />} />
-          <Route path="/en/links" element={<Links />} />
-          <Route path="/ar/links" element={<Links />} />
-          <Route path="/en/about" element={<About />} />
-          <Route path="/ar/about" element={<About />} />
-          <Route path="/en/guide" element={<Guide />} />
-          <Route path="/ar/guide" element={<Guide />} />
-          <Route path="/en/privacy" element={<Privacy />} />
-          <Route path="/ar/privacy" element={<Privacy />} />
-
-          {/* All routes are now public */}
-          <Route path="/en/gpa-calculator" element={<GPACalculator />} />
-          <Route path="/ar/gpa-calculator" element={<GPACalculator />} />
-          <Route path="/en/grade-calculator" element={<GradeCalculator />} />
-          <Route path="/ar/grade-calculator" element={<GradeCalculator />} />
-          <Route
-            path="/en/attendance-calculator"
-            element={<AttendanceCalculator />}
-          />
-          <Route
-            path="/ar/attendance-calculator"
-            element={<AttendanceCalculator />}
-          />
-          <Route path="/en/schedule-planner" element={<SchedulePlanner />} />
-          <Route path="/ar/schedule-planner" element={<SchedulePlanner />} />
-          <Route path="/en/feedback" element={<Feedback />} />
-          <Route path="/ar/feedback" element={<Feedback />} />
-          <Route path="/en/fees-manager" element={<FeesManager />} />
-          <Route path="/ar/fees-manager" element={<FeesManager />} />
-
-          {/* Root and wildcard routes */}
-          <Route path="/" element={<LocaleRedirect />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/ramadan-schedule" element={<RamadanScheduleMaker />} />
+          <Route path="/links" element={<Links />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/guide" element={<Guide />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/gpa-calculator" element={<GPACalculator />} />
+          <Route path="/grade-calculator" element={<GradeCalculator />} />
+          <Route path="/attendance-calculator" element={<AttendanceCalculator />} />
+          <Route path="/schedule-planner" element={<SchedulePlanner />} />
+          <Route path="/fees-manager" element={<FeesManager />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Sidebar>
@@ -136,7 +86,6 @@ const LocalizedApp = () => {
 };
 
 const App: React.FC = () => {
-  // Set the font family on the body element
   useEffect(() => {
     document.body.style.fontFamily = '"IBM Plex Sans Arabic", sans-serif';
   }, []);

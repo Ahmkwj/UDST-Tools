@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { useLocale } from "../context/LanguageContext";
+import useLocalStorage from "../hooks/useLocalStorage";
 import Card from "../components/ui/Card";
 import Select from "../components/ui/Select";
 import Footer from "../components/ui/Footer";
@@ -20,10 +20,12 @@ const sectionGap = "space-y-8 sm:space-y-12";
 
 export default function Calendar() {
   const locale = useLocale();
-  const [selectedYear, setSelectedYear] = useState<string>(
+  const [selectedYear, setSelectedYear] = useLocalStorage<string>(
+    "cal-selectedYear",
     academicCalendarData[0].id
   );
-  const [selectedSemester, setSelectedSemester] = useState<string>(
+  const [selectedSemester, setSelectedSemester] = useLocalStorage<string>(
+    "cal-selectedSemester",
     academicCalendarData[0].semesters[0].id
   );
 

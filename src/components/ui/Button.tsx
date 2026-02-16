@@ -1,5 +1,4 @@
 import React from "react";
-import { useLocale } from "../../context/LanguageContext";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "outline" | "ghost";
@@ -17,9 +16,6 @@ export default function Button({
   className = "",
   ...props
 }: ButtonProps) {
-  const locale = useLocale();
-  const isRTL = locale === "ar";
-
   const baseStyles =
     "inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-950 disabled:opacity-50 disabled:cursor-not-allowed";
 
@@ -47,7 +43,6 @@ export default function Button({
         ${variants[variant]}
         ${sizes[size]}
         ${fullWidth ? "w-full" : ""}
-        ${isRTL ? "flex-row-reverse" : ""}
         ${className}
       `}
       {...props}

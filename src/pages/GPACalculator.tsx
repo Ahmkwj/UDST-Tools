@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import useLocalStorage from "../hooks/useLocalStorage";
 import Input from "../components/ui/Input";
 import Select from "../components/ui/Select";
 import Card from "../components/ui/Card";
@@ -58,10 +59,10 @@ type Scenario = {
 
 export default function GPACalculator() {
   const locale = useLocale();
-  const [totalGradePoints, setTotalGradePoints] = useState<number | string>("");
-  const [totalCredits, setTotalCredits] = useState<number | string>("");
-  const [numberOfCourses, setNumberOfCourses] = useState<number>(0);
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [totalGradePoints, setTotalGradePoints] = useLocalStorage<number | string>("gpa-totalGradePoints", "");
+  const [totalCredits, setTotalCredits] = useLocalStorage<number | string>("gpa-totalCredits", "");
+  const [numberOfCourses, setNumberOfCourses] = useLocalStorage<number>("gpa-numberOfCourses", 0);
+  const [courses, setCourses] = useLocalStorage<Course[]>("gpa-courses", []);
   const [scenarios, setScenarios] = useState<Scenario[]>([
     { numCourses: 4, grades: [], termGPA: 0, cumulativeGPA: 0 },
     { numCourses: 3, grades: [], termGPA: 0, cumulativeGPA: 0 },
