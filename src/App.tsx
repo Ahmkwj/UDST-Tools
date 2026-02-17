@@ -7,6 +7,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import Sidebar from "./components/Sidebar";
 import GPACalculator from "./pages/GPACalculator";
 import GradeCalculator from "./pages/GradeCalculator";
@@ -97,6 +98,7 @@ const App: React.FC = () => {
     <LanguageProvider>
       <Router>
         <LocalizedApp />
+        <Analytics />
       </Router>
     </LanguageProvider>
   );
