@@ -17,7 +17,7 @@ A free, open-source academic toolkit designed specifically for students at the U
 
 ### Stack
 
-- React 18 with TypeScript
+- React 19 with TypeScript
 - Tailwind CSS for styling
 - Framer Motion for animations
 - Vite for build tooling
@@ -50,6 +50,7 @@ npm run preview
 ## SEO & Social Sharing
 
 The site includes comprehensive meta tags for:
+
 - Search engine optimization (title, description, keywords)
 - Open Graph tags for Facebook/LinkedIn
 - Twitter Cards for enhanced sharing
@@ -69,6 +70,11 @@ Recommended platforms: Vercel, Netlify, GitHub Pages, Cloudflare Pages
 
 ## License
 
-Open source project by Ahmed Khawaja (@ahmkwj)
+All rights reserved.
 
-Not affiliated with or endorsed by UDST.
+This project is publicly viewable for transparency and contribution purposes only.  
+No copying, modification, redistribution, or external use is permitted without explicit written permission.
+
+© 2025 Ahmed Khawaja (@ahmkwj)
+
+This project is not affiliated with or endorsed by UDST (University of Doha for Science and Technology).
