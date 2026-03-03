@@ -1,0 +1,126 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Remove existing styles that conflict with Tailwind */
+
+/* Base styles */
+:root {
+  color-scheme: dark;
+}
+
+/* Global font family declaration */
+html,
+body,
+#root {
+  font-family: "IBM Plex Sans Arabic", sans-serif;
+  @apply text-white;
+}
+
+/* Global page background - single source of truth for all pages */
+html,
+body,
+#root {
+  background: #141414;
+  background-attachment: fixed;
+}
+
+/* Common page layout - use for any page so bg and layout apply automatically */
+.page-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+/* RTL Support */
+html[dir="rtl"] {
+  text-align: right;
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-zinc-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-zinc-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-zinc-500;
+}
+
+/* Print-specific styles */
+@media print {
+  /* Hide elements that shouldn't be printed */
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Show elements that should only be visible when printing */
+  .hidden.print\:block {
+    display: block !important;
+  }
+
+  /* Remove background colors and gradients */
+  .print\:bg-white {
+    background: white !important;
+    background-image: none !important;
+  }
+
+  /* Set text color to black for better printing */
+  .print\:text-black {
+    color: black !important;
+  }
+
+  .print\:text-gray-600 {
+    color: #4b5563 !important;
+  }
+
+  .print\:text-gray-700 {
+    color: #374151 !important;
+  }
+
+  .print\:text-gray-900 {
+    color: #111827 !important;
+  }
+
+  /* Border colors for printing */
+  .print\:border-gray-200 {
+    border-color: #e5e7eb !important;
+  }
+
+  .print\:border-gray-300 {
+    border-color: #d1d5db !important;
+  }
+
+  .print\:bg-gray-100 {
+    background-color: #f3f4f6 !important;
+  }
+
+  .print\:divide-gray-200 > * + * {
+    border-color: #e5e7eb !important;
+  }
+
+  .print\:divide-gray-300 > * + * {
+    border-color: #d1d5db !important;
+  }
+
+  /* Remove box shadows in print */
+  .print\:shadow-none {
+    box-shadow: none !important;
+  }
+
+  /* Add border for visible separation in print */
+  .print\:border {
+    border-width: 1px !important;
+    border-style: solid !important;
+  }
+}

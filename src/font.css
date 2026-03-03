@@ -1,0 +1,4 @@
+/* High-specificity selectors to ensure font applies globally */
+html body * {
+  font-family: "IBM Plex Sans Arabic", sans-serif !important;
+}
